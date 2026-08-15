@@ -4,6 +4,7 @@ dek: "An introduction to OpenShift Virtualization — running virtual machines a
 date: 2024-07-30
 slug: unified-mastery-vms-and-containers
 category: "IBM Fusion"
+cover: assets/covers/unified-mastery-vms-and-containers.svg
 tags: [openshift-virtualization, ibm-fusion, containers, vms]
 medium: https://medium.com/@sandeepbazar/unified-mastery-bridging-virtual-machines-and-containers-with-ibm-storage-fusion-f8c54c77df96
 status: link

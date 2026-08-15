@@ -13,6 +13,7 @@ on:
       - "assets/**"
       - "web/**"
       - "build.py"
+      - "gen_covers.py"
       - "requirements.txt"
       - ".github/workflows/pages.yaml"
   workflow_dispatch:
@@ -37,6 +38,10 @@ jobs:
           python-version: "3.12"
       - name: Install the builder
         run: python3 -m pip install -r requirements.txt
+      - name: Generate cover art
+        # Regenerated every build so a new post always has a cover, and so a
+        # malformed SVG fails here rather than half-rendering in a browser.
+        run: python3 gen_covers.py
       - name: Build the site
         # Fails on a missing front-matter field, a duplicate slug, an
         # unresolvable cover or a broken internal link - none of which are

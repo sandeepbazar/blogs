@@ -43,6 +43,18 @@ Commit and push. The workflow rebuilds and redeploys.
 
 `reading_time` is computed from the body, never authored.
 
+## Cover art
+
+`gen_covers.py` generates one animated SVG per post into `assets/covers/<slug>.svg`.
+Each category has its own motif — orbits, a hexagon lattice, stacked planes, wave
+bands — and the variation within a category is derived from a hash of the slug, so
+a post always renders the same image but no two look alike. The animation is
+declarative (it plays through an `<img>` tag) and switches off entirely under
+`prefers-reduced-motion`.
+
+Add `cover: assets/covers/<slug>.svg` to a post's front matter to use it. The
+workflow regenerates covers on every build, so a new post cannot ship without one.
+
 ## Building locally
 
 ```bash

@@ -1,0 +1,60 @@
+# SPDX-FileCopyrightText: 2026 Sandeep Bazar
+# SPDX-License-Identifier: Apache-2.0
+#
+# Build the site from posts/*.md and publish it to GitHub Pages.
+# The source of truth stays markdown; build.py renders it.
+name: pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "posts/**"
+      - "assets/**"
+      - "web/**"
+      - "build.py"
+      - "requirements.txt"
+      - ".github/workflows/pages.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Never cancel a half-finished deploy; queue behind it instead.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install the builder
+        run: python3 -m pip install -r requirements.txt
+      - name: Build the site
+        # Fails on a missing front-matter field, a duplicate slug, an
+        # unresolvable cover or a broken internal link - none of which are
+        # visible once deployed.
+        run: python3 build.py
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write # publish to Pages
+      id-token: write # OIDC verification of the deployment origin
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

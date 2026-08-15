@@ -1,0 +1,560 @@
+#!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 Sandeep Bazar
+# SPDX-License-Identifier: Apache-2.0
+"""Render posts/*.md into a static site under _site/.
+
+The source of truth is markdown. This script is deliberately small: it reads
+front matter, renders the body, and fills three HTML templates. It fails the
+build on anything that would be invisible once deployed - a missing required
+field, a duplicate slug, an unresolvable cover image - because a site that
+silently ships a broken card is worse than one that refuses to build.
+
+Usage:
+    python3 build.py            # build into _site/
+    python3 build.py --serve    # build, then serve on localhost:8000
+"""
+
+from __future__ import annotations
+
+import argparse
+import html
+import http.server
+import json
+import re
+import shutil
+import socketserver
+import sys
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from pathlib import Path
+
+import yaml
+from markdown_it import MarkdownIt
+from mdit_py_plugins.anchors import anchors_plugin
+from mdit_py_plugins.footnote import footnote_plugin
+from pygments import highlight
+from pygments.formatters import HtmlFormatter
+from pygments.lexers import get_lexer_by_name, guess_lexer
+
+ROOT = Path(__file__).parent.resolve()
+POSTS = ROOT / "posts"
+OUT = ROOT / "_site"
+TEMPLATES = ROOT / "web" / "templates"
+STATIC = ROOT / "web" / "static"
+ASSETS = ROOT / "assets"
+
+BASE = "/blogs"
+ORIGIN = "https://sandeepbazar.github.io"
+SITE_TITLE = "Sandeep Bazar"
+SITE_DESC = (
+    "Writing on agentic AI, Kubernetes fleets, and the infrastructure "
+    "underneath both - by Sandeep Bazar."
+)
+
+REQUIRED = ("title", "dek", "date", "slug", "category", "status")
+
+# Category -> the CSS modifier that colours its chip. A category outside this
+# map is a typo, and the build says so rather than rendering an unstyled chip.
+CATEGORIES = {
+    "Agentic AI": "agentic",
+    "Kubernetes & MCP": "kubernetes",
+    "IBM Fusion": "fusion",
+    "Research & Life": "life",
+}
+
+WORDS_PER_MINUTE = 225
+
+
+class BuildError(Exception):
+    """A problem that must stop the build rather than ship silently."""
+
+
+# --------------------------------------------------------------- markdown --
+
+
+def _highlight(code: str, lang: str, _attrs) -> str:
+    try:
+        lexer = get_lexer_by_name(lang) if lang else guess_lexer(code)
+    except Exception:
+        return ""  # fall through to markdown-it's own escaping
+    formatter = HtmlFormatter(nowrap=True)
+    return f'<pre><code class="language-{html.escape(lang or "")}">{highlight(code, lexer, formatter)}</code></pre>'
+
+
+md = (
+    MarkdownIt("commonmark", {"html": True, "linkify": True, "typographer": True, "highlight": _highlight})
+    .enable("table")
+    .enable("strikethrough")
+    .use(anchors_plugin, max_level=3, permalink=False)
+    .use(footnote_plugin)
+)
+
+
+# ------------------------------------------------------------------ model --
+
+
+@dataclass
+class Post:
+    meta: dict
+    body_md: str
+    source: Path
+    html: str = ""
+    toc: list = field(default_factory=list)
+
+    @property
+    def slug(self) -> str:
+        return self.meta["slug"]
+
+    @property
+    def title(self) -> str:
+        return self.meta["title"]
+
+    @property
+    def dek(self) -> str:
+        return self.meta["dek"]
+
+    @property
+    def category(self) -> str:
+        return self.meta["category"]
+
+    @property
+    def date(self) -> datetime:
+        return self.meta["_date"]
+
+    @property
+    def is_offsite(self) -> bool:
+        """A card that links out to Medium; no page is generated for it."""
+        return self.meta["status"] == "link"
+
+    @property
+    def url(self) -> str:
+        if self.is_offsite:
+            return self.meta["medium"]
+        return f"{BASE}/{self.slug}/"
+
+    @property
+    def reading_time(self) -> int:
+        words = len(re.findall(r"\w+", self.body_md))
+        return max(1, round(words / WORDS_PER_MINUTE))
+
+
+def parse_front_matter(text: str, source: Path) -> tuple[dict, str]:
+    if not text.startswith("---"):
+        raise BuildError(f"{source.name}: missing front matter (file must start with ---)")
+    parts = text.split("---", 2)
+    if len(parts) < 3:
+        raise BuildError(f"{source.name}: front matter is not closed with ---")
+    try:
+        meta = yaml.safe_load(parts[1]) or {}
+    except yaml.YAMLError as exc:
+        raise BuildError(f"{source.name}: front matter is not valid YAML: {exc}") from exc
+    return meta, parts[2].lstrip("\n")
+
+
+def load_posts() -> list[Post]:
+    posts: list[Post] = []
+    seen: dict[str, str] = {}
+
+    for path in sorted(POSTS.glob("*.md")):
+        meta, body = parse_front_matter(path.read_text(encoding="utf-8"), path)
+
+        missing = [k for k in REQUIRED if not meta.get(k)]
+        if missing:
+            raise BuildError(f"{path.name}: missing required front matter: {', '.join(missing)}")
+
+        if meta["status"] == "draft":
+            continue
+
+        if meta["status"] not in ("published", "link"):
+            raise BuildError(
+                f"{path.name}: status must be published, link or draft (got {meta['status']!r})"
+            )
+
+        if meta["category"] not in CATEGORIES:
+            raise BuildError(
+                f"{path.name}: unknown category {meta['category']!r}; "
+                f"expected one of {', '.join(CATEGORIES)}"
+            )
+
+        if meta["status"] == "link" and not meta.get("medium"):
+            raise BuildError(f"{path.name}: status 'link' requires a medium: URL")
+
+        slug = meta["slug"]
+        if slug in seen:
+            raise BuildError(f"{path.name}: duplicate slug {slug!r} (also in {seen[slug]})")
+        seen[slug] = path.name
+
+        cover = meta.get("cover")
+        if cover and not (ROOT / cover).exists():
+            raise BuildError(f"{path.name}: cover {cover!r} does not exist")
+
+        date = meta["date"]
+        meta["_date"] = datetime(date.year, date.month, date.day, tzinfo=timezone.utc)
+
+        posts.append(Post(meta=meta, body_md=body, source=path))
+
+    if not posts:
+        raise BuildError("no publishable posts found in posts/")
+
+    posts.sort(key=lambda p: p.date, reverse=True)
+    return posts
+
+
+# --------------------------------------------------------------- rendering --
+
+
+def render_body(post: Post) -> None:
+    post.html = md.render(post.body_md)
+    post.toc = [
+        {"level": int(level), "id": hid, "text": re.sub(r"<[^>]+>", "", text).strip()}
+        for level, hid, text in re.findall(r'<h([23]) id="([^"]+)">(.*?)</h\1>', post.html, re.S)
+    ]
+
+
+def load_template(name: str) -> str:
+    return (TEMPLATES / name).read_text(encoding="utf-8")
+
+
+def fill(template: str, values: dict) -> str:
+    out = template
+    for key, value in values.items():
+        out = out.replace("{{" + key + "}}", str(value))
+    leftover = re.findall(r"\{\{(\w+)\}\}", out)
+    if leftover:
+        raise BuildError(f"unfilled template placeholders: {', '.join(sorted(set(leftover)))}")
+    return out
+
+
+def esc(text: str) -> str:
+    return html.escape(str(text), quote=True)
+
+
+def fmt_date(dt: datetime) -> str:
+    return dt.strftime("%b %-d, %Y")
+
+
+def chip(post: Post) -> str:
+    return f'<span class="tag tag--{CATEGORIES[post.category]}">{esc(post.category)}</span>'
+
+
+def meta_line(post: Post, *, offsite_note: bool = True) -> str:
+    bits = [f'<time datetime="{post.date:%Y-%m-%d}">{fmt_date(post.date)}</time>']
+    if not post.is_offsite:
+        bits.append(f"{post.reading_time} min read")
+    if offsite_note and post.is_offsite:
+        bits.append(
+            '<span class="offsite">on Medium '
+            '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+            'stroke-width="2.5" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span>'
+        )
+    return '<span class="meta__sep">·</span>'.join(f"<span>{b}</span>" for b in bits)
+
+
+def card_media(post: Post) -> str:
+    cover = post.meta.get("cover")
+    if cover:
+        return f'<img src="{BASE}/{esc(cover)}" alt="" loading="lazy">'
+    initials = "".join(w[0] for w in post.category.split() if w[0].isalpha())[:2].upper()
+    return f'<span class="card__glyph">{esc(initials)}</span>'
+
+
+def render_card(post: Post) -> str:
+    target = ' target="_blank" rel="noopener"' if post.is_offsite else ""
+    return f"""      <article class="card reveal" data-category="{esc(post.category)}"
+               data-search="{esc((post.title + ' ' + post.dek + ' ' + post.category).lower())}">
+        <div class="card__media">{card_media(post)}</div>
+        <div class="card__body">
+          {chip(post)}
+          <h3 class="card__title"><a class="card__link" href="{esc(post.url)}"{target}>{esc(post.title)}</a></h3>
+          <p class="card__dek">{esc(post.dek)}</p>
+          <div class="card__meta"><div class="meta">{meta_line(post)}</div></div>
+        </div>
+      </article>"""
+
+
+def render_featured(post: Post) -> str:
+    target = ' target="_blank" rel="noopener"' if post.is_offsite else ""
+    cover = post.meta.get("cover")
+    media = (
+        f'<img src="{BASE}/{esc(cover)}" alt="">'
+        if cover
+        else '<span class="feat__glyph">featured</span>'
+    )
+    return f"""      <a class="feat" href="{esc(post.url)}"{target}>
+        <div class="feat__media">{media}</div>
+        <div class="feat__body">
+          {chip(post)}
+          <h3 class="feat__title">{esc(post.title)}</h3>
+          <p class="feat__dek">{esc(post.dek)}</p>
+          <div class="feat__meta"><div class="meta">{meta_line(post)}</div></div>
+        </div>
+      </a>"""
+
+
+def render_archive(posts: list[Post]) -> str:
+    years: dict[int, list[Post]] = {}
+    for post in posts:
+        years.setdefault(post.date.year, []).append(post)
+    blocks = []
+    for year in sorted(years, reverse=True):
+        rows = "\n".join(
+            f'          <div class="arcrow"><span class="arcrow__date">{p.date:%b %d}</span>'
+            f'<a href="{esc(p.url)}"'
+            f'{" target=\"_blank\" rel=\"noopener\"" if p.is_offsite else ""}>{esc(p.title)}</a></div>'
+            for p in years[year]
+        )
+        blocks.append(
+            f'        <div class="arcyear">\n          <h3>{year}</h3>\n'
+            f'          <div>\n{rows}\n          </div>\n        </div>'
+        )
+    return "\n".join(blocks)
+
+
+def render_toc(post: Post) -> str:
+    if len(post.toc) < 3:
+        return ""
+    links = "\n".join(
+        f'      <a href="#{esc(h["id"])}" data-level="{h["level"]}">{esc(h["text"])}</a>'
+        for h in post.toc
+    )
+    return f'    <nav class="toc" aria-label="On this page">\n      <p>On this page</p>\n{links}\n    </nav>'
+
+
+def render_prevnext(post: Post, ordered: list[Post]) -> str:
+    idx = ordered.index(post)
+    newer = ordered[idx - 1] if idx > 0 else None
+    older = ordered[idx + 1] if idx + 1 < len(ordered) else None
+    cells = []
+    if older:
+        cells.append(
+            f'<a href="{esc(older.url)}"><span>Older</span>{esc(older.title)}</a>'
+        )
+    if newer:
+        cells.append(
+            f'<a class="is-next" href="{esc(newer.url)}"><span>Newer</span>{esc(newer.title)}</a>'
+        )
+    if not cells:
+        return ""
+    return f'<div class="prevnext">{"".join(cells)}</div>'
+
+
+# ------------------------------------------------------------------ pages --
+
+
+def common(title: str, description: str, canonical: str, extra_head: str = "") -> dict:
+    return {
+        "title": esc(title),
+        "description": esc(description),
+        "canonical": esc(canonical),
+        "base": BASE,
+        "origin": ORIGIN,
+        "css_href": f"{BASE}/static/site.css",
+        "js_href": f"{BASE}/static/site.js",
+        "year": datetime.now(timezone.utc).year,
+        "extra_head": extra_head,
+    }
+
+
+def build_home(posts: list[Post], base_tpl: str) -> str:
+    featured = posts[0]
+    rest = posts[1:]
+    pills = "\n".join(
+        f'          <button class="pill" type="button" data-filter="{esc(c)}" aria-pressed="false">{esc(c)}</button>'
+        for c in CATEGORIES
+    )
+    body = fill(
+        load_template("home.html"),
+        {
+            "base": BASE,
+            "count": len(posts),
+            "featured": render_featured(featured),
+            "pills": pills,
+            "cards": "\n".join(render_card(p) for p in rest),
+            "archive": render_archive(posts),
+            "onsite": sum(1 for p in posts if not p.is_offsite),
+        },
+    )
+    return fill(base_tpl, common(f"{SITE_TITLE} — writing", SITE_DESC, f"{ORIGIN}{BASE}/") | {"body": body})
+
+
+def build_post(post: Post, ordered: list[Post], base_tpl: str) -> str:
+    canonical = f"{ORIGIN}{BASE}/{post.slug}/"
+    medium = post.meta.get("medium")
+    backlink = (
+        f'<p class="callout">Originally published on '
+        f'<a href="{esc(medium)}" target="_blank" rel="noopener">Medium</a>. '
+        f"This page is the canonical version.</p>"
+        if medium
+        else ""
+    )
+    body = fill(
+        load_template("post.html"),
+        {
+            "chip": chip(post),
+            "post_title": esc(post.title),
+            "post_dek": esc(post.dek),
+            "post_meta": meta_line(post, offsite_note=False),
+            "content": post.html,
+            "toc": render_toc(post),
+            "backlink": backlink,
+            "prevnext": render_prevnext(post, ordered),
+            "base": BASE,
+        },
+    )
+    return fill(base_tpl, common(post.title, post.dek, canonical) | {"body": body})
+
+
+def build_feed(posts: list[Post]) -> str:
+    items = []
+    for post in posts:
+        items.append(
+            f"""  <item>
+    <title>{esc(post.title)}</title>
+    <link>{esc(post.url if post.is_offsite else ORIGIN + post.url)}</link>
+    <guid isPermaLink="false">{esc(post.slug)}</guid>
+    <pubDate>{post.date.strftime('%a, %d %b %Y 00:00:00 +0000')}</pubDate>
+    <description>{esc(post.dek)}</description>
+    <category>{esc(post.category)}</category>
+  </item>"""
+        )
+    return f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel>
+  <title>{esc(SITE_TITLE)}</title>
+  <link>{ORIGIN}{BASE}/</link>
+  <description>{esc(SITE_DESC)}</description>
+  <language>en</language>
+{chr(10).join(items)}
+</channel></rss>
+"""
+
+
+def build_sitemap(posts: list[Post]) -> str:
+    urls = [f"{ORIGIN}{BASE}/"] + [
+        f"{ORIGIN}{BASE}/{p.slug}/" for p in posts if not p.is_offsite
+    ]
+    entries = "\n".join(f"  <url><loc>{u}</loc></url>" for u in urls)
+    return (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        f"{entries}\n</urlset>\n"
+    )
+
+
+# ------------------------------------------------------------- validation --
+
+
+def check_internal_links(pages: dict[Path, str], slugs: set[str]) -> None:
+    """Fail on an internal link that resolves to no generated page."""
+    known = {f"{BASE}/"} | {f"{BASE}/{s}/" for s in slugs}
+    problems = []
+    for path, markup in pages.items():
+        for href in re.findall(r'href="([^"#?]+)"', markup):
+            if not href.startswith(BASE + "/"):
+                continue
+            if href.startswith(f"{BASE}/static/") or href.startswith(f"{BASE}/assets/"):
+                if not (OUT / href[len(BASE) + 1 :]).exists():
+                    problems.append(f"{path.name}: asset {href} does not exist")
+                continue
+            if href.endswith((".xml", ".txt")):
+                continue
+            if href not in known:
+                problems.append(f"{path.name}: link {href} resolves to no page")
+    if problems:
+        raise BuildError("broken internal links:\n  " + "\n  ".join(sorted(set(problems))))
+
+
+# ------------------------------------------------------------------- main --
+
+
+def build() -> None:
+    if OUT.exists():
+        shutil.rmtree(OUT)
+    OUT.mkdir(parents=True)
+
+    shutil.copytree(STATIC, OUT / "static")
+    if ASSETS.exists():
+        shutil.copytree(ASSETS, OUT / "assets")
+
+    # Pygments styles are appended so code blocks inherit the site's palette.
+    css = (OUT / "static" / "site.css")
+    css.write_text(
+        css.read_text(encoding="utf-8")
+        + "\n/* --- pygments --- */\n"
+        + HtmlFormatter(style="monokai").get_style_defs(".prose pre code"),
+        encoding="utf-8",
+    )
+
+    posts = load_posts()
+    for post in posts:
+        if not post.is_offsite:
+            render_body(post)
+
+    base_tpl = load_template("base.html")
+    pages: dict[Path, str] = {}
+
+    index = OUT / "index.html"
+    index.write_text(build_home(posts, base_tpl), encoding="utf-8")
+    pages[index] = index.read_text(encoding="utf-8")
+
+    onsite = [p for p in posts if not p.is_offsite]
+    for post in onsite:
+        target = OUT / post.slug / "index.html"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(build_post(post, onsite, base_tpl), encoding="utf-8")
+        pages[target] = target.read_text(encoding="utf-8")
+
+    (OUT / "feed.xml").write_text(build_feed(posts), encoding="utf-8")
+    (OUT / "sitemap.xml").write_text(build_sitemap(posts), encoding="utf-8")
+    (OUT / "robots.txt").write_text(
+        f"User-agent: *\nAllow: /\nSitemap: {ORIGIN}{BASE}/sitemap.xml\n", encoding="utf-8"
+    )
+    (OUT / ".nojekyll").write_text("", encoding="utf-8")
+
+    notfound = fill(
+        base_tpl,
+        common("Not found", "That page does not exist.", f"{ORIGIN}{BASE}/")
+        | {
+            "body": '<main id="main" class="wrap hero"><h1 class="grad">404</h1>'
+            f'<p class="hero__sub">That page does not exist.</p>'
+            f'<div class="hero__cta"><a class="btn btn--primary" href="{BASE}/">Back to writing</a></div></main>'
+        },
+    )
+    (OUT / "404.html").write_text(notfound, encoding="utf-8")
+
+    check_internal_links(pages, {p.slug for p in onsite})
+
+    print(f"built {len(pages)} pages ({len(onsite)} posts, {len(posts) - len(onsite)} offsite cards) -> {OUT}")
+
+
+def serve() -> None:
+    class Handler(http.server.SimpleHTTPRequestHandler):
+        def translate_path(self, path):
+            # Emulate the /blogs project-page prefix so local links behave.
+            if path.startswith(BASE):
+                path = path[len(BASE) :] or "/"
+            return super().translate_path(path)
+
+    import os
+
+    os.chdir(OUT)
+    with socketserver.TCPServer(("", 8000), Handler) as httpd:
+        print(f"serving on http://localhost:8000{BASE}/  (ctrl-c to stop)")
+        httpd.serve_forever()
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--serve", action="store_true", help="serve after building")
+    args = parser.parse_args()
+    try:
+        build()
+    except BuildError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+    if args.serve:
+        serve()
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

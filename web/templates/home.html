@@ -1,0 +1,73 @@
+<main id="main">
+
+  <section class="hero wrap">
+    <span class="chip"><span class="chip__dot"></span>{{count}} posts · {{onsite}} hosted here</span>
+    <h1>Notes from the <span class="grad">edge of agentic AI</span></h1>
+    <p class="hero__sub">
+      I build guardrails for AI agents that operate real Kubernetes fleets, and I write down
+      what actually happens. Architecture, failures, evidence — and the occasional detour
+      into research and life.
+    </p>
+    <div class="hero__cta">
+      <a class="btn btn--primary" href="#writing">Read the writing <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn" href="https://sandeepbazar.github.io/ai-roadmap-365/">365 Days of AI Mastery</a>
+    </div>
+
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>agentic AI</span><span>MCP</span><span>Kubernetes</span><span>Open Cluster Management</span>
+        <span>IBM Fusion</span><span>OpenShift Virtualization</span><span>guardrails</span>
+        <span>policy admission</span><span>audit trails</span><span>platform engineering</span>
+        <span>ZMET research</span>
+        <span>agentic AI</span><span>MCP</span><span>Kubernetes</span><span>Open Cluster Management</span>
+        <span>IBM Fusion</span><span>OpenShift Virtualization</span><span>guardrails</span>
+        <span>policy admission</span><span>audit trails</span><span>platform engineering</span>
+        <span>ZMET research</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap section">
+    <div class="section__head">
+      <h2>Featured</h2>
+      <p class="eyebrow">most recent</p>
+    </div>
+{{featured}}
+  </section>
+
+  <section class="wrap section" id="writing">
+    <div class="section__head">
+      <h2>All writing</h2>
+      <p class="count" id="count" role="status"></p>
+    </div>
+
+    <div class="toolbar">
+      <div class="pills" role="group" aria-label="Filter by category">
+        <button class="pill" type="button" data-filter="all" aria-pressed="true">All</button>
+{{pills}}
+      </div>
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <label class="skip" for="q">Search posts</label>
+        <input id="q" type="search" placeholder="Search posts…" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="grid" id="grid">
+{{cards}}
+    </div>
+
+    <p class="empty" id="empty" hidden>No posts match that search. Try a different term.</p>
+  </section>
+
+  <section class="wrap section">
+    <div class="section__head">
+      <h2>Archive</h2>
+      <p class="eyebrow">everything, by year</p>
+    </div>
+    <div class="archive">
+{{archive}}
+    </div>
+  </section>
+
+</main>

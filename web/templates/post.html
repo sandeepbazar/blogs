@@ -1,0 +1,23 @@
+<main id="main" class="wrap post">
+
+  <header class="post__head">
+    {{chip}}
+    <h1 class="post__title">{{post_title}}</h1>
+    <p class="post__dek">{{post_dek}}</p>
+    <div class="post__meta"><div class="meta">{{post_meta}}</div></div>
+  </header>
+
+  <div class="post__layout">
+    <article class="post__body prose">
+{{content}}
+    </article>
+{{toc}}
+  </div>
+
+  <footer class="post__foot">
+    {{backlink}}
+    {{prevnext}}
+    <p style="margin-top:26px"><a href="{{base}}/">← All writing</a></p>
+  </footer>
+
+</main>

@@ -4,6 +4,7 @@ dek: "Ten hard-won lessons from building an MCP server whose tools can genuinely
 date: 2026-08-01
 slug: mcp-server-is-a-security-boundary
 category: "Kubernetes & MCP"
+cover: assets/covers/mcp-server-is-a-security-boundary.svg
 tags: [mcp, security, agentic-ai, platform-engineering]
 medium: https://medium.com/@sandeepbazar/your-mcp-server-is-a-security-boundary-not-an-api-wrapper-95c975fc94d4
 canonical: self

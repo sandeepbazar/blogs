@@ -4,6 +4,7 @@ dek: "How I gave AI agents safe hands on a multi-cluster Kubernetes fleet — an
 date: 2026-07-29
 slug: can-an-ai-agent-take-the-2am-page
 category: "Agentic AI"
+cover: assets/covers/can-an-ai-agent-take-the-2am-page.svg
 tags: [agentic-ai, kubernetes, mcp, guardrails, open-cluster-management]
 medium: https://medium.com/@sandeepbazar/can-an-ai-agent-take-the-2-a-m-page-i-built-the-guardrails-and-published-the-receipts-e98fa4c5a2db
 canonical: self

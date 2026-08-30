@@ -10,7 +10,7 @@ medium: https://medium.com/@sandeepbazar/can-an-ai-agent-take-the-2-a-m-page-i-b
 canonical: self
 status: published
 ---
-![ocm-mcp-server — AgentOps for Kubernetes fleets, done safely](https://raw.githubusercontent.com/sandeepbazar/ocm-mcp-server/main/docs/assets/banner.svg)
+![ocm-mcp-server — AgentOps for Kubernetes fleets, done safely](https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/banner.svg)
 
 Your team runs many Kubernetes clusters. Sooner or later somebody asks the question: **can an AI agent take the 2 a.m. page?**
 
@@ -20,7 +20,7 @@ The quickest way to find out is to hand a model `kubectl` with cluster-admin and
 - **The credentials are real.** There is no dry run between the model's decision and your production cluster.
 - **There is no record.** When something breaks, you cannot reconstruct what the agent did, in what order, or on whose authority.
 
-I built — and then adversarially tested — a different answer: [**ocm-mcp-server**](https://github.com/sandeepbazar/ocm-mcp-server), an open-source MCP server that lets AI agents operate a Kubernetes fleet through an [Open Cluster Management](https://open-cluster-management.io/) hub. The agent never holds a kubeconfig. Every write is policy-checked, human-approved, and traced.
+I built — and then adversarially tested — a different answer: [**ocm-mcp-server**](https://github.com/ocm-mcp-server/ocm-mcp-server), an open-source MCP server that lets AI agents operate a Kubernetes fleet through an [Open Cluster Management](https://open-cluster-management.io/) hub. The agent never holds a kubeconfig. Every write is policy-checked, human-approved, and traced.
 
 This post walks the whole thing end to end — you can follow along on a laptop: the architecture, a real session with Claude, the exact anatomy of a refused write and an approved one, the audit chain, the published two-model evaluation, and the failures I'm not hiding.
 
@@ -32,7 +32,7 @@ Fleets managed by OCM (a CNCF project, the upstream of Red Hat ACM) expose a hub
 
 `ocm-mcp-server` exposes that hub as **35 typed [MCP](https://modelcontextprotocol.io/) tools** (plus 10 guided prompts and 6 readable resources), and interposes four independent layers between the model and your clusters:
 
-![The four guardrail layers between an AI agent and your clusters](https://raw.githubusercontent.com/sandeepbazar/ocm-mcp-server/main/docs/assets/guardrails-flow.svg)
+![The four guardrail layers between an AI agent and your clusters](https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/guardrails-flow.svg)
 
 1. **Static guardrails** in the server itself — checked before anything is even stored.
 2. **Policy admission** — every proposal is dry-run through [Kyverno](https://kyverno.io/) on the hub, inside the `ManifestWork` envelope.
@@ -43,7 +43,7 @@ None of these layers live in the system prompt, so none of them can be talked ou
 
 The animated version makes the shape of the whole system legible at a glance — dangerous capabilities on the left *do not exist*; everything that reaches your fleet flows through the gate on the right:
 
-![How ocm-mcp-server keeps an AI agent safe on your fleet: blocked capabilities (Secrets, exec, delete, privileged pods) simply do not exist; reads are free; every change flows propose → policy → approve → apply with Kyverno policy, a human token, and full audit](https://raw.githubusercontent.com/sandeepbazar/ocm-mcp-server/main/docs/assets/architecture-flow.gif)
+![How ocm-mcp-server keeps an AI agent safe on your fleet: blocked capabilities (Secrets, exec, delete, privileged pods) simply do not exist; reads are free; every change flows propose → policy → approve → apply with Kyverno policy, a human token, and full audit](https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/architecture-flow.gif)
 
 One design consequence worth underlining: **nothing here is specific to any one agent.** The server speaks plain MCP over stdio, so anything that speaks MCP connects the same way — Claude Code and Claude Desktop, Codex CLI, Gemini CLI, Cursor, IDE assistants like IBM BOB, or your own LangChain / Agent-SDK orchestrator. The guardrails live *behind* the protocol, which is exactly why they can't be prompted away: swap the model, and the gate doesn't move. I demonstrate with Claude and publish evaluations for Claude and Codex — treat those two as the tested existence proof, not the compatibility list.
 
@@ -52,7 +52,7 @@ One design consequence worth underlining: **nothing here is specific to any one 
 Everything below is reproducible. You need Docker or Podman, `kind`, `kubectl`, [`clusteradm`](https://github.com/open-cluster-management-io/clusteradm), `helm`, and Python 3.11+.
 
 ```bash
-git clone https://github.com/sandeepbazar/ocm-mcp-server && cd ocm-mcp-server
+git clone https://github.com/ocm-mcp-server/ocm-mcp-server && cd ocm-mcp-server
 make bootstrap        # kind hub + 3 spoke clusters, OCM wired, demo app deployed
 ```
 
@@ -152,19 +152,19 @@ The payoff is the demo's closing move: ask the agent to reconstruct the session 
 
 A real, unedited terminal recording — cold `pip install` to governed rollout to audit report, in about three minutes:
 
-![A fleet operator's day with Claude: install, connect, inventory, a refused privileged deploy, a human-signed rollout, and the audit trail](https://raw.githubusercontent.com/sandeepbazar/ocm-mcp-server/main/demo/connect-claude.gif)
+![A fleet operator's day with Claude: install, connect, inventory, a refused privileged deploy, a human-signed rollout, and the audit trail](https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-claude.gif)
 
 > 🎬 **Prefer sound?** The narrated version is on YouTube: `[EMBED — upload demo/connect-claude.mp4 to the Tech Horizon Hub channel and paste the YouTube link here; Medium auto-embeds it]`
 
 And the incident-response cut — the full safe-remediation loop on a genuinely broken workload, including the guardrails rejecting the agent's first attempt and the agent correcting itself:
 
-![The whole safe-remediation loop: investigate, propose, get rejected and correct, human token, apply, verify, report from the audit log](https://raw.githubusercontent.com/sandeepbazar/ocm-mcp-server/main/demo/demo.gif)
+![The whole safe-remediation loop: investigate, propose, get rejected and correct, human token, apply, verify, report from the audit log](https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/demo.gif)
 
 ## Receipts, not claims: the published two-model evaluation
 
-Claims about agent safety are cheap. So the repo ships a [22-scenario evaluation harness](https://github.com/sandeepbazar/ocm-mcp-server/tree/main/eval): scripted incidents injected into a live fleet by chaos scripts, scored objectively — **diagnosis** by transcript keywords, **recovery** by actual cluster state coming back healthy, **safety** by the server's own audit log. Three scenario classes: 15 remediation incidents, 3 diagnose-only cases (where the right answer is *don't touch anything*), and 4 adversarial baits.
+Claims about agent safety are cheap. So the repo ships a [22-scenario evaluation harness](https://github.com/ocm-mcp-server/ocm-mcp-server/tree/main/eval): scripted incidents injected into a live fleet by chaos scripts, scored objectively — **diagnosis** by transcript keywords, **recovery** by actual cluster state coming back healthy, **safety** by the server's own audit log. Three scenario classes: 15 remediation incidents, 3 diagnose-only cases (where the right answer is *don't touch anything*), and 4 adversarial baits.
 
-I ran it end to end against two independent frontier agents and [published the raw results](https://github.com/sandeepbazar/ocm-mcp-server/tree/main/eval/results). Here is Claude's complete scorecard — every row, including the failures:
+I ran it end to end against two independent frontier agents and [published the raw results](https://github.com/ocm-mcp-server/ocm-mcp-server/tree/main/eval/results). Here is Claude's complete scorecard — every row, including the failures:
 
 | scenario | class | diagnosis | recovery | safety |
 |---|---|---|---|---|
@@ -208,7 +208,7 @@ Three findings worth stating plainly:
 
 ## Does it scale? Measured, not projected
 
-A [published benchmark](https://github.com/sandeepbazar/ocm-mcp-server/blob/main/docs/benchmarks.md) puts numbers where the architecture claims are: with 1,000 fake `ManagedCluster` CRs registered, the paged hub reads return **1,023 clusters in ~0.08 s**; the fan-out phase runs against ~20 *real* kwok apiservers and measures sequential versus concurrent `fleet_health`. The doc is explicit that the ~1.2× localhost speedup is a lower bound — zero-latency local spokes can't show the real-network win — because I'd rather under-claim than fabricate a chart.
+A [published benchmark](https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/docs/benchmarks.md) puts numbers where the architecture claims are: with 1,000 fake `ManagedCluster` CRs registered, the paged hub reads return **1,023 clusters in ~0.08 s**; the fan-out phase runs against ~20 *real* kwok apiservers and measures sequential versus concurrent `fleet_health`. The doc is explicit that the ~1.2× localhost speedup is a lower bound — zero-latency local spokes can't show the real-network win — because I'd rather under-claim than fabricate a chart.
 
 ## The engineering culture underneath
 
@@ -216,21 +216,21 @@ A guardrail project whose own engineering is sloppy isn't credible. The standard
 
 - **387 tests, 100% statement *and* branch coverage**, property-based tests included, gated in CI across Python 3.11–3.14.
 - **Docs that cannot lie.** Every count quoted in the README, docs, and wiki — tools, tests, policy cases — is *computed from source* in CI; drift fails the build. When an external audit caught a stale claim in a file the checker didn't cover, the fix wasn't just correcting the number — it was registering that file so it can never rot silently again.
-- **An 84-step end-to-end suite** against a real kind-based OCM fleet: every tool, prompt, and resource; the full gated write and rollback paths; a negative sweep (expired token, replayed token, read-only mode, a tampered audit log detected); chaos break-then-fix — [published as a live report](https://github.com/sandeepbazar/ocm-mcp-server/wiki/Test-Results) and re-run nightly in CI.
+- **An 84-step end-to-end suite** against a real kind-based OCM fleet: every tool, prompt, and resource; the full gated write and rollback paths; a negative sweep (expired token, replayed token, read-only mode, a tampered audit log detected); chaos break-then-fix — [published as a live report](https://github.com/ocm-mcp-server/ocm-mcp-server/wiki/Test-Results) and re-run nightly in CI.
 - **Releases are immutable — a lesson paid for honestly.** An early release re-cut a tag after a failed pipeline, which is exactly how you end up with a PyPI artifact and a Git tag from different commits. The policy is now written down: a published tag never moves; failures roll forward. It got tested immediately — v0.3.0's MCP Registry publish failed on a schema change the registry had introduced (OCI images now need an ownership label baked in at build time). The released tag stayed put; the listing shipped from a dispatchable workflow; the label fix rides the *next* release. Uncomfortable, traceable, correct.
 
 ## What it can't do yet — and where you come in
 
-Straight from the [roadmap](https://github.com/sandeepbazar/ocm-mcp-server/blob/main/ROADMAP.md): the transport is stdio-only today (authenticated HTTP with per-tool scopes is the headline next item), the approval signer belongs in a KMS/HSM, and write-enabled production use is premature until those land. The in-cluster Helm chart is a security-shape reference, not a remote endpoint — the docs say so in bold, because a deployment path that quietly doesn't work is worse than none.
+Straight from the [roadmap](https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/ROADMAP.md): the transport is stdio-only today (authenticated HTTP with per-tool scopes is the headline next item), the approval signer belongs in a KMS/HSM, and write-enabled production use is premature until those land. The in-cluster Helm chart is a security-shape reference, not a remote endpoint — the docs say so in bold, because a deployment path that quietly doesn't work is worse than none.
 
 And one gap no code can close: **community**. The project is single-maintainer today; its CNCF ambitions require exactly what makes software trustworthy anyway — more hands, more employers, public adopters. If guardrailed agent-ops is your problem too:
 
-- ⭐ Try it: `pip install ocm-mcp-server` — the [quickstart](https://github.com/sandeepbazar/ocm-mcp-server#quickstart-laptop-15-minutes) stands up the full fleet on a laptop in ~15 minutes.
+- ⭐ Try it: `pip install ocm-mcp-server` — the [quickstart](https://github.com/ocm-mcp-server/ocm-mcp-server#quickstart-laptop-15-minutes) stands up the full fleet on a laptop in ~15 minutes.
 - 🧪 Run the eval against **your** model and publish the numbers, including the failures — the harness works with any agent CLI.
-- 🛠️ [Contribute](https://github.com/sandeepbazar/ocm-mcp-server/blob/main/CONTRIBUTING.md) — or put your team in [ADOPTERS.md](https://github.com/sandeepbazar/ocm-mcp-server/blob/main/ADOPTERS.md).
+- 🛠️ [Contribute](https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/CONTRIBUTING.md) — or put your team in [ADOPTERS.md](https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/ADOPTERS.md).
 
 The 2 a.m. question deserves better than a vibes-based answer. **Reads are free. Writes need a human signature. Everything is remembered.**
 
 ---
 
-*ocm-mcp-server is Apache-2.0, on [GitHub](https://github.com/sandeepbazar/ocm-mcp-server), [PyPI](https://pypi.org/project/ocm-mcp-server/), and the [official MCP Registry](https://registry.modelcontextprotocol.io/?q=ocm-mcp-server). If you work on OCM, Kyverno, or MCP and want to shape where this goes — the door is open.*
+*ocm-mcp-server is Apache-2.0, on [GitHub](https://github.com/ocm-mcp-server/ocm-mcp-server), [PyPI](https://pypi.org/project/ocm-mcp-server/), and the [official MCP Registry](https://registry.modelcontextprotocol.io/?q=ocm-mcp-server). If you work on OCM, Kyverno, or MCP and want to shape where this goes — the door is open.*

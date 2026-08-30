@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Sandeep Bazar
 # SPDX-License-Identifier: Apache-2.0
 #
-# Build the site from posts/*.md and publish it to GitHub Pages.
+# Build the site from posts/<collection>/*.md and publish it to GitHub Pages.
 # The source of truth stays markdown; build.py renders it.
 name: pages
 

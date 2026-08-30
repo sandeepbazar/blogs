@@ -272,11 +272,22 @@ def label(category: str, palette) -> str:
 def main() -> int:
     COVERS.mkdir(parents=True, exist_ok=True)
     made = 0
+    skipped = 0
 
-    for path in sorted(POSTS.glob("*.md")):
+    for path in sorted(POSTS.rglob("*.md")):
+        if path.name == "README.md":
+            continue  # a folder index, not a post
         text = path.read_text(encoding="utf-8")
         meta = yaml.safe_load(text.split("---", 2)[1])
         if meta.get("status") == "draft":
+            continue
+
+        # A post that ships its own artwork keeps it. Generated covers are the
+        # default so no post can go out without one, not a rule that a drawn
+        # cover gets overwritten on the next build.
+        cover = meta.get("cover") or ""
+        if cover and not cover.startswith("assets/covers/"):
+            skipped += 1
             continue
 
         slug = meta["slug"]
@@ -301,7 +312,8 @@ def main() -> int:
         (COVERS / f"{slug}.svg").write_text(svg, encoding="utf-8")
         made += 1
 
-    print(f"generated {made} covers -> {COVERS.relative_to(ROOT)}")
+    note = f" ({skipped} post(s) ship their own cover)" if skipped else ""
+    print(f"generated {made} covers -> {COVERS.relative_to(ROOT)}{note}")
     return 0
 
 

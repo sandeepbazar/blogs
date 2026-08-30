@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2026 Sandeep Bazar
 # SPDX-License-Identifier: Apache-2.0
-"""Render posts/*.md into a static site under _site/.
+"""Render posts/<collection>/*.md into a static site under _site/.
 
 The source of truth is markdown. This script is deliberately small: it reads
 front matter, renders the body, and fills three HTML templates. It fails the
 build on anything that would be invisible once deployed - a missing required
-field, a duplicate slug, an unresolvable cover image - because a site that
-silently ships a broken card is worse than one that refuses to build.
+field, a duplicate slug, an unresolvable cover image, a post filed outside a
+known collection - because a site that silently ships a broken card is worse
+than one that refuses to build.
 
 Usage:
     python3 build.py            # build into _site/
@@ -61,6 +62,21 @@ CATEGORIES = {
     "IBM Fusion": "fusion",
     "Research & Life": "life",
 }
+
+# posts/<collection>/ -> what belongs in it. Posts are filed by the project or
+# repo they were written for, so everything about one thing reads as a series
+# instead of eleven files sorted by date. A folder outside this map is a typo.
+COLLECTIONS = {
+    "ocm-mcp-server": "AgentOps guardrails for Kubernetes fleets — the ocm-mcp-server project",
+    "fusion-mcp": "Conversational operations on IBM Fusion via kubernetes-mcp and Fusion MCP",
+    "ibm-fusion": "The IBM Fusion platform itself — storage, virtualization, migration, GPUs",
+    "research-and-life": "Qualitative research, and the writing that is not about infrastructure",
+}
+
+# LinkedIn, Slack and X rasterise nothing: an SVG in og:image renders as a
+# blank card. So the social card is always a PNG - this one by default, or the
+# post's own if it ships one next to its cover.
+SITE_CARD = "assets/thumbnails/site-card.png"
 
 WORDS_PER_MINUTE = 225
 
@@ -151,42 +167,77 @@ def parse_front_matter(text: str, source: Path) -> tuple[dict, str]:
     return meta, parts[2].lstrip("\n")
 
 
+def collection_of(path: Path) -> str:
+    """The `posts/<collection>/` folder a post lives in.
+
+    Posts are filed by the project or repo they belong to, so that everything
+    written about one thing sits together. A file loose in `posts/` has no home
+    and stops the build rather than quietly becoming the first of a mess.
+    """
+    rel = path.relative_to(POSTS)
+    if len(rel.parts) != 2:
+        raise BuildError(
+            f"posts/{rel}: every post lives in exactly one collection folder "
+            f"(posts/<collection>/<file>.md); expected one of {', '.join(sorted(COLLECTIONS))}"
+        )
+    if rel.parts[0] not in COLLECTIONS:
+        raise BuildError(
+            f"posts/{rel}: unknown collection {rel.parts[0]!r}; "
+            f"expected one of {', '.join(sorted(COLLECTIONS))}"
+        )
+    return rel.parts[0]
+
+
 def load_posts() -> list[Post]:
     posts: list[Post] = []
     seen: dict[str, str] = {}
 
-    for path in sorted(POSTS.glob("*.md")):
+    for path in sorted(POSTS.rglob("*.md")):
+        if path.name == "README.md":
+            continue  # GitHub renders these as the folder index; not a post
+        name = str(path.relative_to(POSTS))
+        collection_of(path)  # filing is validated here; it never reaches a page
         meta, body = parse_front_matter(path.read_text(encoding="utf-8"), path)
 
         missing = [k for k in REQUIRED if not meta.get(k)]
         if missing:
-            raise BuildError(f"{path.name}: missing required front matter: {', '.join(missing)}")
+            raise BuildError(f"{name}: missing required front matter: {', '.join(missing)}")
 
         if meta["status"] == "draft":
             continue
 
         if meta["status"] not in ("published", "link"):
             raise BuildError(
-                f"{path.name}: status must be published, link or draft (got {meta['status']!r})"
+                f"{name}: status must be published, link or draft (got {meta['status']!r})"
             )
 
         if meta["category"] not in CATEGORIES:
             raise BuildError(
-                f"{path.name}: unknown category {meta['category']!r}; "
+                f"{name}: unknown category {meta['category']!r}; "
                 f"expected one of {', '.join(CATEGORIES)}"
             )
 
         if meta["status"] == "link" and not meta.get("medium"):
-            raise BuildError(f"{path.name}: status 'link' requires a medium: URL")
+            raise BuildError(f"{name}: status 'link' requires a medium: URL")
 
         slug = meta["slug"]
         if slug in seen:
-            raise BuildError(f"{path.name}: duplicate slug {slug!r} (also in {seen[slug]})")
-        seen[slug] = path.name
+            raise BuildError(f"{name}: duplicate slug {slug!r} (also in {seen[slug]})")
+        seen[slug] = name
 
         cover = meta.get("cover")
         if cover and not (ROOT / cover).exists():
-            raise BuildError(f"{path.name}: cover {cover!r} does not exist")
+            raise BuildError(f"{name}: cover {cover!r} does not exist")
+
+        card = meta.get("card")
+        if card:
+            if not card.endswith((".png", ".jpg", ".jpeg")):
+                raise BuildError(
+                    f"{name}: card {card!r} must be a PNG or JPEG - social previews "
+                    f"do not rasterise SVG, and an SVG card shows as a blank box"
+                )
+            if not (ROOT / card).exists():
+                raise BuildError(f"{name}: card {card!r} does not exist")
 
         date = meta["date"]
         meta["_date"] = datetime(date.year, date.month, date.day, tzinfo=timezone.utc)
@@ -341,11 +392,13 @@ def render_prevnext(post: Post, ordered: list[Post]) -> str:
 # ------------------------------------------------------------------ pages --
 
 
-def common(title: str, description: str, canonical: str, extra_head: str = "") -> dict:
+def common(title: str, description: str, canonical: str, extra_head: str = "",
+           og_image: str = SITE_CARD) -> dict:
     return {
         "title": esc(title),
         "description": esc(description),
         "canonical": esc(canonical),
+        "og_image": esc(f"{ORIGIN}{BASE}/{og_image}"),
         "base": BASE,
         "origin": ORIGIN,
         "css_href": f"{BASE}/static/site.css",
@@ -377,6 +430,11 @@ def build_home(posts: list[Post], base_tpl: str) -> str:
     return fill(base_tpl, common(f"{SITE_TITLE} — writing", SITE_DESC, f"{ORIGIN}{BASE}/") | {"body": body})
 
 
+def card_image(post: Post) -> str:
+    """The PNG a social preview shows for this post, or the site's own."""
+    return post.meta.get("card") or SITE_CARD
+
+
 def build_post(post: Post, ordered: list[Post], base_tpl: str) -> str:
     canonical = f"{ORIGIN}{BASE}/{post.slug}/"
     medium = post.meta.get("medium")
@@ -401,7 +459,10 @@ def build_post(post: Post, ordered: list[Post], base_tpl: str) -> str:
             "base": BASE,
         },
     )
-    return fill(base_tpl, common(post.title, post.dek, canonical) | {"body": body})
+    return fill(
+        base_tpl,
+        common(post.title, post.dek, canonical, og_image=card_image(post)) | {"body": body},
+    )
 
 
 def build_feed(posts: list[Post]) -> str:
@@ -483,6 +544,9 @@ def build() -> None:
         + HtmlFormatter(style="monokai").get_style_defs(".prose pre code"),
         encoding="utf-8",
     )
+
+    if not (ROOT / SITE_CARD).exists():
+        raise BuildError(f"the site card {SITE_CARD!r} does not exist")
 
     posts = load_posts()
     for post in posts:

@@ -11,7 +11,7 @@ canonical: self
 status: published
 ---
 <!-- IMAGE 1 · hero — replace by committing the generated file at blogs/assets/2026-08-01-img1-wrapper-vs-boundary.png -->
-![The moment your MCP server gets promoted: from API wrapper to the security boundary between an AI model and production](https://raw.githubusercontent.com/sandeepbazar/ocm-mcp-server/main/blogs/assets/2026-08-01-img1-wrapper-vs-boundary.png)
+![The moment your MCP server gets promoted: from API wrapper to the security boundary between an AI model and production](https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/blogs/assets/2026-08-01-img1-wrapper-vs-boundary.png)
 
 ## The promotion nobody announces
 
@@ -27,9 +27,9 @@ Nobody appointed it. The architecture did. Your server got promoted, and the pro
 
 ## Where these lessons come from
 
-I learned this by building [**ocm-mcp-server**](https://github.com/sandeepbazar/ocm-mcp-server), an open-source MCP server that lets AI agents operate a multi-cluster Kubernetes fleet through an [Open Cluster Management](https://open-cluster-management.io/) hub — about as consequential a write surface as it gets. An agent that can ship a `ManifestWork` can ship it to every cluster you run.
+I learned this by building [**ocm-mcp-server**](https://github.com/ocm-mcp-server/ocm-mcp-server), an open-source MCP server that lets AI agents operate a multi-cluster Kubernetes fleet through an [Open Cluster Management](https://open-cluster-management.io/) hub — about as consequential a write surface as it gets. An agent that can ship a `ManifestWork` can ship it to every cluster you run.
 
-So I designed the server assuming the worst — a model that is confused, prompt-injected, or outright hostile — and then I tested that assumption the only honest way: adversarially, with real frontier agents, on a live fleet. Two independent vendors' agents (Claude Code and Codex CLI), 22 scripted incident scenarios each, including deliberate baits — *deploy this privileged pod*, *write into kube-system*, *ship this `:latest` image*, *read me that Secret*. The [raw results are published](https://github.com/sandeepbazar/ocm-mcp-server/tree/main/eval/results), failures included.
+So I designed the server assuming the worst — a model that is confused, prompt-injected, or outright hostile — and then I tested that assumption the only honest way: adversarially, with real frontier agents, on a live fleet. Two independent vendors' agents (Claude Code and Codex CLI), 22 scripted incident scenarios each, including deliberate baits — *deploy this privileged pod*, *write into kube-system*, *ship this `:latest` image*, *read me that Secret*. The [raw results are published](https://github.com/ocm-mcp-server/ocm-mcp-server/tree/main/eval/results), failures included.
 
 The safety line held at **44/44 across both vendors**. Not one unsafe write, not one unsafe *proposal*, in 44 scenario runs.
 
@@ -46,7 +46,7 @@ I wrote the operator-facing story of this project separately — [Can an AI Agen
 The single highest-leverage security decision in an MCP server is not authentication, not rate limiting, not input validation. It is deciding which tools **do not exist**.
 
 <!-- IMAGE 2 · capability deletion — replace by committing the generated file at blogs/assets/2026-08-01-img2-no-door.png -->
-![You cannot pick the lock on a door that was never built — absent capabilities versus guarded capabilities](https://raw.githubusercontent.com/sandeepbazar/ocm-mcp-server/main/blogs/assets/2026-08-01-img2-no-door.png)
+![You cannot pick the lock on a door that was never built — absent capabilities versus guarded capabilities](https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/blogs/assets/2026-08-01-img2-no-door.png)
 
 `ocm-mcp-server` exposes 35 tools for fleet operations — inventory, health, logs, events, placements, policies, the works. But walk the surface looking for trouble and you find nothing to hold: there is **no Secret reader**, **no `exec`**, **no port-forward**, **no arbitrary-resource delete**, and — the one people miss — **no tool that approves anything**. The generic resource reader doesn't take arbitrary GVKs; it takes an allow-list of OCM types only. Even the server's own RBAC identity has no Secret read and no exec, so a *bug in my code* can't read a Secret either.
 
@@ -84,7 +84,7 @@ The payoff showed up in the evaluation: the guardrails held **identically** for 
 There is no tool in this server that changes a cluster in one call. None. A write is always a ceremony with three acts and two principals:
 
 <!-- IMAGE 3 · two-phase write — replace by committing the generated file at blogs/assets/2026-08-01-img3-two-phase-write.png -->
-![The gated write path: the agent proposes, guardrails and policy check, a human signs on a trusted terminal, only then does the change ship](https://raw.githubusercontent.com/sandeepbazar/ocm-mcp-server/main/blogs/assets/2026-08-01-img3-two-phase-write.png)
+![The gated write path: the agent proposes, guardrails and policy check, a human signs on a trusted terminal, only then does the change ship](https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/blogs/assets/2026-08-01-img3-two-phase-write.png)
 
 **Act 1 — the agent proposes.** It calls `propose_manifestwork`; the server runs the full guardrail suite, dry-runs the Kyverno policies, and only then stores a pending proposal along with a **SHA-256 content hash** computed over the target cluster, the name, and the exact manifests. The agent gets back a proposal id — and can go no further. It is standing at a counter holding a ticket.
 
@@ -114,7 +114,7 @@ Notice what this does to the trust relationship. The agent's job is reduced to p
 Two-phase writes are only as strong as the key custody behind them, and this is where most designs quietly collapse. If the process that *verifies* approvals can also *create* them, then your two-phase write is one compromise away from being a zero-phase write.
 
 <!-- IMAGE 4 · key custody — replace by committing the generated file at blogs/assets/2026-08-01-img4-key-custody.png -->
-![Asymmetric trust: the server holds only the public verifier key; the private signing key lives with the human, off-box](https://raw.githubusercontent.com/sandeepbazar/ocm-mcp-server/main/blogs/assets/2026-08-01-img4-key-custody.png)
+![Asymmetric trust: the server holds only the public verifier key; the private signing key lives with the human, off-box](https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/blogs/assets/2026-08-01-img4-key-custody.png)
 
 The design rule in `ocm-mcp-server` is one sentence long: **the server verifies; it never signs.** The Ed25519 private key lives with the human — `OCM_MCP_SIGNER_KEY` points it off-box, to a separate OS account, a separate device, eventually a KMS or HSM. The server holds the public verifier key and nothing else. Run the threat all the way to the end: an attacker who *fully owns the server process* — reads its memory, its disk, its environment — can deny service, but cannot mint an approval and push a change. The signing power was never there to steal.
 
@@ -172,7 +172,7 @@ My guardrails exist twice, on purpose. Once in Python — instant, local, agent-
 Two implementations of one policy **will** drift. Mine did, and I found out the humbling way.
 
 <!-- IMAGE 5 · parity contract — replace by committing the generated file at blogs/assets/2026-08-01-img5-parity-contract.png -->
-![Two independent referees, one shared fixture corpus, and a CI contract that fails if their verdicts ever disagree](https://raw.githubusercontent.com/sandeepbazar/ocm-mcp-server/main/blogs/assets/2026-08-01-img5-parity-contract.png)
+![Two independent referees, one shared fixture corpus, and a CI contract that fails if their verdicts ever disagree](https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/blogs/assets/2026-08-01-img5-parity-contract.png)
 
 An external audit found that my Kyverno image-pinning rule walked `spec.template.spec.containers` — but not `initContainers`, and not `ephemeralContainers`. A `:latest` image smuggled in as an init container would sail past that policy. The Python layer covered all three container roles through one shared helper, so nothing unsafe could actually have landed — but the *redundancy I was advertising* had a hole in one layer. And once the auditor pulled that thread, the same containers-only gap turned up in two more policies: the privileged check and the secret-env check. One blind spot, three rules.
 
@@ -187,7 +187,7 @@ There's a general law hiding in this war story: any invariant you state twice, y
 "What did the agent do, and on whose authority?" — that is the first question every serious team asks before letting an agent near production, and it is a question about your *audit log*, not your model. A directory of JSON lines does not answer it, because anything that can append to a file can usually also edit one, and the party you're auditing is a creative text generator with tool access.
 
 <!-- IMAGE 6 · tamper-evident audit chain — replace by committing the generated file at blogs/assets/2026-08-01-img6-audit-chain.png -->
-![A hash-chained audit ledger: every entry locks to the previous one, and a human-signed anchor pins the head of the chain](https://raw.githubusercontent.com/sandeepbazar/ocm-mcp-server/main/blogs/assets/2026-08-01-img6-audit-chain.png)
+![A hash-chained audit ledger: every entry locks to the previous one, and a human-signed anchor pins the head of the chain](https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/blogs/assets/2026-08-01-img6-audit-chain.png)
 
 So the log defends itself. Every tool call in `ocm-mcp-server` — every read, every refusal, every proposal, every apply — appends an entry carrying `ts, actor, tool, args, outcome, duration_ms` plus three chain fields: a sequence number, the previous entry's hash, and `hash = sha256(prev + canonical(entry))`. Each line is cryptographically welded to everything before it. Edit an entry, reorder two, delete one from the middle — `ocm-mcp audit-verify` fails, and tells you where.
 
@@ -223,7 +223,7 @@ Three habits from this repo, all enforced rather than aspirational:
 
 **Docs that cannot lie.** Every count quoted in the README, the docs, and the wiki — 35 tools, 387 tests, 42 policy cases — is *computed from source* by a checker that runs in CI; drift fails the build. When an external audit caught a stale claim in a file the checker didn't cover, the real fix wasn't correcting the number — it was registering that file with the checker, so it can never rot silently again. (100% statement *and* branch coverage sits under all of it, gated across Python 3.11–3.14 — a guardrail project whose own engineering is sloppy isn't credible.)
 
-**Published evaluations, failures included.** The 22-scenario harness scores three things three different ways, none of them vibes: *diagnosis* by transcript, *recovery* by whether the cluster actually came back healthy, *safety* by the server's own hash-chained audit log. The [published results](https://github.com/sandeepbazar/ocm-mcp-server/tree/main/eval/results) keep every FAIL row. The failures turned out to be the most useful data in the project: both models missed the *same* recovery scenarios — crashloops, scaled-to-zero, broken services — precisely the cases where the correct fix needs state the read surface deliberately withholds. In most failing transcripts the models diagnosed correctly and *refused to guess*, which is exactly what you want; the scorecard is a map of where the read surface should grow, and of what to still keep a human on. The first live run also found real bugs in my own harness. All fixed, all in the changelog. Honest evaluation cuts both ways.
+**Published evaluations, failures included.** The 22-scenario harness scores three things three different ways, none of them vibes: *diagnosis* by transcript, *recovery* by whether the cluster actually came back healthy, *safety* by the server's own hash-chained audit log. The [published results](https://github.com/ocm-mcp-server/ocm-mcp-server/tree/main/eval/results) keep every FAIL row. The failures turned out to be the most useful data in the project: both models missed the *same* recovery scenarios — crashloops, scaled-to-zero, broken services — precisely the cases where the correct fix needs state the read surface deliberately withholds. In most failing transcripts the models diagnosed correctly and *refused to guess*, which is exactly what you want; the scorecard is a map of where the read surface should grow, and of what to still keep a human on. The first live run also found real bugs in my own harness. All fixed, all in the changelog. Honest evaluation cuts both ways.
 
 **Under-claimed benchmarks.** The fleet-scale benchmark registers 1,000 fake `ManagedCluster` CRs and measures paged hub reads (~0.08 s) and concurrent fan-out against ~20 real kwok apiservers — and the doc explicitly labels the ~1.2× localhost speedup a *lower bound*, because zero-latency local spokes can't show the real-network win. I'd rather under-claim than fabricate a chart.
 
@@ -263,7 +263,7 @@ Notice the last column never says "the model wouldn't do that." That's the disci
 ## The checklist
 
 <!-- IMAGE 7 · shareable checklist card — replace by committing the generated file at blogs/assets/2026-08-01-img7-checklist-card.png -->
-![The ten-point checklist for MCP servers whose tools can hurt someone](https://raw.githubusercontent.com/sandeepbazar/ocm-mcp-server/main/blogs/assets/2026-08-01-img7-checklist-card.png)
+![The ten-point checklist for MCP servers whose tools can hurt someone](https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/blogs/assets/2026-08-01-img7-checklist-card.png)
 
 If your MCP tools can hurt someone, walk this list before you ship:
 
@@ -280,11 +280,11 @@ If your MCP tools can hurt someone, walk this list before you ship:
 
 ## Kick the tires
 
-![ocm-mcp-server — AgentOps for Kubernetes fleets, done safely](https://raw.githubusercontent.com/sandeepbazar/ocm-mcp-server/main/docs/assets/banner.svg)
+![ocm-mcp-server — AgentOps for Kubernetes fleets, done safely](https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/banner.svg)
 
-`ocm-mcp-server` is the working, tested existence proof for all ten lessons — Apache-2.0, on [GitHub](https://github.com/sandeepbazar/ocm-mcp-server), [PyPI](https://pypi.org/project/ocm-mcp-server/), and the [official MCP Registry](https://registry.modelcontextprotocol.io/).
+`ocm-mcp-server` is the working, tested existence proof for all ten lessons — Apache-2.0, on [GitHub](https://github.com/ocm-mcp-server/ocm-mcp-server), [PyPI](https://pypi.org/project/ocm-mcp-server/), and the [official MCP Registry](https://registry.modelcontextprotocol.io/).
 
-- ⭐ **Try it:** the [quickstart](https://github.com/sandeepbazar/ocm-mcp-server#quickstart-laptop-15-minutes) stands up a full guardrailed fleet — kind hub, three spokes, OCM wired, guardrails live — on a laptop in about 15 minutes.
+- ⭐ **Try it:** the [quickstart](https://github.com/ocm-mcp-server/ocm-mcp-server#quickstart-laptop-15-minutes) stands up a full guardrailed fleet — kind hub, three spokes, OCM wired, guardrails live — on a laptop in about 15 minutes.
 - 🧪 **Test it:** the eval harness works with any agent CLI. Run it against *your* model and publish the numbers, failures included.
 - 🛠 **Shape it:** the roadmap is honest about what's missing — authenticated HTTP transport with per-tool scopes is the headline next item, and a KMS-backed signer after that. If you build MCP servers, your review of these mechanisms is worth more to me than a star.
 

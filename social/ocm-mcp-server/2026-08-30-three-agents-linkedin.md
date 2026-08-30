@@ -7,49 +7,50 @@ image: assets/art/ocm-mcp-server/three-agents-one-server-same-seven-walls.png
 
 # LinkedIn — Three Agents, One Server, and the Same Seven Walls
 
-Upload the image natively (LinkedIn gives an uploaded image far more of the
-feed than a link preview), and put the links in the first comment.
+The blog link sits **in the post body**, so LinkedIn pulls the card image from
+the page's `og:image` and renders the thumbnail under the text. Don't upload a
+separate image as well — an uploaded image replaces the link preview, and the
+preview is what carries the click.
 
 ## Post
 
-**Three AI agents. The same 22 broken Kubernetes clusters. All three recovered exactly 8 of 15 — and failed the same seven.**
+I gave three AI agents the same 22 broken Kubernetes clusters.
 
-Not "roughly the same". The same eight, the same seven, zero crossings across three different labs:
+**Claude Code** (sonnet), **Codex CLI** (gpt-5.6-sol) and **Antigravity CLI** (gemini-3.7-flash). Same server, same fleet, same day — only the agent changed.
 
-🔹 **Claude Code** — `sonnet`
-🔹 **Codex CLI** — `gpt-5.6-sol`
-🔹 **Antigravity CLI** — `gemini-3.7-flash`
+They scored six points apart on diagnosis. One used twice as many tool calls as another.
 
-The seven have one thing in common: **the fix needed a value the breaking change had already overwritten.** The original container command. The intended replica count. The old Service selector.
+Then all three recovered **exactly 8 of 15** — and failed the same seven. Zero crossings.
 
-My server has **37 tools that describe the fleet as it is** — and none that say what it *was*.
+So I looked at what those seven had in common. **Every one needed a value the breaking change had already overwritten.** The original container command. The intended replica count. The old Service selector.
 
-In most of those transcripts the agents diagnosed it correctly and then **refused to guess**. Right call on a production cluster. Also a gap in my read surface, not in the models.
+My server has 37 tools that describe the fleet as it *is*. None that say what it *was*.
 
-**Safety: 61 of 61 measured scenarios clean**, across all three vendors. The gate doesn't move when the model does — which was the whole point.
+In most of those runs the agents diagnosed the problem correctly and then refused to guess. Right call on a production cluster — and a gap in my read surface, not in the models.
 
-Full write-up, every scenario and every miss 👇
+**Safety held: 61 of 61 measured scenarios clean, across all three vendors.** The gate doesn't move when the model does. That was the whole point.
+
+Full write-up — every scenario, every miss, and all three agents recorded driving the identical session:
+https://sandeepbazar.github.io/blogs/three-agents-one-server-same-seven-walls/
 
 #Kubernetes #AIAgents #MCP #PlatformEngineering #AgenticAI #OpenSource #SRE #CloudNative
 
 ## First comment
 
-📖 **The write-up** — https://sandeepbazar.github.io/blogs/three-agents-one-server-same-seven-walls/
 📊 **Raw results for all three runs, failures included** — https://github.com/ocm-mcp-server/ocm-mcp-server/tree/main/eval/results/published
 🛠️ **Project** — https://github.com/ocm-mcp-server/ocm-mcp-server
 📚 **Documentation** — https://ocm-mcp-server.github.io/
-🎬 **All three agents driving the identical session**, recorded live — embedded in the write-up
 
-Run it against your own agent — the harness takes any MCP-capable CLI and the fleet stands up on a laptop in ~15 minutes:
+Run it against your own agent — any MCP-capable CLI, fleet on a laptop in ~15 min:
 
 `pip install ocm-mcp-server` → `python3 eval/run_eval.py --agent-cmd "<your agent CLI>"`
 
 Pin your model. Publish the failures.
 
-## Alternate hook
+## Alternate opening
 
-If the lead above feels too data-forward, swap the first line for:
+If the lead feels too data-forward, swap the first line for:
 
-**I gave three frontier AI agents the same broken Kubernetes fleet. They failed in exactly the same seven places.**
+I gave three frontier AI agents the same broken Kubernetes fleet. They failed in exactly the same seven places.
 
 That isn't a result about models. It's a result about what my server lets them see.

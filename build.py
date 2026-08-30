@@ -156,7 +156,16 @@ class Post:
 
     @property
     def reading_time(self) -> int:
-        words = len(re.findall(r"\w+", self.body_md))
+        r"""Minutes of reading, counting only what a reader actually reads.
+
+        Counting raw markdown inflates a post with embedded media: every path
+        segment of an <img src> URL matches \w+, so three figures can add two
+        minutes to a page nobody reads any slower. HTML tags and fenced code
+        come out before counting.
+        """
+        text = re.sub(r"```.*?```", " ", self.body_md, flags=re.S)
+        text = re.sub(r"<[^>]+>", " ", text)
+        words = len(re.findall(r"[A-Za-z][A-Za-z'-]*", text))
         return max(1, round(words / WORDS_PER_MINUTE))
 
 

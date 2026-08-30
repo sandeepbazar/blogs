@@ -1,5 +1,5 @@
 ---
-title: "Bringing Agentic AI to IBM Fusion Fleet — Conversational Operations Powered by IBM Fusion MCP and IBM Bob"
+title: "Bringing Agentic AI to IBM Fusion Fleet: Conversational Operations Powered by IBM Fusion MCP and IBM Bob"
 dek: "Modern platform operations are no longer about managing a single Kubernetes or OpenShift cluster."
 date: 2026-02-08
 slug: agentic-ai-ibm-fusion-fleet

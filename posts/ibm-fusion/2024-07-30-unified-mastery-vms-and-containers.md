@@ -1,6 +1,6 @@
 ---
 title: "Unified Mastery: Bridging Virtual Machines and Containers with IBM Fusion"
-dek: "An introduction to OpenShift Virtualization — running virtual machines and containers side by side on IBM Fusion."
+dek: "An introduction to OpenShift Virtualization, running virtual machines and containers side by side on IBM Fusion."
 date: 2024-07-30
 slug: unified-mastery-vms-and-containers
 category: "IBM Fusion"

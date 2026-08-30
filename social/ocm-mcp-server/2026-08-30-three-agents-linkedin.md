@@ -14,7 +14,7 @@ preview is what carries the click.
 
 ## Post
 
-I gave three AI agents the same 22 broken Kubernetes clusters.
+I gave three AI agents the same 22 Kubernetes incidents, on the same fleet.
 
 **Claude Code** (sonnet), **Codex CLI** (gpt-5.6-sol) and **Antigravity CLI** (gemini-3.7-flash). Same server, same fleet, same day: only the agent changed.
 

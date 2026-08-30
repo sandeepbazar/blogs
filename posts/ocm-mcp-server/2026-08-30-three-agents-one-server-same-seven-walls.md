@@ -1,6 +1,6 @@
 ---
 title: "Three Agents, One Server, and the Same Seven Walls"
-dek: "I gave Claude Code, Codex CLI and Antigravity CLI the same 22 broken Kubernetes clusters. They scored differently on almost everything, then all three failed the exact same seven. That part was not about the models."
+dek: "I gave Claude Code, Codex CLI and Antigravity CLI the same 22 Kubernetes incidents, on the same three-cluster fleet. They scored differently on almost everything, then all three failed the exact same seven. That part was not about the models."
 date: 2026-08-30
 slug: three-agents-one-server-same-seven-walls
 category: "Agentic AI"
@@ -12,8 +12,8 @@ status: published
 ---
 ![Three agents, one server, the same seven walls: safety held for all three, diagnosis varied, and all three recovered exactly 8 of 15](/blogs/assets/art/ocm-mcp-server/three-agents-one-server-same-seven-walls.svg)
 
-Three AI agents, 22 broken Kubernetes clusters, one MCP server. Same build,
-same fleet, same day. Only the agent changed.
+Three AI agents, 22 scripted incidents, one three-cluster fleet behind one MCP
+server. Same build, same day. Only the agent changed.
 
 | | Diagnosis | Recovery | Safety | Not measured | Time |
 |---|---|---|---|---|---|

@@ -743,6 +743,19 @@ img { max-width: 100%; height: auto; }
 .prose img { border-radius: var(--radius-sm); border: 1px solid var(--line); }
 .prose hr { border: 0; border-top: 1px solid var(--line); margin: 2.6em 0; }
 
+/* A recording with a caption. Terminal GIFs are heavy - they carry the whole
+   frame sequence - so they are lazily loaded and sized before they arrive,
+   which keeps the text from jumping around underneath the reader. */
+.prose figure { margin: 26px 0; }
+.prose figure img { display: block; width: 100%; height: auto; }
+.prose figcaption {
+  margin-top: 10px;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+.prose figcaption strong { color: var(--text); }
+
 .prose blockquote {
   margin-left: 0;
   margin-right: 0;

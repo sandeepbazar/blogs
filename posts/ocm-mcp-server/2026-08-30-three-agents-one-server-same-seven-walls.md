@@ -294,6 +294,53 @@ traffic your control plane sees. Anything you build for agents should be paged,
 bounded and cheap on the read path, because you do not get to pick how chatty
 the agent on the other end is.
 
+## Watch all three do the same day
+
+These are not the evaluation runs — an eval scenario is a scripted incident with
+a machine-checked outcome, and it makes for terrible viewing. These are the
+project's **connect demo**: the same ten chapters, recorded live against the same
+fleet, driven by each of the three agents in turn. Install, connect, one-question
+fleet inventory, placement reasoning, a privileged `nginx:latest` deploy refused
+by the guardrails, a compliant pinned proposal, a human `ocm-mcp approve` signing
+an Ed25519 token, apply-and-verify, and the day read back from the audit trail.
+
+The point of putting them side by side is the same as the point of the table
+above: **only the agent changes.** The refusal is the same refusal, the token is
+the same token, and the differences you can see are working style, not
+capability.
+
+<figure>
+  <img src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-claude.gif" loading="lazy" width="1200"
+       alt="Claude Code driving the ten-chapter connect demo: install, connect, fleet inventory, a refused privileged deploy, a human-signed rollout, and the audit trail">
+  <figcaption><strong>Claude Code</strong> — the most frugal of the three; it
+  tends to ask one broad question and reason from the answer.
+  <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-claude.mp4">MP4, narrated</a> ·
+  <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-claude.cast">terminal cast</a></figcaption>
+</figure>
+
+<figure>
+  <img src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-codex.gif" loading="lazy" width="1200"
+       alt="Codex CLI driving the same ten chapters against the same server and fleet">
+  <figcaption><strong>Codex CLI</strong> — the same ten chapters, and the
+  strongest diagnosis result in the evaluation.
+  <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-codex.mp4">MP4</a> ·
+  <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-codex.cast">terminal cast</a></figcaption>
+</figure>
+
+<figure>
+  <img src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-agy.gif" loading="lazy" width="1200"
+       alt="Gemini, through the Antigravity CLI, driving the same ten chapters against the same server and fleet">
+  <figcaption><strong>Antigravity CLI</strong> (Gemini) — visibly the chattiest,
+  and the one that let the server refuse every bait rather than declining first.
+  <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-agy.mp4">MP4</a> ·
+  <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-agy.cast">terminal cast</a></figcaption>
+</figure>
+
+Three vendors' agents, one stdio MCP server, no client shipped for any of them.
+That is the part I would still call the interesting engineering: the guardrails
+live *behind* the protocol, so swapping the model does not move the gate — and
+you can watch that be true three times in a row.
+
 ## What I am not claiming
 
 - **This is not a leaderboard.** One run each, on one fleet, on one day, with

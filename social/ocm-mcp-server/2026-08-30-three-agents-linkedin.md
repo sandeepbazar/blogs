@@ -38,6 +38,7 @@ Full write-up, every scenario and every miss 👇
 📊 **Raw results for all three runs, failures included** — https://github.com/ocm-mcp-server/ocm-mcp-server/tree/main/eval/results/published
 🛠️ **Project** — https://github.com/ocm-mcp-server/ocm-mcp-server
 📚 **Documentation** — https://ocm-mcp-server.github.io/
+🎬 **All three agents driving the identical session**, recorded live — embedded in the write-up
 
 Run it against your own agent — the harness takes any MCP-capable CLI and the fleet stands up on a laptop in ~15 minutes:
 

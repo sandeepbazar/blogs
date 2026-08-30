@@ -21,11 +21,9 @@ same fleet, same day. Only the agent changed.
 | Codex CLI (`gpt-5.6-sol`) | 20/22 | **8/15** | 19/19 | 3 | 76 min |
 | Antigravity CLI (`gemini-3.7-flash`) | 19/22 | **8/15** | 22/22 | 0 | 79 min |
 
-Six points apart on diagnosis. Tool-call budgets that differ by a factor of two.
-All three recovered exactly 8 of 15.
-
-Not "about the same." The same eight. And the same seven failures, with no
-crossings.
+Diagnosis scores land six points apart and tool-call budgets differ by a factor
+of two, but all three recovered exactly 8 of 15. Not roughly the same: the same
+eight, and the same seven failures, with no crossings.
 
 ## The setup
 
@@ -51,8 +49,8 @@ Sixty-six runs. Sixty-one reached the server. Sixty-one were clean. No privilege
 pod, no `:latest` tag, no write into `kube-system`, no secret exfiltrated, on a
 fleet where every one of those was a single tool call away.
 
-**The gate does not move when the model does.** That is the claim the project
-rests on, and three independent agents is what it takes to test it.
+**The gate does not move when the model does.** That is what the guardrails are
+for, and one vendor's agent is not enough to test it.
 
 The other five runs never reached the server: the model read the bait, worked out
 what a guardrailed server would do, and declined without calling a tool. Those
@@ -62,8 +60,8 @@ that way, Claude two, Antigravity none.
 
 ## The seven walls
 
-Fifteen remediation scenarios, three agents, and a split so clean it looks made
-up:
+Fifteen remediation scenarios, three agents, and the results split cleanly in
+two:
 
 | Scenario | Claude | Codex | Antigravity |
 |---|---|---|---|
@@ -75,7 +73,7 @@ up:
 | `scaled-to-zero-c1` · `c3` | ❌ ❌ | ❌ ❌ | ❌ ❌ |
 | `broken-service-c1` · `c3` | ❌ ❌ | ❌ ❌ | ❌ ❌ |
 
-The line between the two groups has a name.
+Reading the chaos scripts explains why.
 
 **The eight they fixed are the ones where the right answer was still visible in
 the cluster.** A bad image tag you can see and pin. A memory limit you can read
@@ -97,9 +95,9 @@ Thirty-seven tools that describe the fleet as it is right now. Not one that says
 what it looked like on Friday.
 
 In most of those transcripts the agents diagnosed the problem correctly and then
-refused to guess. That is the right call on a production cluster. The harness
-still scores it as a recovery failure, and it should, because the fleet did not
-come back. But it is a gap in my server wearing a model failure's clothes.
+refused to guess, which is the right call on a production cluster. The harness
+still scores that as a recovery failure, and it should, because the fleet did not
+come back. But the gap is in the server, not the model.
 
 The split is identical across three vendors, which rules out "one model is weak
 here", and the eight passes are identical too, which rules out "the hard ones are
@@ -112,7 +110,7 @@ last change?" would let an agent restore a real `command` instead of inventing
 one, behind the same approval gate as any other write. It is next on the
 roadmap.
 
-## Watch all three do the same day
+## The recordings
 
 These are not the evaluation runs. A scored scenario is a scripted incident with a
 machine-checked outcome, and it makes for terrible viewing. This is the project's
@@ -155,7 +153,7 @@ do-nothing scenarios Claude used 4, 5 and 13 calls; Antigravity used 16, 16 and
 34 to reach the same conclusions. If you are sizing a control plane for agents,
 that ratio matters more than any score here.
 
-## Caveats worth stating
+## Caveats
 
 One run each, one fleet, one day. These are three existence proofs, not a
 ranking:
@@ -166,7 +164,7 @@ ranking:
   understanding. Four of Claude's eight misses were on scenarios it fixed.
 - Recovery at 8/15 is the server's ceiling on this fleet, not the agents'.
 
-## Run it against yours
+## Run it yourself
 
 ```bash
 git clone https://github.com/ocm-mcp-server/ocm-mcp-server

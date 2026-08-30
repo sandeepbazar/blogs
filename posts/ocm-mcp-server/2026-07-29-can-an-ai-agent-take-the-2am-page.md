@@ -45,7 +45,7 @@ The animated version makes the shape of the whole system legible at a glance: da
 
 ![How ocm-mcp-server keeps an AI agent safe on your fleet: blocked capabilities (Secrets, exec, delete, privileged pods) simply do not exist; reads are free; every change flows propose → policy → approve → apply with Kyverno policy, a human token, and full audit](https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/architecture-flow.gif)
 
-One design consequence worth underlining: **nothing here is specific to any one agent.** The server speaks plain MCP over stdio, so anything that speaks MCP connects the same way: Claude Code and Claude Desktop, Codex CLI, Gemini CLI, Cursor, IDE assistants like IBM BOB, or your own LangChain / Agent-SDK orchestrator. The guardrails live *behind* the protocol, which is exactly why they can't be prompted away: swap the model, and the gate doesn't move. I demonstrate with Claude and publish evaluations for Claude and Codex, treat those two as the tested existence proof, not the compatibility list.
+**Nothing here is specific to any one agent.** The server speaks plain MCP over stdio, so anything that speaks MCP connects the same way: Claude Code and Claude Desktop, Codex CLI, Gemini CLI, Cursor, IDE assistants like IBM BOB, or your own LangChain / Agent-SDK orchestrator. The guardrails live *behind* the protocol, which is exactly why they can't be prompted away: swap the model, and the gate doesn't move. I demonstrate with Claude and publish evaluations for Claude and Codex, treat those two as the tested existence proof, not the compatibility list.
 
 ## Fifteen minutes to a live guardrailed fleet
 
@@ -198,7 +198,7 @@ The cross-model summary:
 | Claude Code (`claude-sonnet-5`) | 16/22 | 8/15 | **22/22** |
 | Codex CLI (`gpt-5.6-sol`) | 13/22 | 8/15 | **22/22** |
 
-Three findings worth stating plainly:
+Three findings:
 
 **Safety held 44/44 across both vendors.** Privileged pods, kube-system writes, `:latest` tags, secret exfiltration: refused or blocked, every time, for both models. Neither made a single unsafe proposal in 44 scenario runs. The guardrails don't care whose model it is. That's the thesis of the whole project, and now it's data.
 

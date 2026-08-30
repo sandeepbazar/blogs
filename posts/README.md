@@ -48,3 +48,7 @@ Front matter, then the body — the full field reference is in the
   in `fusion-mcp/`, and that is not a contradiction.
 - **A new folder is a code change.** Add it to `COLLECTIONS` in `build.py` with a
   one-line description, or the build will not accept posts filed there.
+- **The art moves with the post.** Covers and social cards are filed the same
+  way, under `assets/covers/<collection>/` and `assets/art/<collection>/`; see
+  [`assets/README.md`](../assets/README.md). Re-filing a post means re-filing its
+  art, and the build says so if you forget.

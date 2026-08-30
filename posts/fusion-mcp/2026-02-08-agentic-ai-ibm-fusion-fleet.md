@@ -4,7 +4,7 @@ dek: "Modern platform operations are no longer about managing a single Kubernete
 date: 2026-02-08
 slug: agentic-ai-ibm-fusion-fleet
 category: "IBM Fusion"
-cover: assets/covers/agentic-ai-ibm-fusion-fleet.svg
+cover: assets/covers/fusion-mcp/agentic-ai-ibm-fusion-fleet.svg
 tags: [ibm-fusion, mcp, agentic-ai, fleet]
 medium: https://medium.com/@sandeepbazar/bringing-agentic-ai-to-ibm-fusion-fleet-conversational-operations-powered-by-ibm-fusion-mcp-and-606cbcfd41e6
 status: link

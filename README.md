@@ -65,20 +65,24 @@ Commit and push. The workflow rebuilds and redeploys.
 
 ## Cover art
 
-`gen_covers.py` generates one animated SVG per post into `assets/covers/<slug>.svg`.
+`gen_covers.py` generates one animated SVG per post into
+`assets/covers/<collection>/<slug>.svg` — art is filed the way posts are.
 Each category has its own motif — orbits, a hexagon lattice, stacked planes, wave
 bands — and the variation within a category is derived from a hash of the slug, so
 a post always renders the same image but no two look alike. The animation is
 declarative (it plays through an `<img>` tag) and switches off entirely under
 `prefers-reduced-motion`.
 
-Add `cover: assets/covers/<slug>.svg` to a post's front matter to use it. The
-workflow regenerates covers on every build, so a new post cannot ship without one.
+Add `cover: assets/covers/<collection>/<slug>.svg` to a post's front matter to
+use it. The workflow regenerates covers on every build, so a new post cannot
+ship without one.
 
 A post that deserves art of its own puts the file in
-[`assets/thumbnails/`](assets/thumbnails/) and points `cover:` there.
-`gen_covers.py` leaves any cover outside `assets/covers/` alone, so a drawn cover
-is not overwritten on the next build.
+`assets/art/<collection>/` and points `cover:` (and `card:`) there.
+`gen_covers.py` owns `assets/covers/` and touches nothing else, so drawn work is
+never overwritten. [`assets/README.md`](assets/README.md) has the full layout and
+the rules the build enforces — including that art must be filed under the same
+collection as the post claiming it.
 
 ## Building locally
 
@@ -89,8 +93,10 @@ python3 -m venv .venv
 ```
 
 The build **fails** rather than shipping a broken page. It rejects a missing
-required field, an unknown category, a duplicate slug, a `cover` that does not
-resolve, and any internal link pointing at a page that was never generated.
+required field, an unknown category, a duplicate slug, a post filed outside a
+known collection, a `cover` or `card` that does not resolve or is filed under
+another collection, an SVG `card`, and any internal link pointing at a page that
+was never generated.
 
 ## Announcement copy
 

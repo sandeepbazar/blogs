@@ -4,7 +4,7 @@ dek: "A demonstration of how IBM Fusion orchestrates AI workloads across contain
 date: 2026-01-07
 slug: breaking-the-ai-platform-myth
 category: "IBM Fusion"
-cover: assets/covers/breaking-the-ai-platform-myth.svg
+cover: assets/covers/ibm-fusion/breaking-the-ai-platform-myth.svg
 tags: [ibm-fusion, gpu, openshift-virtualization, ai-platform]
 medium: https://medium.com/@sandeepbazar/breaking-the-ai-platform-myth-how-ibm-fusion-unifies-containers-vms-and-gpus-959c12d1410e
 status: link

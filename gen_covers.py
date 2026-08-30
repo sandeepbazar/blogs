@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2026 Sandeep Bazar
 # SPDX-License-Identifier: Apache-2.0
-"""Generate one cover image per post into assets/covers/<slug>.svg.
+"""Generate one cover image per post into assets/covers/<collection>/<slug>.svg.
 
 The art is generated rather than drawn so a new post gets a cover for free and
 every cover stays in the site's palette. Each category has its own motif; the
 variation within a category is derived from a hash of the slug, so a given post
-always renders the same image but no two posts look alike.
+always renders the same image but no two posts look alike. Covers are filed in
+the same collection folder as the post they belong to.
 
 Animation lives inside the SVG (declarative, so it plays through an <img> tag)
 and is switched off wholesale under prefers-reduced-motion.
@@ -282,15 +283,18 @@ def main() -> int:
         if meta.get("status") == "draft":
             continue
 
-        # A post that ships its own artwork keeps it. Generated covers are the
-        # default so no post can go out without one, not a rule that a drawn
-        # cover gets overwritten on the next build.
+        # This script owns assets/covers/ and nothing else. A post that points
+        # its cover somewhere else - assets/art/, for drawn work - keeps that
+        # file: generated covers are the default so no post ships without one,
+        # not a rule that overwrites artwork on the next build.
         cover = meta.get("cover") or ""
         if cover and not cover.startswith("assets/covers/"):
             skipped += 1
             continue
 
         slug = meta["slug"]
+        # Covers mirror how posts are filed, so a collection's art sits together.
+        collection = path.parent.name
         category = meta["category"]
         palette = PALETTES[category]
         rng = Rng(slug)
@@ -309,7 +313,9 @@ def main() -> int:
         except ET.ParseError as exc:
             raise SystemExit(f"error: generated cover for {slug} is not valid XML: {exc}")
 
-        (COVERS / f"{slug}.svg").write_text(svg, encoding="utf-8")
+        target = COVERS / collection / f"{slug}.svg"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(svg, encoding="utf-8")
         made += 1
 
     note = f" ({skipped} post(s) ship their own cover)" if skipped else ""

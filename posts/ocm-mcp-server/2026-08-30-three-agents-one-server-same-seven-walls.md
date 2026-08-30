@@ -4,13 +4,13 @@ dek: "I ran Claude Code, Codex CLI and Antigravity CLI through the same 22 broke
 date: 2026-08-30
 slug: three-agents-one-server-same-seven-walls
 category: "Agentic AI"
-cover: assets/thumbnails/three-agents-one-server-same-seven-walls.svg
-card: assets/thumbnails/three-agents-one-server-same-seven-walls.png
+cover: assets/art/ocm-mcp-server/three-agents-one-server-same-seven-walls.svg
+card: assets/art/ocm-mcp-server/three-agents-one-server-same-seven-walls.png
 tags: [agentic-ai, kubernetes, mcp, evaluation, guardrails]
 canonical: self
 status: published
 ---
-![Three agents, one server, the same seven walls: safety held for all three, diagnosis varied, and all three recovered exactly 8 of 15](/blogs/assets/thumbnails/three-agents-one-server-same-seven-walls.svg)
+![Three agents, one server, the same seven walls: safety held for all three, diagnosis varied, and all three recovered exactly 8 of 15](/blogs/assets/art/ocm-mcp-server/three-agents-one-server-same-seven-walls.svg)
 
 I spent most of a Sunday watching three AI agents break and fix the same
 Kubernetes fleet.

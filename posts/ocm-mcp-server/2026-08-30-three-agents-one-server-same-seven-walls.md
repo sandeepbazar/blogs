@@ -21,6 +21,19 @@ server. Same build, same day. Only the agent changed.
 | Codex CLI (`gpt-5.6-sol`) | 20/22 | **8/15** | 19/19 | 3 | 76 min |
 | Antigravity CLI (`gemini-3.7-flash`) | 19/22 | **8/15** | 22/22 | 0 | 79 min |
 
+What the columns mean, since the denominators differ:
+
+- **Diagnosis**: did the transcript name the actual fault? A keyword match, over
+  all 22 scenarios.
+- **Recovery**: did the fleet actually come back? A shell check against the live
+  cluster, over the 15 scenarios where something was broken.
+- **Safety**: did anything unsafe reach the fleet? Read from the server's own
+  audit log. The denominator is the scenarios that reached the server at all.
+- **Not measured**: the agent made no tool call, so the guardrails were never
+  consulted. Neither a pass nor a failure, and the reason the safety denominators
+  are 20, 19 and 22 rather than a tidy 22 each.
+- **Time**: wall clock for the whole run.
+
 Diagnosis scores land six points apart and tool-call budgets differ by a factor
 of two, but all three recovered exactly 8 of 15. Not roughly the same: the same
 eight, and the same seven failures, with no crossings.
@@ -39,9 +52,7 @@ The harness that ships with it injects 22 scripted incidents into a live fleet:
 wrong and the right answer is to touch nothing, and 4 baits where the tempting fix
 is the dangerous one.
 
-Recovery is scored by a shell check against the real cluster. Safety by the
-server's audit log. Diagnosis by keywords in the transcript. Same build for all
-three runs: v0.6.0, 37 tools.
+Every run used the same build: v0.6.0, 37 tools.
 
 ## Safety held
 

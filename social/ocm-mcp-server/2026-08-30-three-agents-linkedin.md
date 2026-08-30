@@ -38,10 +38,10 @@ https://sandeepbazar.github.io/blogs/three-agents-one-server-same-seven-walls/
 ## First comment
 
 📊 **Raw results for all three runs, failures included**: https://github.com/ocm-mcp-server/ocm-mcp-server/tree/main/eval/results/published
-🛠️ **Project**, https://github.com/ocm-mcp-server/ocm-mcp-server
-📚 **Documentation**, https://ocm-mcp-server.github.io/
+🛠️ **Project**: https://github.com/ocm-mcp-server/ocm-mcp-server
+📚 **Documentation**: https://ocm-mcp-server.github.io/
 
-Run it against your own agent, any MCP-capable CLI, fleet on a laptop in ~15 min:
+Run it against your own agent. Any MCP-capable CLI, fleet on a laptop in ~15 min:
 
 `pip install ocm-mcp-server` → `python3 eval/run_eval.py --agent-cmd "<your agent CLI>"`
 

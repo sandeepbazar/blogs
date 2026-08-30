@@ -100,9 +100,14 @@ was never generated.
 
 ## Announcement copy
 
-[`social/`](social/) holds the ready-to-paste announcement for a post — the
-LinkedIn text, the first comment carrying the links, and which image to attach.
-It is filing, not a pipeline: nothing here posts anything anywhere.
+[`social/<collection>/`](social/) holds the ready-to-paste announcement for a
+post — the text, the first comment carrying the links, and which image to
+attach — filed the same way posts and assets are. Nothing here posts anything
+anywhere, but the build does check that a social file names a post that exists,
+in its own collection, with an image that resolves: a dead link in a feed is not
+something you find out about from your own machine.
+[`social/README.md`](social/README.md) carries the front matter and the house
+style.
 
 ## Canonical URLs
 

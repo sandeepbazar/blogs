@@ -39,6 +39,7 @@ from pygments.lexers import get_lexer_by_name, guess_lexer
 
 ROOT = Path(__file__).parent.resolve()
 POSTS = ROOT / "posts"
+SOCIAL = ROOT / "social"
 OUT = ROOT / "_site"
 TEMPLATES = ROOT / "web" / "templates"
 STATIC = ROOT / "web" / "static"
@@ -191,6 +192,45 @@ def collection_of(path: Path) -> str:
             f"expected one of {', '.join(sorted(COLLECTIONS))}"
         )
     return rel.parts[0]
+
+
+def check_social(posts: list[Post]) -> None:
+    """Announcement copy must point at a post that exists.
+
+    social/ is not part of the site, so nothing here is rendered. It is checked
+    anyway: the one failure mode that matters is pasting a dead link into a
+    feed, and that is not something you find out about from your own machine.
+    """
+    if not SOCIAL.exists():
+        return
+    where = {p.slug: p.source.parent.name for p in posts}
+    problems = []
+    for path in sorted(SOCIAL.rglob("*.md")):
+        if path.name == "README.md":
+            continue
+        rel = path.relative_to(SOCIAL)
+        if len(rel.parts) != 2 or rel.parts[0] not in COLLECTIONS:
+            problems.append(
+                f"social/{rel}: file it under a collection "
+                f"(social/<collection>/<file>.md)"
+            )
+            continue
+        meta, _ = parse_front_matter(path.read_text(encoding="utf-8"), path)
+        slug = meta.get("slug")
+        if not slug:
+            problems.append(f"social/{rel}: missing slug: naming the post it announces")
+        elif slug not in where:
+            problems.append(f"social/{rel}: slug {slug!r} matches no published post")
+        elif where[slug] != rel.parts[0]:
+            problems.append(
+                f"social/{rel}: post {slug!r} is in {where[slug]!r}, "
+                f"not {rel.parts[0]!r}"
+            )
+        image = meta.get("image")
+        if image and not (ROOT / image).exists():
+            problems.append(f"social/{rel}: image {image!r} does not exist")
+    if problems:
+        raise BuildError("announcement copy:\n  " + "\n  ".join(problems))
 
 
 def check_filing(name: str, field: str, asset: str, collection: str) -> None:
@@ -576,6 +616,7 @@ def build() -> None:
         raise BuildError(f"the site card {SITE_CARD!r} does not exist")
 
     posts = load_posts()
+    check_social(posts)
     for post in posts:
         if not post.is_offsite:
             render_body(post)

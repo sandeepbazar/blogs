@@ -3,7 +3,7 @@
 
 # blogs
 
-Long-form writing by [Sandeep Bazar](https://github.com/sandeepbazar), published at
+Long-form writing by [Sandeep Bazar](https://www.linkedin.com/in/sandeepbazar/), published at
 **<https://sandeepbazar.github.io/blogs/>**.
 
 The source of truth is markdown in [`posts/`](posts/). `build.py` renders it into

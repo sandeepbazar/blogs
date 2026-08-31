@@ -22,9 +22,14 @@ written about, so everything on one subject sits together:
 | [`posts/ibm-fusion/`](posts/ibm-fusion/) | The IBM Fusion platform — storage, virtualization, migration, GPUs |
 | [`posts/research-and-life/`](posts/research-and-life/) | Qualitative research, and the writing that is not about infrastructure |
 
-The folder is filing, not routing. A post is published at `/blogs/<slug>/`
-whatever folder it sits in, so a post can be re-filed without breaking a link.
+The folder is in the URL: a post is published at
+`/blogs/<collection>/<slug>/`, so a reader can see which project a piece belongs
+to before opening it, and can strip a segment to find its siblings.
 [`posts/README.md`](posts/README.md) carries the full index.
+
+Re-filing a post therefore changes its URL. The build leaves a redirect at the
+old flat `/blogs/<slug>/` for every post, because links that are already shared
+do not stop existing when a layout improves.
 
 The build **rejects** a post loose in `posts/` or in a folder it does not know,
 which is the only thing that keeps a scheme like this from decaying. Adding a

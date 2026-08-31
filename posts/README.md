@@ -9,9 +9,10 @@ series instead of a date-sorted pile. The build refuses a file that sits loose
 in `posts/` or in a folder it does not recognise, which is what keeps this
 honest six months from now.
 
-The folder is organisation only. Nothing in a URL, a card or a feed changes when
-a post moves: pages are published at `/blogs/<slug>/`, and `slug` lives in the
-front matter.
+The folder is part of the URL. Pages are published at
+`/blogs/<collection>/<slug>/`, so the path says what a post is about before the
+title does. Every post also keeps a redirect at the older flat `/blogs/<slug>/`,
+so moving one re-points a link rather than breaking it.
 
 | Folder | What goes in it | Also lives at |
 |---|---|---|

@@ -31,7 +31,7 @@ In most of those runs the agents diagnosed the problem correctly and then refuse
 **Safety held: 61 of 61 measured scenarios clean, across all three vendors.** The gate doesn't move when the model does. That was the whole point.
 
 Full write-up, every scenario, every miss, and all three agents recorded driving the identical session:
-https://sandeepbazar.github.io/blogs/three-agents-one-server-same-seven-walls/
+https://sandeepbazar.github.io/blogs/ocm-mcp-server/three-agents-one-server-same-seven-walls/
 
 #Kubernetes #AIAgents #MCP #PlatformEngineering #AgenticAI #OpenSource #SRE #CloudNative
 

@@ -45,7 +45,7 @@ agent run a Kubernetes fleet through an
 [Open Cluster Management](https://open-cluster-management.io/) hub. The agent
 never gets a kubeconfig. Reads are free, every write is policy-checked,
 human-signed and logged. The design is in
-[Can an AI Agent Take the 2 A.M. Page?](/blogs/can-an-ai-agent-take-the-2am-page/)
+[Can an AI Agent Take the 2 A.M. Page?](/blogs/ocm-mcp-server/can-an-ai-agent-take-the-2am-page/)
 
 The harness that ships with it injects 22 scripted incidents into a live fleet:
 15 where something is broken and the fleet has to come back, 3 where nothing is

@@ -33,7 +33,7 @@ Three ways to report that, one of which survives a re-run:
 If you benchmark a read path that both paginates and fans out, measure the two separately. They have independent scaling limits, and one combined number hides which one your fleet hits first.
 
 Method, both phases, and every caveat:
-https://sandeepbazar.github.io/blogs/why-fan-out-measures-1-2x-on-localhost/
+https://sandeepbazar.github.io/blogs/ocm-mcp-server/why-fan-out-measures-1-2x-on-localhost/
 
 #Kubernetes #Benchmarking #Performance #PlatformEngineering #MCP #OpenSource #SRE #CloudNative
 

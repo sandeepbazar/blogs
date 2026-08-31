@@ -144,14 +144,30 @@ class Post:
         return self.meta["_date"]
 
     @property
+    def collection(self) -> str:
+        return self.meta["_collection"]
+
+    @property
     def is_offsite(self) -> bool:
         """A card that links out to Medium; no page is generated for it."""
         return self.meta["status"] == "link"
 
     @property
     def url(self) -> str:
+        """Canonical URL. The collection is in the path, so a reader can see
+        which project a post belongs to before opening it, and can strip a
+        segment to find its siblings."""
         if self.is_offsite:
             return self.meta["medium"]
+        return f"{BASE}/{self.collection}/{self.slug}/"
+
+    @property
+    def legacy_url(self) -> str:
+        """Where this post used to live, before collections entered the path.
+
+        Published links do not stop existing because a layout improves, so
+        every post keeps a redirect at its flat URL.
+        """
         return f"{BASE}/{self.slug}/"
 
     @property
@@ -271,6 +287,7 @@ def load_posts() -> list[Post]:
         name = str(path.relative_to(POSTS))
         collection = collection_of(path)
         meta, body = parse_front_matter(path.read_text(encoding="utf-8"), path)
+        meta["_collection"] = collection
 
         missing = [k for k in REQUIRED if not meta.get(k)]
         if missing:
@@ -294,6 +311,11 @@ def load_posts() -> list[Post]:
             raise BuildError(f"{name}: status 'link' requires a medium: URL")
 
         slug = meta["slug"]
+        if slug in COLLECTIONS:
+            raise BuildError(
+                f"{name}: slug {slug!r} is also a collection name; the redirect "
+                f"left at /{slug}/ would collide with the collection itself"
+            )
         if slug in seen:
             raise BuildError(f"{name}: duplicate slug {slug!r} (also in {seen[slug]})")
         seen[slug] = name
@@ -512,7 +534,7 @@ def card_image(post: Post) -> str:
 
 
 def build_post(post: Post, ordered: list[Post], base_tpl: str) -> str:
-    canonical = f"{ORIGIN}{BASE}/{post.slug}/"
+    canonical = f"{ORIGIN}{post.url}"
     medium = post.meta.get("medium")
     backlink = (
         f'<p class="callout">Originally published on '
@@ -541,6 +563,25 @@ def build_post(post: Post, ordered: list[Post], base_tpl: str) -> str:
     )
 
 
+def build_redirect(post: Post) -> str:
+    """A standing redirect from a post's old flat URL to its current one."""
+    href = f"{ORIGIN}{post.url}"
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Moved: {esc(post.title)}</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="{esc(href)}">
+<meta http-equiv="refresh" content="0; url={esc(href)}">
+</head>
+<body>
+<p>This post now lives at <a href="{esc(href)}">{esc(href)}</a>.</p>
+</body>
+</html>
+"""
+
+
 def build_feed(posts: list[Post]) -> str:
     items = []
     for post in posts:
@@ -567,7 +608,7 @@ def build_feed(posts: list[Post]) -> str:
 
 def build_sitemap(posts: list[Post]) -> str:
     urls = [f"{ORIGIN}{BASE}/"] + [
-        f"{ORIGIN}{BASE}/{p.slug}/" for p in posts if not p.is_offsite
+        f"{ORIGIN}{p.url}" for p in posts if not p.is_offsite
     ]
     entries = "\n".join(f"  <url><loc>{u}</loc></url>" for u in urls)
     return (
@@ -580,9 +621,13 @@ def build_sitemap(posts: list[Post]) -> str:
 # ------------------------------------------------------------- validation --
 
 
-def check_internal_links(pages: dict[Path, str], slugs: set[str]) -> None:
-    """Fail on an internal link that resolves to no generated page."""
-    known = {f"{BASE}/"} | {f"{BASE}/{s}/" for s in slugs}
+def check_internal_links(pages: dict[Path, str], urls: set[str]) -> None:
+    """Fail on an internal link that resolves to no generated page.
+
+    Both shapes count: the canonical `/blogs/<collection>/<slug>/` and the flat
+    `/blogs/<slug>/` that still answers with a redirect.
+    """
+    known = {f"{BASE}/"} | urls
     problems = []
     for path, markup in pages.items():
         for href in re.findall(r'href="([^"#?]+)"', markup):
@@ -639,10 +684,16 @@ def build() -> None:
 
     onsite = [p for p in posts if not p.is_offsite]
     for post in onsite:
-        target = OUT / post.slug / "index.html"
+        target = OUT / post.collection / post.slug / "index.html"
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(build_post(post, onsite, base_tpl), encoding="utf-8")
         pages[target] = target.read_text(encoding="utf-8")
+
+        # Anything already shared points at the flat URL. Leave a redirect
+        # there rather than breaking it; noindex so search keeps the canonical.
+        legacy = OUT / post.slug / "index.html"
+        legacy.parent.mkdir(parents=True, exist_ok=True)
+        legacy.write_text(build_redirect(post), encoding="utf-8")
 
     (OUT / "feed.xml").write_text(build_feed(posts), encoding="utf-8")
     (OUT / "sitemap.xml").write_text(build_sitemap(posts), encoding="utf-8")
@@ -662,7 +713,10 @@ def build() -> None:
     )
     (OUT / "404.html").write_text(notfound, encoding="utf-8")
 
-    check_internal_links(pages, {p.slug for p in onsite})
+    check_internal_links(
+        pages,
+        {p.url for p in onsite} | {p.legacy_url for p in onsite},
+    )
 
     print(f"built {len(pages)} pages ({len(onsite)} posts, {len(posts) - len(onsite)} offsite cards) -> {OUT}")
 

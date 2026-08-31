@@ -31,9 +31,9 @@
   <rect width="1200" height="630" fill="url(#grid)" mask="url(#gridmask)"/>
 
   <text x="64" y="80" fill="#7f8db5" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="19" letter-spacing="2.6">PUBLISHED BENCHMARK · ocm-mcp-server v0.6.0</text>
-  <text x="64" y="152" fill="#eef2ff" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="57" font-weight="700">The benchmark said 1.2x.</text>
-  <text x="64" y="216" fill="url(#head)" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="57" font-weight="700">I published it anyway.</text>
-  <text x="64" y="260" fill="#aab6d6" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="20">Concurrent fan-out across 20 real kwok apiservers, measured on one laptop</text>
+  <text x="64" y="150" fill="#eef2ff" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="52" font-weight="700">Concurrent fan-out:</text>
+  <text x="64" y="210" fill="url(#head)" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="52" font-weight="700">1.2x on localhost.</text>
+  <text x="64" y="256" fill="#aab6d6" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="20">20 real kwok apiservers, zero network latency between them</text>
   <text x="284" y="332" fill="#eef2ff" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="18" font-weight="600" text-anchor="end">sequential</text>
   <text x="284" y="352" fill="#7f8db5" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" text-anchor="end">workers=1</text>
   <rect x="300" y="318" width="470" height="26" rx="8" fill="#141a33"/>
@@ -46,7 +46,7 @@
   <text x="704.8" y="398" fill="#fb923c" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="17" font-weight="600">0.302 s</text>
   <rect x="880" y="316" width="256" height="92" rx="14" fill="#0b1020" fill-opacity=".92" stroke="#24305c"/>
   <text x="1008" y="358" fill="#fb923c" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="34" font-weight="700" text-anchor="middle">1.2x faster</text>
-  <text x="1008" y="386" fill="#aab6d6" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="16" text-anchor="middle">on zero-latency localhost</text>
+  <text x="1008" y="386" fill="#aab6d6" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="16" text-anchor="middle">a floor, not a ceiling</text>
 
   <rect x="64" y="446" width="1072" height="72" rx="14" fill="#0b1020" fill-opacity=".82" stroke="#24305c"/>
   <text x="88" y="480" fill="#eef2ff" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="19" font-weight="600">A lower bound, not a ceiling.</text>

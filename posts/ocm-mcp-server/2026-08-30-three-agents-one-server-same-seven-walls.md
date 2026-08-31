@@ -1,6 +1,6 @@
 ---
 title: "Three Agents, One Server, and the Same Seven Walls"
-dek: "I gave Claude Code, Codex CLI and Antigravity CLI the same 22 Kubernetes incidents, on the same three-cluster fleet. They scored differently on almost everything, then all three failed the exact same seven. That part was not about the models."
+dek: "Claude Code, Codex CLI and Antigravity CLI run the same 22 Kubernetes incidents against the same three-cluster fleet. They diverge on almost every metric and then fail the identical seven scenarios, which turns out to be a property of the read surface rather than the models."
 date: 2026-08-30
 slug: three-agents-one-server-same-seven-walls
 category: "Agentic AI"
@@ -61,12 +61,12 @@ pod, no `:latest` tag, no write into `kube-system`, no secret exfiltrated, on a
 fleet where every one of those was a single tool call away.
 
 **The gate does not move when the model does.** That is what the guardrails are
-for, and one vendor's agent is not enough to test it.
+for, and testing it takes more than one vendor's agent.
 
-The other five runs never reached the server: the model read the bait, worked out
-what a guardrailed server would do, and declined without calling a tool. Those
-score as "not measured" rather than "blocked", because otherwise I would be
-crediting my server for a refusal the model made on its own. Codex declined three
+The other five runs never reach the server. The model reads the bait, works out
+what a guardrailed server would do, and declines without calling a tool. Those
+score as "not measured" rather than "blocked", because counting them as blocked
+credits the server for a refusal the model made on its own. Codex declines three
 that way, Claude two, Antigravity none.
 
 ## The seven walls
@@ -84,7 +84,7 @@ two:
 | `scaled-to-zero-c1` · `c3` | ❌ ❌ | ❌ ❌ | ❌ ❌ |
 | `broken-service-c1` · `c3` | ❌ ❌ | ❌ ❌ | ❌ ❌ |
 
-Reading the chaos scripts explains why.
+The chaos scripts explain the split.
 
 **The eight they fixed are the ones where the right answer was still visible in
 the cluster.** A bad image tag you can see and pin. A memory limit you can read
@@ -101,25 +101,24 @@ answer:**
   running, endpoints empty, and nothing says the selector used to be
   `app: payments`.
 
-Same shape every time. **The fix needs history, and my read surface has none.**
-Thirty-seven tools that describe the fleet as it is right now. Not one that says
-what it looked like on Friday.
+Same shape every time. **The fix requires history, and the read surface has
+none.** Thirty-seven tools describe the fleet as it is right now. None of them
+report what it looked like before the last change.
 
-In most of those transcripts the agents diagnosed the problem correctly and then
-refused to guess, which is the right call on a production cluster. The harness
-still scores that as a recovery failure, and it should, because the fleet did not
-come back. But the gap is in the server, not the model.
+In most of those transcripts the agents diagnose the problem correctly and then
+refuse to guess, which is the right call on a production cluster. The harness
+still scores that as a recovery failure, correctly, because the fleet does not
+come back. The gap is in the server rather than the model.
 
-The split is identical across three vendors, which rules out "one model is weak
-here", and the eight passes are identical too, which rules out "the hard ones are
-just hard". The boundary is not difficulty. It is whether the answer still
-exists.
+Two properties of the data support that. The split is identical across three
+vendors, which rules out one weak model, and the eight passes are identical too,
+which rules out the scenarios simply being hard. The boundary is not difficulty.
+It is whether the correct value still exists somewhere readable.
 
 A `ManifestWork` on an OCM hub already carries its revision history, in objects
-these tools read anyway. A tool that answers "what did this look like before the
-last change?" would let an agent restore a real `command` instead of inventing
-one, behind the same approval gate as any other write. It is next on the
-roadmap.
+these tools read anyway. A tool answering "what did this look like before the
+last change?" would let an agent restore a real `command` rather than invent one,
+behind the same approval gate as any other write. It is next on the roadmap.
 
 ## The recordings
 
@@ -172,7 +171,7 @@ ranking:
 - `sonnet` is an alias, not a dated model id, and the `agy` run did not pin a
   reasoning tier. Both are recorded that way in the published JSON.
 - Diagnosis is a keyword match, so it measures vocabulary as much as
-  understanding. Four of Claude's eight misses were on scenarios it fixed.
+  understanding. Four of Claude's eight misses are on scenarios it fixed.
 - Recovery at 8/15 is the server's ceiling on this fleet, not the agents'.
 
 ## Run it yourself
@@ -186,9 +185,9 @@ pip install ocm-mcp-server
 python3 eval/run_eval.py --agent-cmd "<your agent CLI>"
 ```
 
-Pin your model, and publish the failures. If your agent clears the seven walls,
-the transcript is worth seeing, because on this read surface three of them could
-not.
+Pin the model, and publish the failures. An agent that clears the seven walls is
+doing something three frontier agents cannot do on this read surface, and the
+transcript is worth seeing.
 
 Raw JSON for all three runs:
 [`eval/results/published/`](https://github.com/ocm-mcp-server/ocm-mcp-server/tree/main/eval/results/published).

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img">
+  <defs>
+    <linearGradient id="head" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fb923c"/><stop offset=".6" stop-color="#8ea2ff"/><stop offset="1" stop-color="#38bdf8"/>
+    </linearGradient>
+    <radialGradient id="glowA" cx="50%" cy="50%">
+      <stop offset="0" stop-color="#fb923c" stop-opacity=".34"/><stop offset="1" stop-color="#fb923c" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowC" cx="50%" cy="50%">
+      <stop offset="0" stop-color="#38bdf8" stop-opacity=".36"/><stop offset="1" stop-color="#38bdf8" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#94a3b8" stroke-opacity=".07" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <mask id="gridmask"><rect width="1200" height="630" fill="url(#fade)"/></mask>
+  </defs>
+  <style>
+    /* Background only. A card is rasterised by link scrapers at an
+       unpredictable moment, so every number is drawn, never played in. */
+    .drift { animation: drift 17s ease-in-out infinite alternate; }
+    .drift2 { animation: drift 23s ease-in-out infinite alternate-reverse; }
+    @keyframes drift { from { transform: translate(-22px,-13px); } to { transform: translate(22px,15px); } }
+    @media (prefers-reduced-motion: reduce) { .drift, .drift2 { animation: none; } }
+  </style>
+  <rect width="1200" height="630" fill="#070b16"/>
+  <ellipse class="drift" cx="240" cy="160" rx="430" ry="310" fill="url(#glowA)"/>
+  <ellipse class="drift2" cx="1000" cy="520" rx="390" ry="290" fill="url(#glowC)"/>
+  <rect width="1200" height="630" fill="url(#grid)" mask="url(#gridmask)"/>
+
+  <text x="64" y="80" fill="#7f8db5" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="19" letter-spacing="2.6">PUBLISHED BENCHMARK · ocm-mcp-server v0.6.0</text>
+  <text x="64" y="152" fill="#eef2ff" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="57" font-weight="700">The benchmark said 1.2x.</text>
+  <text x="64" y="216" fill="url(#head)" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="57" font-weight="700">I published it anyway.</text>
+  <text x="64" y="260" fill="#aab6d6" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="20">Concurrent fan-out across 20 real kwok apiservers, measured on one laptop</text>
+  <text x="284" y="332" fill="#eef2ff" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="18" font-weight="600" text-anchor="end">sequential</text>
+  <text x="284" y="352" fill="#7f8db5" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" text-anchor="end">workers=1</text>
+  <rect x="300" y="318" width="470" height="26" rx="8" fill="#141a33"/>
+  <rect x="300" y="318" width="470.0" height="26" rx="8" fill="#475569" fill-opacity=".92"/>
+  <text x="788.0" y="336" fill="#aab6d6" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="17" font-weight="600">0.367 s</text>
+  <text x="284" y="394" fill="#eef2ff" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="18" font-weight="600" text-anchor="end">concurrent</text>
+  <text x="284" y="414" fill="#7f8db5" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13" text-anchor="end">workers=8</text>
+  <rect x="300" y="380" width="470" height="26" rx="8" fill="#141a33"/>
+  <rect x="300" y="380" width="386.8" height="26" rx="8" fill="#fb923c" fill-opacity=".92"/>
+  <text x="704.8" y="398" fill="#fb923c" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="17" font-weight="600">0.302 s</text>
+  <rect x="880" y="316" width="256" height="92" rx="14" fill="#0b1020" fill-opacity=".92" stroke="#24305c"/>
+  <text x="1008" y="358" fill="#fb923c" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="34" font-weight="700" text-anchor="middle">1.2x faster</text>
+  <text x="1008" y="386" fill="#aab6d6" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="16" text-anchor="middle">on zero-latency localhost</text>
+
+  <rect x="64" y="446" width="1072" height="72" rx="14" fill="#0b1020" fill-opacity=".82" stroke="#24305c"/>
+  <text x="88" y="480" fill="#eef2ff" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="19" font-weight="600">A lower bound, not a ceiling.</text>
+  <text x="88" y="504" fill="#aab6d6" font-family="Inter,ui-sans-serif,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,sans-serif" font-size="17">Sequential costs sum(latency), concurrent costs max(latency). At zero latency they are the same number.</text>
+
+  <line x1="64" y1="578" x2="1136" y2="578" stroke="#24305c" stroke-width="1"/>
+  <text x="64" y="608" fill="#34d399" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="16" font-weight="600">hub phase: 1,023 clusters read in 0.083 s</text>
+  <text x="1136" y="608" fill="#7f8db5" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="16" text-anchor="end">docs/benchmarks.md · sandeepbazar</text>
+  <title>A published benchmark that came back at 1.2x: sequential fan-out across 20 kwok apiservers at 0.367s median versus 0.302s concurrent, a lower bound produced by zero-latency localhost spokes rather than a ceiling</title>
+</svg>

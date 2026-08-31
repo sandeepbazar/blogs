@@ -24,6 +24,7 @@ front matter.
 
 | Date | Post | Category | Where it lives |
 |---|---|---|---|
+| 2026-08-31 | [My Concurrency Benchmark Came Back at 1.2x. I Published It Anyway.](ocm-mcp-server/2026-08-31-the-benchmark-that-undersold-my-own-code.md) | Kubernetes & MCP | `ocm-mcp-server/` |
 | 2026-08-30 | [Three Agents, One Server, and the Same Seven Walls](ocm-mcp-server/2026-08-30-three-agents-one-server-same-seven-walls.md) | Agentic AI | `ocm-mcp-server/` |
 | 2026-08-01 | [Your MCP Server Is a Security Boundary, Not an API Wrapper](ocm-mcp-server/2026-08-01-mcp-server-is-a-security-boundary.md) | Kubernetes & MCP | `ocm-mcp-server/` |
 | 2026-07-29 | [Can an AI Agent Take the 2 A.M. Page?](ocm-mcp-server/2026-07-29-can-an-ai-agent-take-the-2am-page.md) | Agentic AI | `ocm-mcp-server/` |

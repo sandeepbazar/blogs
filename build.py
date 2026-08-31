@@ -259,20 +259,23 @@ def check_social(posts: list[Post]) -> None:
 
 
 def check_filing(name: str, field: str, asset: str, collection: str) -> None:
-    """A post's art lives in the post's own collection folder.
+    """A post's art lives in the post's own collection folder, not merely
+    somewhere inside the tree.
 
-    Art filed under someone else's collection still renders, which is exactly
-    why it goes wrong quietly: the page looks right and the folder is a lie.
-    Assets outside the two managed trees - a shared diagram, say - are free to
-    live wherever they like.
+    Both failures are silent without this. Art filed under another collection
+    renders perfectly while the folder tells a lie, and art dropped loose at the
+    top of a tree rebuilds the flat pile these folders exist to replace.
+
+    Assets outside the two managed trees - a diagram shared by several posts,
+    say - have no single collection to belong to and are left alone.
     """
     for tree in ASSET_TREES:
         if asset.startswith(tree):
             rest = asset[len(tree):]
-            if "/" in rest and not rest.startswith(f"{collection}/"):
+            if not rest.startswith(f"{collection}/"):
                 raise BuildError(
-                    f"{name}: {field} {asset!r} is filed under a different "
-                    f"collection; this post is in {collection!r}"
+                    f"{name}: {field} {asset!r} must live in {tree}{collection}/ "
+                    f"(this post is in {collection!r})"
                 )
             return
 

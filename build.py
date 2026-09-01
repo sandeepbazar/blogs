@@ -598,12 +598,18 @@ def build_feed(posts: list[Post]) -> str:
     <category>{esc(post.category)}</category>
   </item>"""
         )
+    built = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    # The stylesheet is presentation only: a browser opening this URL gets a
+    # readable page instead of a wall of XML, and a feed reader ignores it.
     return f"""<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0"><channel>
+<?xml-stylesheet type="text/xsl" href="{BASE}/static/feed.xsl"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>
   <title>{esc(SITE_TITLE)}</title>
   <link>{ORIGIN}{BASE}/</link>
+  <atom:link href="{ORIGIN}{BASE}/feed.xml" rel="self" type="application/rss+xml"/>
   <description>{esc(SITE_DESC)}</description>
   <language>en</language>
+  <lastBuildDate>{built}</lastBuildDate>
 {chr(10).join(items)}
 </channel></rss>
 """

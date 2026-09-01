@@ -16,6 +16,11 @@ on:
       - "gen_covers.py"
       - "requirements.txt"
       - ".github/workflows/pages.yaml"
+  # The footer year is rendered at build time, so a site that is not rebuilt
+  # keeps last year's copyright until someone publishes something. Rebuild
+  # monthly so the turn of the year fixes itself.
+  schedule:
+    - cron: "17 4 1 * *"
   workflow_dispatch:
 
 permissions:

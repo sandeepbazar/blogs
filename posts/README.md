@@ -37,7 +37,7 @@ so moving one re-points a link rather than breaking it.
 | 2025-12-10 | [Bringing Agentic AI to IBM Fusion: How Kubernetes-MCP Transforms Fusion Operations](fusion-mcp/2025-12-10-agentic-ai-ibm-fusion-kubernetes-mcp.md) | IBM Fusion | `fusion-mcp/` |
 | 2024-08-22 | [Seamless Virtual Machines Migration: VMware to IBM Fusion with OpenShift MTV](ibm-fusion/2024-08-22-vmware-to-fusion-migration-with-mtv.md) | IBM Fusion | `ibm-fusion/` |
 | 2024-07-30 | [Unified Mastery: Bridging Virtual Machines and Containers with IBM Fusion](ibm-fusion/2024-07-30-unified-mastery-vms-and-containers.md) | IBM Fusion | `ibm-fusion/` |
-| 2024-02-09 | [IBM Storage Fusion HCI and IBM Cloud Satellite Integration](ibm-fusion/2024-02-09-fusion-hci-cloud-satellite-integration.md) | IBM Fusion | `ibm-fusion/` |
+| 2024-02-09 | [IBM Fusion HCI and IBM Cloud Satellite Integration](ibm-fusion/2024-02-09-fusion-hci-cloud-satellite-integration.md) | IBM Fusion | `ibm-fusion/` |
 
 ## Adding one
 

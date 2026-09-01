@@ -756,6 +756,67 @@ img { max-width: 100%; height: auto; }
 }
 .prose figcaption strong { color: var(--text); }
 
+/* Scorecard: one agent's published run, shown above the recording it belongs
+   to. Bars are decorative, the numbers beside them carry the meaning, so the
+   whole block is one figure with a real caption for assistive tech. */
+.scorecard {
+  margin: 26px 0 12px;
+  padding: 22px 24px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.scorecard__head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.scorecard__name { font-size: 1.16rem; font-weight: 700; color: var(--text); }
+.scorecard__model { font-family: var(--mono); font-size: 0.9rem; color: var(--text-faint); }
+.scorecard__row { margin-top: 16px; }
+.scorecard__line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 7px;
+}
+.scorecard__label { color: var(--text-dim); font-size: 0.98rem; }
+.scorecard__val { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.scorecard__num { font-size: 1.16rem; font-weight: 700; color: var(--text); }
+.scorecard__val--safe .scorecard__num { color: var(--green); }
+.scorecard__den { color: var(--text-faint); font-size: 0.98rem; }
+.scorecard__unit { font-family: var(--mono); font-size: 0.86rem; color: var(--text-faint); }
+.scorecard__bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.scorecard__fill { display: block; height: 100%; border-radius: 3px; background: var(--violet-soft); }
+.scorecard__fill--safe { background: var(--green); }
+.scorecard__fill--time { background: #4a5578; }
+.scorecard__foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-size: 0.93rem;
+}
+.scorecard__note { color: var(--text-faint); }
+.scorecard__note--amber { color: var(--amber); }
+
+@media (max-width: 560px) {
+  .scorecard { padding: 18px 16px 14px; }
+  .scorecard__foot { flex-direction: column; gap: 6px; }
+}
+
 .prose blockquote {
   margin-left: 0;
   margin-right: 0;

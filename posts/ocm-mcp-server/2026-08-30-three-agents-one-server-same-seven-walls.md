@@ -129,7 +129,48 @@ in turn. Install, connect, fleet inventory, a privileged `nginx:latest` deploy
 refused, a compliant proposal, a human signing an Ed25519 token, apply and verify,
 and the day read back from the audit trail.
 
-Same refusal, same token, three agents. What differs is working style.
+Same refusal, same token, three agents. What differs is working style. Each
+recording carries the scores from that agent's published run, and every card
+links to the raw JSON it was read from.
+
+<div class="scorecard">
+    <div class="scorecard__head">
+      <span class="scorecard__name">Claude Code</span>
+      <span class="scorecard__model">sonnet</span>
+    </div>
+    <div class="scorecard__row">
+      <div class="scorecard__line">
+        <span class="scorecard__label">Safety</span>
+        <span class="scorecard__val scorecard__val--safe"><span class="scorecard__num">20</span><span class="scorecard__den">/20</span></span>
+      </div>
+      <div class="scorecard__bar"><span class="scorecard__fill scorecard__fill--safe" style="width:100.0%"></span></div>
+    </div>
+    <div class="scorecard__row">
+      <div class="scorecard__line">
+        <span class="scorecard__label">Diagnosis</span>
+        <span class="scorecard__val"><span class="scorecard__num">14</span><span class="scorecard__den">/22</span></span>
+      </div>
+      <div class="scorecard__bar"><span class="scorecard__fill" style="width:63.6%"></span></div>
+    </div>
+    <div class="scorecard__row">
+      <div class="scorecard__line">
+        <span class="scorecard__label">Recovery</span>
+        <span class="scorecard__val"><span class="scorecard__num">8</span><span class="scorecard__den">/15</span></span>
+      </div>
+      <div class="scorecard__bar"><span class="scorecard__fill" style="width:53.3%"></span></div>
+    </div>
+    <div class="scorecard__row">
+      <div class="scorecard__line">
+        <span class="scorecard__label">Time taken</span>
+        <span class="scorecard__val"><span class="scorecard__num">104</span> <span class="scorecard__unit">min</span></span>
+      </div>
+      <div class="scorecard__bar"><span class="scorecard__fill scorecard__fill--time" style="width:100.0%"></span></div>
+    </div>
+    <div class="scorecard__foot">
+      <span class="scorecard__note scorecard__note--amber">2 not measured</span>
+      <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/eval/results/published/20260830-claude-sonnet.json">raw JSON</a>
+    </div>
+  </div>
 
 <figure>
   <img src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-claude.gif" loading="lazy" width="1200"
@@ -139,6 +180,45 @@ Same refusal, same token, three agents. What differs is working style.
   <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-claude.cast">terminal cast</a></figcaption>
 </figure>
 
+<div class="scorecard">
+    <div class="scorecard__head">
+      <span class="scorecard__name">Codex CLI</span>
+      <span class="scorecard__model">gpt-5.6-sol</span>
+    </div>
+    <div class="scorecard__row">
+      <div class="scorecard__line">
+        <span class="scorecard__label">Safety</span>
+        <span class="scorecard__val scorecard__val--safe"><span class="scorecard__num">19</span><span class="scorecard__den">/19</span></span>
+      </div>
+      <div class="scorecard__bar"><span class="scorecard__fill scorecard__fill--safe" style="width:100.0%"></span></div>
+    </div>
+    <div class="scorecard__row">
+      <div class="scorecard__line">
+        <span class="scorecard__label">Diagnosis</span>
+        <span class="scorecard__val"><span class="scorecard__num">20</span><span class="scorecard__den">/22</span></span>
+      </div>
+      <div class="scorecard__bar"><span class="scorecard__fill" style="width:90.9%"></span></div>
+    </div>
+    <div class="scorecard__row">
+      <div class="scorecard__line">
+        <span class="scorecard__label">Recovery</span>
+        <span class="scorecard__val"><span class="scorecard__num">8</span><span class="scorecard__den">/15</span></span>
+      </div>
+      <div class="scorecard__bar"><span class="scorecard__fill" style="width:53.3%"></span></div>
+    </div>
+    <div class="scorecard__row">
+      <div class="scorecard__line">
+        <span class="scorecard__label">Time taken</span>
+        <span class="scorecard__val"><span class="scorecard__num">76</span> <span class="scorecard__unit">min</span></span>
+      </div>
+      <div class="scorecard__bar"><span class="scorecard__fill scorecard__fill--time" style="width:73.1%"></span></div>
+    </div>
+    <div class="scorecard__foot">
+      <span class="scorecard__note scorecard__note--amber">3 not measured</span>
+      <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/eval/results/published/20260830-codex-gpt-5.6-sol.json">raw JSON</a>
+    </div>
+  </div>
+
 <figure>
   <img src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-codex.gif" loading="lazy" width="1200"
        alt="Codex CLI driving the same ten chapters against the same server and fleet">
@@ -147,6 +227,45 @@ Same refusal, same token, three agents. What differs is working style.
   <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-codex.mp4">MP4</a> ·
   <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-codex.cast">terminal cast</a></figcaption>
 </figure>
+
+<div class="scorecard">
+    <div class="scorecard__head">
+      <span class="scorecard__name">Antigravity CLI</span>
+      <span class="scorecard__model">gemini-3.7-flash</span>
+    </div>
+    <div class="scorecard__row">
+      <div class="scorecard__line">
+        <span class="scorecard__label">Safety</span>
+        <span class="scorecard__val scorecard__val--safe"><span class="scorecard__num">22</span><span class="scorecard__den">/22</span></span>
+      </div>
+      <div class="scorecard__bar"><span class="scorecard__fill scorecard__fill--safe" style="width:100.0%"></span></div>
+    </div>
+    <div class="scorecard__row">
+      <div class="scorecard__line">
+        <span class="scorecard__label">Diagnosis</span>
+        <span class="scorecard__val"><span class="scorecard__num">19</span><span class="scorecard__den">/22</span></span>
+      </div>
+      <div class="scorecard__bar"><span class="scorecard__fill" style="width:86.4%"></span></div>
+    </div>
+    <div class="scorecard__row">
+      <div class="scorecard__line">
+        <span class="scorecard__label">Recovery</span>
+        <span class="scorecard__val"><span class="scorecard__num">8</span><span class="scorecard__den">/15</span></span>
+      </div>
+      <div class="scorecard__bar"><span class="scorecard__fill" style="width:53.3%"></span></div>
+    </div>
+    <div class="scorecard__row">
+      <div class="scorecard__line">
+        <span class="scorecard__label">Time taken</span>
+        <span class="scorecard__val"><span class="scorecard__num">79</span> <span class="scorecard__unit">min</span></span>
+      </div>
+      <div class="scorecard__bar"><span class="scorecard__fill scorecard__fill--time" style="width:76.0%"></span></div>
+    </div>
+    <div class="scorecard__foot">
+      <span class="scorecard__note">every scenario reached the server</span>
+      <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/eval/results/published/20260830-agy-gemini-3.7-flash.json">raw JSON</a>
+    </div>
+  </div>
 
 <figure>
   <img src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-agy.gif" loading="lazy" width="1200"

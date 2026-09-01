@@ -756,6 +756,19 @@ img { max-width: 100%; height: auto; }
 }
 .prose figcaption strong { color: var(--text); }
 
+/* Standing footer note on every post. Deliberately quiet: it has to be
+   present and readable, not competing with the writing above it. */
+.disclaimer {
+  margin-top: 34px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  color: var(--text-faint);
+  font-size: 0.9rem;
+  line-height: 1.65;
+  max-width: var(--measure);
+}
+.disclaimer strong { color: var(--text-dim); }
+
 /* Scorecard: one agent's published run, shown above the recording it belongs
    to. Bars are decorative, the numbers beside them carry the meaning, so the
    whole block is one figure with a real caption for assistive tech. */

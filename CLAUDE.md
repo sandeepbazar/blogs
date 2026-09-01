@@ -27,6 +27,20 @@ Related: when a post moves, its art and its social copy move with it, and the
 URL changes. Leave the redirect at the old path (`build_redirect`) rather than
 breaking a link somebody already shared.
 
+## Canonical URLs for the sibling sites
+
+Both sibling projects moved to their own GitHub organisations, so their sites
+are served from the org root rather than a project path under this account:
+
+| Project | Use | Not |
+|---|---|---|
+| ocm-mcp-server | `https://ocm-mcp-server.github.io/` | `sandeepbazar.github.io/ocm-mcp-server/` |
+| 365 Days of AI | `https://ai-roadmap-365.github.io/` | `sandeepbazar.github.io/ai-roadmap-365/` |
+
+Repos moved with them: `github.com/ocm-mcp-server/ocm-mcp-server`. This blog
+stays at `sandeepbazar.github.io/blogs/`. GitHub redirects the old paths, but
+write the new ones everywhere: in posts, in nav, in announcement copy.
+
 ## Prose
 
 - **No em dashes.** They read as machine-written now, whatever the truth of the

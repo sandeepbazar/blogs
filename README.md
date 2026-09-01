@@ -122,5 +122,5 @@ story settings — otherwise search engines split ranking across both copies.
 
 ## Related
 
-- [ocm-mcp-server](https://sandeepbazar.github.io/ocm-mcp-server/) — AgentOps for Kubernetes fleets
-- [365 Days of AI Mastery](https://sandeepbazar.github.io/ai-roadmap-365/) — the course
+- [ocm-mcp-server](https://ocm-mcp-server.github.io/) — AgentOps for Kubernetes fleets
+- [365 Days of AI Mastery](https://ai-roadmap-365.github.io/) — the course

@@ -1,4 +1,7 @@
-# Working in this repo
+# Contributing
+
+House rules for this repo. Everything here is enforced by `build.py` where it
+can be, and written down here where it cannot.
 
 ## Everything about one project lives under that project's collection
 
@@ -59,10 +62,17 @@ write the new ones everywhere: in posts, in nav, in announcement copy.
 ## Commits
 
 Author and commit as `sandeepbazar
-<5602033+sandeepbazar@users.noreply.github.com>`. **Never** add a
-`Co-Authored-By` trailer, an agent name, or any "generated with" line, unless
-explicitly asked. Commit messages are plain sentences explaining what changed
-and why.
+<5602033+sandeepbazar@users.noreply.github.com>`, on every commit and every
+branch name.
+
+Nothing about how a change was produced belongs in the repo's provenance: no
+`Co-Authored-By` trailer, no tool or assistant name in an author field, a
+branch name or a "generated with" line. Commit messages are plain sentences
+explaining what changed and why.
+
+Naming an AI agent in the *content* is a different thing and is fine. The
+evaluation posts compare Claude Code, Codex CLI and the Antigravity CLI by
+name, because that is what they are about.
 
 ## Before pushing
 

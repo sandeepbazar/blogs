@@ -71,6 +71,7 @@ COLLECTIONS = {
     "ocm-mcp-server": "AgentOps guardrails for Kubernetes fleets — the ocm-mcp-server project",
     "fusion-mcp": "Conversational operations on IBM Fusion via kubernetes-mcp and Fusion MCP",
     "ibm-fusion": "The IBM Fusion platform itself — storage, virtualization, migration, GPUs",
+    "lazy-senior-dev": "Review personas that ride along inside a coding agent \u2014 the lazy-senior-dev project",
     "research-and-life": "Qualitative research, and the writing that is not about infrastructure",
 }
 

@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="An agent writes a diff, a reviewer refuses the write until the finding is fixed, and the branch stays clean. Beneath: defects caught are the same with and without the persona, false alarms fall from four to zero, and outage-class defects shipped fall from 67 percent to zero.">
+  <style>
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .sans{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    .cap{font-size:15px;font-weight:700;letter-spacing:.2em}
+    .code{font-size:19px}.lbl{font-size:16px}.num{font-size:44px;font-weight:800}
+    .note{font-size:15px}
+    @keyframes flag{0%,42%{opacity:1}52%,100%{opacity:0}}
+    @keyframes heal{0%,46%{opacity:0}58%,100%{opacity:1}}
+    @keyframes stamp{0%,44%{opacity:0;transform:scale(.86)}54%{opacity:1;transform:scale(1.06)}62%,92%{opacity:1;transform:scale(1)}100%{opacity:0}}
+    @keyframes block{0%,38%{opacity:1;transform:scale(1)}50%,100%{opacity:0;transform:scale(.9)}}
+    @keyframes dash{to{stroke-dashoffset:-36}}
+    @keyframes glow{0%,100%{opacity:.16}50%{opacity:.34}}
+    @keyframes pulse{0%,100%{opacity:.45}50%{opacity:1}}
+    @keyframes rise{0%{opacity:0;transform:translateY(6px)}100%{opacity:1;transform:translateY(0)}}
+    .bad{animation:flag 6s ease-in-out infinite}
+    .good{animation:heal 6s ease-in-out infinite}
+    .approve{animation:stamp 6s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+    .blocked{animation:block 6s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+    .wire{animation:dash 1.5s linear infinite}
+    .glow{animation:glow 5s ease-in-out infinite}
+    .dot{animation:pulse 2.2s ease-in-out infinite}
+    .stat{animation:rise .8s ease-out both}.s1{animation-delay:.15s}.s2{animation-delay:.3s}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important}.bad{opacity:0}.good{opacity:1}
+      .approve{opacity:1}.blocked{opacity:0}}
+  </style>
+  <defs>
+    <radialGradient id="gl"><stop offset="0%" stop-color="#6f6cf6" stop-opacity=".5"/><stop offset="100%" stop-color="#6f6cf6" stop-opacity="0"/></radialGradient>
+    <radialGradient id="gr"><stop offset="0%" stop-color="#22c55e" stop-opacity=".42"/><stop offset="100%" stop-color="#22c55e" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#0b1020"/>
+  <circle class="glow" cx="330" cy="250" r="300" fill="url(#gl)"/>
+  <circle class="glow" cx="900" cy="250" r="300" fill="url(#gr)" style="animation-delay:2.5s"/>
+
+  <text x="70" y="76" class="mono cap" fill="#f43f5e">AGENT · WRITES</text>
+  <text x="520" y="76" class="mono cap" fill="#8ea2ff">REVIEWED · GATED</text>
+  <text x="880" y="76" class="mono cap" fill="#22c55e">BRANCH · CLEAN</text>
+
+  <rect x="70" y="106" width="380" height="188" rx="14" fill="#121a30" stroke="#243154"/>
+  <text x="94" y="140" class="mono code" fill="#93a4c8">def charge(order):</text>
+  <g class="bad">
+    <rect x="86" y="152" width="348" height="30" rx="6" fill="#f43f5e" fill-opacity=".16"/>
+    <text x="94" y="174" class="mono code" fill="#f43f5e">-  amt = body.get("amount")</text>
+  </g>
+  <g class="good">
+    <rect x="86" y="152" width="348" height="30" rx="6" fill="#22c55e" fill-opacity=".16"/>
+    <text x="94" y="174" class="mono code" fill="#22c55e">+  amt = body["amount"]</text>
+  </g>
+  <text x="94" y="212" class="mono code" fill="#93a4c8">  return gateway.charge(amt)</text>
+  <text x="94" y="262" class="mono note" fill="#f43f5e">KeyError in production, not a 400</text>
+
+  <path class="wire" d="M470 200 H 700" fill="none" stroke="#8ea2ff" stroke-width="2" opacity=".5" stroke-dasharray="6 8"/>
+  <circle r="5" fill="#8ea2ff"><animateMotion dur="2.2s" repeatCount="indefinite" path="M470 200 H 700"/></circle>
+
+  <g transform="translate(600 200)">
+    <g class="blocked">
+      <rect x="-92" y="-26" width="184" height="52" rx="12" fill="#f43f5e" fill-opacity=".14" stroke="#f43f5e" stroke-width="2"/>
+      <text y="7" text-anchor="middle" class="mono" font-size="17" font-weight="700" fill="#f43f5e">REQUEST_CHANGES</text>
+    </g>
+    <g class="approve">
+      <rect x="-70" y="-26" width="140" height="52" rx="12" fill="#22c55e" fill-opacity=".14" stroke="#22c55e" stroke-width="2"/>
+      <text y="7" text-anchor="middle" class="mono" font-size="17" font-weight="700" fill="#22c55e">APPROVE</text>
+    </g>
+  </g>
+
+  <path class="wire" d="M700 200 H 880" fill="none" stroke="#22c55e" stroke-width="2" opacity=".5" stroke-dasharray="6 8" style="animation-delay:.6s"/>
+  <rect x="880" y="106" width="250" height="188" rx="14" fill="#121a30" stroke="#243154"/>
+  <circle class="dot" cx="908" cy="146" r="6" fill="#22c55e"/>
+  <text x="926" y="152" class="mono lbl" fill="#e8ecf8">merged</text>
+  <circle class="dot" cx="908" cy="196" r="6" fill="#22c55e" style="animation-delay:.7s"/>
+  <text x="926" y="202" class="mono lbl" fill="#e8ecf8">deployed</text>
+  <circle class="dot" cx="908" cy="246" r="6" fill="#22c55e" style="animation-delay:1.4s"/>
+  <text x="926" y="252" class="mono lbl" fill="#e8ecf8">no page at 3 a.m.</text>
+
+  <line x1="70" y1="368" x2="1130" y2="368" stroke="#243154"/>
+  <g class="stat">
+    <text x="70" y="440" class="mono num" fill="#22c55e">30 / 30</text>
+    <text x="70" y="474" class="mono note" fill="#93a4c8">defects caught, with the persona</text>
+    <text x="70" y="500" class="mono note" fill="#93a4c8">and without it. Detection was never</text>
+    <text x="70" y="526" class="mono note" fill="#93a4c8">the problem.</text>
+  </g>
+  <g class="stat s1">
+    <text x="470" y="440" class="mono num" fill="#f472b6">4 → 0</text>
+    <text x="470" y="474" class="mono note" fill="#93a4c8">false alarms on clean code,</text>
+    <text x="470" y="500" class="mono note" fill="#93a4c8">per run</text>
+  </g>
+  <g class="stat s2">
+    <text x="820" y="440" class="mono num" fill="#38bdf8">67% → 0%</text>
+    <text x="820" y="474" class="mono note" fill="#93a4c8">outage-class defects shipped</text>
+    <text x="820" y="500" class="mono note" fill="#93a4c8">when the agent wrote the code</text>
+  </g>
+  <text x="70" y="588" class="mono note" fill="#5a6b8c">FOUR AGENTS · TWO TIERS · EVERY FIGURE FROM A RECORDED RUN</text>
+</svg>

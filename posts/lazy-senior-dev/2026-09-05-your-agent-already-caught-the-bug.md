@@ -82,7 +82,7 @@ There is a fourth, and it is my favourite, because it nearly poisoned the whole 
 
 ## What the three personas are
 
-Each is one markdown ruleset compiled to adapters for fourteen hosts — Claude Code, Codex, Copilot, Gemini and Antigravity, Cursor, Windsurf, Cline, Kiro, OpenCode, Devin, Qoder, IBM Bob, and plain `AGENTS.md` for anything else. Each ships an MCP server, a GitHub Action, and a CLI. Apache-2.0, zero runtime dependencies.
+Each is one markdown ruleset compiled to adapters for fourteen hosts — Claude Code, Codex, Copilot, Gemini and Antigravity, Cursor, Windsurf, Cline, Kiro, OpenCode, Devin, Qoder, IBM Bob, and plain `AGENTS.md` for anything else. Each ships an MCP server, a GitHub Action, and a CLI, with zero runtime dependencies.
 
 ![The Grump: a change flows in, is reviewed and gated, and the branch stays clean](https://lazy-senior-dev.github.io/assets/hero/grumpy-reviewer-dark.svg)
 
@@ -112,4 +112,4 @@ The benchmarks are in the repositories with the raw transcripts, the per-case ta
 
 ---
 
-*The three personas are Apache-2.0 and live under [lazy-senior-dev](https://github.com/lazy-senior-dev) — [grumpy-reviewer](https://lazy-senior-dev.github.io/grumpy-reviewer/), [paranoid-sre](https://lazy-senior-dev.github.io/paranoid-sre/), [tenured](https://lazy-senior-dev.github.io/tenured/). Written in a personal capacity; the views here are my own and not those of my employer. Product and company names are the trademarks of their respective owners, and their appearance in a benchmark is a measurement, not an endorsement in either direction.*
+*The three personas live under [lazy-senior-dev](https://github.com/lazy-senior-dev) — [grumpy-reviewer](https://lazy-senior-dev.github.io/grumpy-reviewer/), [paranoid-sre](https://lazy-senior-dev.github.io/paranoid-sre/), [tenured](https://lazy-senior-dev.github.io/tenured/). Written in a personal capacity; the views here are my own and not those of my employer. Product and company names are the trademarks of their respective owners, and their appearance in a benchmark is a measurement, not an endorsement in either direction.*

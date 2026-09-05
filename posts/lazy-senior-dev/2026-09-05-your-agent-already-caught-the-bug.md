@@ -4,7 +4,8 @@ dek: "I gave four AI coding agents the same defective diffs, then made them writ
 date: 2026-09-05
 slug: your-agent-already-caught-the-bug
 category: "Agentic AI"
-cover: assets/covers/your-agent-already-caught-the-bug.svg
+cover: assets/covers/lazy-senior-dev/your-agent-already-caught-the-bug.svg
+card: assets/art/lazy-senior-dev/your-agent-already-caught-the-bug.png
 tags: [agentic-ai, code-review, benchmarks, developer-tools]
 canonical: self
 status: published

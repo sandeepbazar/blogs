@@ -11,6 +11,8 @@ canonical: self
 status: published
 ---
 
+![Three review personas and the measured drop in defects reaching the branch for each](https://lazy-senior-dev.github.io/assets/hero/hero-dark.svg)
+
 ## The result I did not want
 
 I built three AI review personas and benchmarked them properly, expecting to show they catch more bugs than a bare agent.
@@ -82,8 +84,14 @@ There is a fourth, and it is my favourite, because it nearly poisoned the whole 
 
 Each is one markdown ruleset compiled to adapters for fourteen hosts — Claude Code, Codex, Copilot, Gemini and Antigravity, Cursor, Windsurf, Cline, Kiro, OpenCode, Devin, Qoder, IBM Bob, and plain `AGENTS.md` for anything else. Each ships an MCP server, a GitHub Action, and a CLI. Apache-2.0, zero runtime dependencies.
 
+![The Grump: a change flows in, is reviewed and gated, and the branch stays clean](https://lazy-senior-dev.github.io/assets/hero/grumpy-reviewer-dark.svg)
+
 - **[grumpy-reviewer](https://github.com/lazy-senior-dev/grumpy-reviewer)** — the staff engineer who blocks the merge. Ten questions, a stop rule, and verdicts of `APPROVE` / `REQUEST_CHANGES` / `BLOCK`.
+![The Paranoid SRE: a deploy is held until the blast radius is answered](https://lazy-senior-dev.github.io/assets/hero/paranoid-sre-dark.svg)
+
 - **[paranoid-sre](https://github.com/lazy-senior-dev/paranoid-sre)** — asks what happens at 3 a.m. when this rolls out. `SHIP` / `HOLD` / `PAGE`. The strongest measured effect of the three.
+![Tenured: a ticket is checked against the history so the repository does not repeat itself](https://lazy-senior-dev.github.io/assets/hero/tenured-dark.svg)
+
 - **[tenured](https://github.com/lazy-senior-dev/tenured)** — reads the git log, the postmortems and the ADRs, and asks whether the repository has tried this before and undone it. `NEW` / `SEEN_BEFORE` / `DO_NOT_REPEAT`.
 
 They compose. The Grump reviews the diff, the SRE asks what it does to production, Tenured asks whether you already tried it in 2024.

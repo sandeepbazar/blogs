@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="A git log whose middle commit names incident INC-2019-07 is scanned by the agent, which finds it in 94 percent of unaided runs. On four clean changes the unaided agent raises four false alarms; with the reviewer loaded it raises none while still catching every planted defect.">
+  <style>
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .sans{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    .cap{font-size:15px;font-weight:700;letter-spacing:.18em;fill:#5a6b8c}
+    .code{font-size:17px;fill:#93a4c8}
+    .lbl{font-size:17px;fill:#93a4c8}
+    .big{font-size:76px;font-weight:800;fill:#e8ecf8}
+    .mid{font-size:40px;font-weight:800}
+    .note{font-size:15px;fill:#5a6b8c}
+    .ttl{font-size:31px;font-weight:800;fill:#e8ecf8}
+    @keyframes scan{0%{transform:translateY(0);opacity:0}6%{opacity:1}26%{transform:translateY(64px);opacity:1}34%,100%{opacity:0}}
+    @keyframes hit{0%,20%{opacity:0}26%{opacity:1}100%{opacity:1}}
+    @keyframes pct{0%,30%{opacity:0;transform:translateY(10px)}38%,100%{opacity:1;transform:translateY(0)}}
+    @keyframes pulse{0%,42%{opacity:.25;transform:scale(.94)}50%{opacity:1;transform:scale(1.06)}60%,100%{opacity:1;transform:scale(1)}}
+    @keyframes calm{0%,74%{opacity:0;transform:scale(.9)}82%{opacity:1;transform:scale(1.06)}88%,100%{opacity:1;transform:scale(1)}}
+    @keyframes keep{0%,46%{opacity:0}54%,100%{opacity:1}}
+    @keyframes dash{to{stroke-dashoffset:-40}}
+    .s{animation:scan 9s ease-in-out infinite}
+    .h{animation:hit 9s ease-in-out infinite}
+    .p{animation:pct 9s ease-out infinite}
+    .f2{animation:pulse 9s ease-in-out infinite;transform-origin:854px 270px}
+    .c{animation:calm 9s ease-out infinite;transform-origin:center}
+    .k{animation:keep 9s ease-out infinite}
+    .w{stroke-dasharray:8 8;animation:dash 1.6s linear infinite}
+    @media (prefers-reduced-motion:reduce){
+      .s,.h,.p,.f2,.c,.k{animation:none}
+      .s{opacity:0}
+      .p,.f2,.c,.k{opacity:1}
+    }
+  </style>
+  <rect width="1200" height="630" fill="#0b1020"/>
+  <rect x="0" y="0" width="1200" height="4" fill="#8ea2ff" opacity=".55"/>
+
+  <text class="sans ttl" x="64" y="72">It already read the log. It just flags everything.</text>
+  <text class="sans note" x="64" y="102">Eight tickets whose history argues against the obvious change. The incident id appears only in the commit log.</text>
+
+  <!-- panel 1: the log -->
+  <text class="sans cap" x="64" y="156">THE HISTORY</text>
+  <rect x="64" y="172" width="392" height="180" rx="12" fill="#121a30" stroke="#1e2a4a"/>
+  <text class="mono code" x="88" y="208">cache: initial client</text>
+  <rect x="80" y="222" width="360" height="34" rx="7" fill="#8ea2ff" fill-opacity=".14" class="h"/>
+  <text class="mono code" x="88" y="245" fill="#e8ecf8">cap retries at 5; storm caused</text>
+  <text class="mono h" x="88" y="272" font-size="17" fill="#38bdf8">INC-2019-07</text>
+  <text class="mono code" x="88" y="300">cache: expose Stats()</text>
+  <rect x="80" y="188" width="360" height="26" rx="6" fill="#8ea2ff" fill-opacity=".22" class="s"/>
+  <text class="sans note" x="64" y="378">Not in the ticket. Not in the code.</text>
+
+  <!-- panel 2: it found it -->
+  <text class="sans cap" x="520" y="156">UNAIDED AGENT</text>
+  <g class="p">
+    <text class="sans big" x="520" y="248">94%</text>
+    <text class="sans lbl" x="520" y="282">named the incident</text>
+    <text class="sans lbl" x="520" y="306">with no skill loaded</text>
+  </g>
+  <text class="sans note" x="520" y="378">claude-sonnet-5.</text>
+
+
+  <!-- panel 3: the real problem -->
+  <text class="sans cap" x="760" y="156">FOUR CLEAN CHANGES</text>
+  <rect x="760" y="172" width="376" height="180" rx="12" fill="#121a30" stroke="#1e2a4a"/>
+  <line x1="948" y1="192" x2="948" y2="332" stroke="#1e2a4a" stroke-width="1.5"/>
+  <text class="sans cap" x="854" y="216" text-anchor="middle" font-size="13">UNAIDED</text>
+  <text class="sans cap" x="1042" y="216" text-anchor="middle" font-size="13">LOADED</text>
+  <g class="f2">
+    <text class="sans" x="854" y="290" font-size="64" font-weight="800" fill="#f43f5e" text-anchor="middle">4</text>
+  </g>
+  <g class="c">
+    <text class="sans" x="1042" y="290" font-size="64" font-weight="800" fill="#22c55e" text-anchor="middle">0</text>
+  </g>
+  <text class="sans lbl" x="948" y="324" text-anchor="middle" fill="#93a4c8">false alarms of 4</text>
+  <text class="sans note" x="760" y="378">Unaided, then with the reviewer loaded.</text>
+
+  <!-- the line that makes it mean something -->
+  <rect x="64" y="430" width="1072" height="84" rx="14" fill="#121a30" stroke="#1e2a4a"/>
+  <g class="k">
+    <circle cx="106" cy="472" r="15" fill="#22c55e" opacity=".18"/>
+    <path d="M99 472 l5 6 l10 -13" stroke="#22c55e" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text class="sans" x="138" y="466" font-size="20" font-weight="700" fill="#e8ecf8">Detection held: 12 of 12 seeded defects still caught.</text>
+    <text class="sans note" x="138" y="492">Zero false alarms is also what approving everything scores, so the catch rate belongs in the same sentence.</text>
+  </g>
+
+  <text class="sans note" x="64" y="566">Four agents measured. Review tier, clean-input arm.</text>
+  <text class="sans note" x="1136" y="566" text-anchor="end">lazy-senior-dev · tenured</text>
+</svg>

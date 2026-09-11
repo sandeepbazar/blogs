@@ -86,13 +86,13 @@ Each is one markdown ruleset compiled to adapters for fourteen hosts — Claude 
 
 ![The Grump: a change flows in, is reviewed and gated, and the branch stays clean](https://lazy-senior-dev.github.io/assets/hero/grumpy-reviewer-dark.svg)
 
-- **[grumpy-reviewer](https://github.com/lazy-senior-dev/grumpy-reviewer)** — the staff engineer who blocks the merge. Ten questions, a stop rule, and verdicts of `APPROVE` / `REQUEST_CHANGES` / `BLOCK`.
+- **[grumpy-reviewer](https://lazy-senior-dev.github.io/grumpy-reviewer/)** — the staff engineer who blocks the merge. Ten questions, a stop rule, and verdicts of `APPROVE` / `REQUEST_CHANGES` / `BLOCK`.
 ![The Paranoid SRE: a deploy is held until the blast radius is answered](https://lazy-senior-dev.github.io/assets/hero/paranoid-sre-dark.svg)
 
-- **[paranoid-sre](https://github.com/lazy-senior-dev/paranoid-sre)** — asks what happens at 3 a.m. when this rolls out. `SHIP` / `HOLD` / `PAGE`. The strongest measured effect of the three.
+- **[paranoid-sre](https://lazy-senior-dev.github.io/paranoid-sre/)** — asks what happens at 3 a.m. when this rolls out. `SHIP` / `HOLD` / `PAGE`. The strongest measured effect of the three.
 ![Tenured: a ticket is checked against the history so the repository does not repeat itself](https://lazy-senior-dev.github.io/assets/hero/tenured-dark.svg)
 
-- **[tenured](https://github.com/lazy-senior-dev/tenured)** — reads the git log, the postmortems and the ADRs, and asks whether the repository has tried this before and undone it. `NEW` / `SEEN_BEFORE` / `DO_NOT_REPEAT`.
+- **[tenured](https://lazy-senior-dev.github.io/tenured/)** — reads the git log, the postmortems and the ADRs, and asks whether the repository has tried this before and undone it. `NEW` / `SEEN_BEFORE` / `DO_NOT_REPEAT`.
 
 They compose. The Grump reviews the diff, the SRE asks what it does to production, Tenured asks whether you already tried it in 2024.
 
@@ -112,4 +112,4 @@ The benchmarks are in the repositories with the raw transcripts, the per-case ta
 
 ---
 
-*The three personas live under [lazy-senior-dev](https://github.com/lazy-senior-dev) — [grumpy-reviewer](https://lazy-senior-dev.github.io/grumpy-reviewer/), [paranoid-sre](https://lazy-senior-dev.github.io/paranoid-sre/), [tenured](https://lazy-senior-dev.github.io/tenured/). Written in a personal capacity; the views here are my own and not those of my employer. Product and company names are the trademarks of their respective owners, and their appearance in a benchmark is a measurement, not an endorsement in either direction.*
+*The three personas live under [lazy-senior-dev](https://lazy-senior-dev.github.io/) — [grumpy-reviewer](https://lazy-senior-dev.github.io/grumpy-reviewer/), [paranoid-sre](https://lazy-senior-dev.github.io/paranoid-sre/), [tenured](https://lazy-senior-dev.github.io/tenured/). Written in a personal capacity; the views here are my own and not those of my employer. Product and company names are the trademarks of their respective owners, and their appearance in a benchmark is a measurement, not an endorsement in either direction.*

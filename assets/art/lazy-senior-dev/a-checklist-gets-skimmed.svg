@@ -1,0 +1,174 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Three reviewer personas on one pipeline. The Grump reads the diff and answers APPROVE, REQUEST_CHANGES or BLOCK. The Paranoid SRE reads the deploy and answers SHIP, HOLD or PAGE. Tenured reads the history and answers NEW, SEEN_BEFORE or DO_NOT_REPEAT. Each checklist question is considered in turn, the blocking verdict locks on, one shared PreToolUse gate refuses the write, and once the finding is fixed the same gate lets it through.">
+  <style>
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .sans{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    .cap{font-size:15px;font-weight:700;letter-spacing:.22em;fill:#5a6b8c}
+    .name{font-size:25px;font-weight:700}
+    .lbl{font-size:13px;font-weight:700;letter-spacing:.16em;fill:#5a6b8c}
+    .reads{font-size:17px;fill:#93a4c8}
+    .chip{font-size:16px;fill:#e8ecf8}
+    .gate{font-size:19px;fill:#e8ecf8}
+    .note{font-size:15px;fill:#5a6b8c}
+    .verdict{font-size:15px;font-weight:700;letter-spacing:.14em}
+    svg *{transform-box:fill-box}
+
+    /* one 9s story, told three times over with a quarter-second stagger */
+    @keyframes consider{0%,6%{opacity:0}10%,20%{opacity:1}26%,100%{opacity:0}}
+    @keyframes consider2{0%,18%{opacity:0}22%,32%{opacity:1}38%,100%{opacity:0}}
+    @keyframes lock{0%,30%{opacity:0;transform:scale(.94)}36%{opacity:1;transform:scale(1.03)}40%,62%{opacity:1;transform:scale(1)}70%,100%{opacity:0;transform:scale(1)}}
+    @keyframes ring{0%,32%{opacity:0;transform:scale(.9)}40%{opacity:.55;transform:scale(1.04)}56%{opacity:0;transform:scale(1.12)}100%{opacity:0}}
+    @keyframes cleared{0%,66%{opacity:0;transform:scale(.94)}72%{opacity:1;transform:scale(1.03)}76%,92%{opacity:1;transform:scale(1)}98%,100%{opacity:0}}
+    @keyframes fall{0%,42%{opacity:0;transform:translateY(-14px)}48%{opacity:1}58%{opacity:1;transform:translateY(52px)}62%,100%{opacity:0;transform:translateY(52px)}}
+    @keyframes flow{to{stroke-dashoffset:-28}}
+    @keyframes wake{0%,40%{opacity:.28}50%,62%{opacity:1}74%,100%{opacity:.28}}
+    @keyframes refuse{0%,50%{opacity:0}56%,68%{opacity:1}74%,100%{opacity:0}}
+    @keyframes pass{0%,70%{opacity:0}76%,94%{opacity:1}99%,100%{opacity:0}}
+    @keyframes railRed{0%,50%{opacity:0}56%,70%{opacity:1}76%,100%{opacity:0}}
+    @keyframes railGreen{0%,50%{opacity:1}56%,70%{opacity:0}76%,100%{opacity:1}}
+    @keyframes lift{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+    @keyframes breathe{0%,100%{opacity:.30}50%{opacity:.62}}
+
+    .in{animation:lift .9s ease-out both}
+    .d1{animation-delay:.05s}.d2{animation-delay:.25s}.d3{animation-delay:.45s}
+    .c1{animation:consider 9s ease-in-out infinite}
+    .c2{animation:consider2 9s ease-in-out infinite}
+    .lk{animation:lock 9s ease-in-out infinite}
+    .rg{animation:ring 9s ease-in-out infinite}
+    .ok{animation:cleared 9s ease-in-out infinite}
+    .tok{animation:fall 9s ease-in-out infinite}
+    .wire{stroke-dasharray:5 9;animation:flow 2.4s linear infinite,wake 9s ease-in-out infinite}
+    .s2{animation-delay:.25s}.s3{animation-delay:.5s}
+    .glow{animation:breathe 9s ease-in-out infinite}
+
+    @media (prefers-reduced-motion:reduce){
+      .in,.c1,.c2,.lk,.rg,.ok,.tok,.wire,.glow{animation:none}
+      .c1,.c2,.rg,.ok,.tok{opacity:0}
+      .lk{opacity:1}
+      .wire{opacity:.5}
+    }
+  </style>
+
+  <rect width="1200" height="630" fill="#0b1020"/>
+  <g stroke="#243154" stroke-width="1" opacity=".5"><path d="M0 90.5H1200"/></g>
+  <g stroke="#1a2440" stroke-width="1" opacity=".55">
+    <path d="M240.5 0V630M480.5 0V630M720.5 0V630M960.5 0V630"/>
+  </g>
+
+  <text class="mono cap" x="56" y="54">SAME MECHANICS  ·  <tspan fill="#93a4c8">THREE DIFFERENT ENGINEERS</tspan></text>
+  <text class="mono lbl" x="1144" y="54" text-anchor="end">lazy-senior-dev</text>
+
+  <!-- ============ grumpy-reviewer ============ -->
+  <g class="in d1">
+    <rect x="56" y="126" width="344" height="300" rx="18" fill="#121a30" stroke="#243154"/>
+    <rect x="56" y="126" width="344" height="4" rx="2" fill="#fbbf24"/>
+    <text class="mono name" x="84" y="178" fill="#fbbf24">grumpy-reviewer</text>
+    <text class="mono lbl" x="84" y="210">READS</text>
+    <text class="sans reads" x="84" y="238">the diff</text>
+
+    <rect x="84" y="262" width="288" height="42" rx="10" fill="#0b1020" stroke="#243154"/>
+    <circle cx="106" cy="283" r="6" fill="#22c55e" opacity=".45"/>
+    <text class="mono chip" x="126" y="289">APPROVE</text>
+    <g class="ok"><rect x="84" y="262" width="288" height="42" rx="10" fill="#0d2a18" stroke="#22c55e"/>
+      <circle cx="106" cy="283" r="6" fill="#22c55e"/><text class="mono chip" x="126" y="289" fill="#bbf7d0">APPROVE</text></g>
+    <g class="c1"><rect x="84" y="262" width="288" height="42" rx="10" fill="none" stroke="#3d4a6b"/></g>
+
+    <rect x="84" y="312" width="288" height="42" rx="10" fill="#0b1020" stroke="#243154"/>
+    <circle cx="106" cy="333" r="6" fill="#fbbf24" opacity=".45"/>
+    <text class="mono chip" x="126" y="339">REQUEST_CHANGES</text>
+    <g class="c2"><rect x="84" y="312" width="288" height="42" rx="10" fill="none" stroke="#3d4a6b"/></g>
+
+    <rect x="84" y="362" width="288" height="42" rx="10" fill="#0b1020" stroke="#243154"/>
+    <circle cx="106" cy="383" r="6" fill="#f43f5e" opacity=".45"/>
+    <text class="mono chip" x="126" y="389">BLOCK</text>
+    <g class="lk"><rect x="84" y="362" width="288" height="42" rx="10" fill="#2a1020" stroke="#f43f5e"/>
+      <circle cx="106" cy="383" r="6" fill="#f43f5e"/><text class="mono chip" x="126" y="389" fill="#fecdd3">BLOCK</text></g>
+    <rect class="rg" x="78" y="356" width="300" height="54" rx="14" fill="none" stroke="#f43f5e" stroke-width="2"/>
+  </g>
+
+  <!-- ============ paranoid-sre ============ -->
+  <g class="in d2">
+    <rect x="428" y="126" width="344" height="300" rx="18" fill="#121a30" stroke="#243154"/>
+    <rect x="428" y="126" width="344" height="4" rx="2" fill="#38bdf8"/>
+    <text class="mono name" x="456" y="178" fill="#38bdf8">paranoid-sre</text>
+    <text class="mono lbl" x="456" y="210">READS</text>
+    <text class="sans reads" x="456" y="238">the deploy</text>
+
+    <rect x="456" y="262" width="288" height="42" rx="10" fill="#0b1020" stroke="#243154"/>
+    <circle cx="478" cy="283" r="6" fill="#22c55e" opacity=".45"/>
+    <text class="mono chip" x="498" y="289">SHIP</text>
+    <g class="ok s2"><rect x="456" y="262" width="288" height="42" rx="10" fill="#0d2a18" stroke="#22c55e"/>
+      <circle cx="478" cy="283" r="6" fill="#22c55e"/><text class="mono chip" x="498" y="289" fill="#bbf7d0">SHIP</text></g>
+    <g class="c1 s2"><rect x="456" y="262" width="288" height="42" rx="10" fill="none" stroke="#3d4a6b"/></g>
+
+    <rect x="456" y="312" width="288" height="42" rx="10" fill="#0b1020" stroke="#243154"/>
+    <circle cx="478" cy="333" r="6" fill="#38bdf8" opacity=".45"/>
+    <text class="mono chip" x="498" y="339">HOLD</text>
+    <g class="c2 s2"><rect x="456" y="312" width="288" height="42" rx="10" fill="none" stroke="#3d4a6b"/></g>
+
+    <rect x="456" y="362" width="288" height="42" rx="10" fill="#0b1020" stroke="#243154"/>
+    <circle cx="478" cy="383" r="6" fill="#f472b6" opacity=".45"/>
+    <text class="mono chip" x="498" y="389">PAGE</text>
+    <g class="lk s2"><rect x="456" y="362" width="288" height="42" rx="10" fill="#2a1026" stroke="#f472b6"/>
+      <circle cx="478" cy="383" r="6" fill="#f472b6"/><text class="mono chip" x="498" y="389" fill="#fbcfe8">PAGE</text></g>
+    <rect class="rg s2" x="450" y="356" width="300" height="54" rx="14" fill="none" stroke="#f472b6" stroke-width="2"/>
+  </g>
+
+  <!-- ============ tenured ============ -->
+  <g class="in d3">
+    <rect x="800" y="126" width="344" height="300" rx="18" fill="#121a30" stroke="#243154"/>
+    <rect x="800" y="126" width="344" height="4" rx="2" fill="#a78bfa"/>
+    <text class="mono name" x="828" y="178" fill="#a78bfa">tenured</text>
+    <text class="mono lbl" x="828" y="210">READS</text>
+    <text class="sans reads" x="828" y="238">the history</text>
+
+    <rect x="828" y="262" width="288" height="42" rx="10" fill="#0b1020" stroke="#243154"/>
+    <circle cx="850" cy="283" r="6" fill="#22c55e" opacity=".45"/>
+    <text class="mono chip" x="870" y="289">NEW</text>
+    <g class="ok s3"><rect x="828" y="262" width="288" height="42" rx="10" fill="#0d2a18" stroke="#22c55e"/>
+      <circle cx="850" cy="283" r="6" fill="#22c55e"/><text class="mono chip" x="870" y="289" fill="#bbf7d0">NEW</text></g>
+    <g class="c1 s3"><rect x="828" y="262" width="288" height="42" rx="10" fill="none" stroke="#3d4a6b"/></g>
+
+    <rect x="828" y="312" width="288" height="42" rx="10" fill="#0b1020" stroke="#243154"/>
+    <circle cx="850" cy="333" r="6" fill="#a78bfa" opacity=".45"/>
+    <text class="mono chip" x="870" y="339">SEEN_BEFORE</text>
+    <g class="c2 s3"><rect x="828" y="312" width="288" height="42" rx="10" fill="none" stroke="#3d4a6b"/></g>
+
+    <rect x="828" y="362" width="288" height="42" rx="10" fill="#0b1020" stroke="#243154"/>
+    <circle cx="850" cy="383" r="6" fill="#fbbf24" opacity=".45"/>
+    <text class="mono chip" x="870" y="389">DO_NOT_REPEAT</text>
+    <g class="lk s3"><rect x="828" y="362" width="288" height="42" rx="10" fill="#2a2010" stroke="#fbbf24"/>
+      <circle cx="850" cy="383" r="6" fill="#fbbf24"/><text class="mono chip" x="870" y="389" fill="#fde68a">DO_NOT_REPEAT</text></g>
+    <rect class="rg s3" x="822" y="356" width="300" height="54" rx="14" fill="none" stroke="#fbbf24" stroke-width="2"/>
+  </g>
+
+  <!-- ============ the verdict falls into one shared gate ============ -->
+  <g fill="none" stroke-width="2">
+    <path class="wire" d="M228 426V492" stroke="#f43f5e"/>
+    <path class="wire s2" d="M600 426V492" stroke="#f472b6"/>
+    <path class="wire s3" d="M972 426V492" stroke="#fbbf24"/>
+  </g>
+  <circle class="tok" cx="228" cy="432" r="5" fill="#f43f5e"/>
+  <circle class="tok s2" cx="600" cy="432" r="5" fill="#f472b6"/>
+  <circle class="tok s3" cx="972" cy="432" r="5" fill="#fbbf24"/>
+
+  <rect class="glow" x="48" y="484" width="1104" height="92" rx="20" fill="none" stroke="#243154"/>
+  <rect x="56" y="492" width="1088" height="76" rx="16" fill="#121a30" stroke="#243154"/>
+  <rect x="56" y="492" width="6" height="76" rx="3" fill="#22c55e" style="animation:railGreen 9s ease-in-out infinite"/>
+  <rect x="56" y="492" width="6" height="76" rx="3" fill="#f43f5e" style="animation:railRed 9s ease-in-out infinite"/>
+
+  <text class="mono lbl" x="92" y="522">ONE GATE</text>
+  <text class="sans gate" x="92" y="548">PreToolUse refuses the write until the finding is fixed</text>
+
+  <g style="animation:refuse 9s ease-in-out infinite">
+    <rect x="806" y="512" width="150" height="36" rx="10" fill="#2a1020" stroke="#f43f5e"/>
+    <text class="mono verdict" x="881" y="536" fill="#fda4af" text-anchor="middle">REFUSED</text>
+  </g>
+  <g style="animation:pass 9s ease-in-out infinite">
+    <rect x="806" y="512" width="150" height="36" rx="10" fill="#0d2a18" stroke="#22c55e"/>
+    <text class="mono verdict" x="881" y="536" fill="#86efac" text-anchor="middle">FIXED</text>
+  </g>
+
+  <text class="mono note" x="1112" y="537" text-anchor="end">14 agents</text>
+  <text class="sans note" x="56" y="602">A checklist gets skimmed. A character gets obeyed.</text>
+  <text class="mono note" x="1144" y="602" text-anchor="end">one ruleset each  ·  Apache-2.0</text>
+</svg>

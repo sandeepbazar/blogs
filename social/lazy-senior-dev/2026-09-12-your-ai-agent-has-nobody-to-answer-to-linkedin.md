@@ -12,80 +12,75 @@ that preview does not render; an uploaded image replaces the link card.
 
 ## Post
 
-**I asked an AI agent to write 45 Kubernetes deploys. 27 of them would have taken production down.**
+Plain text, ready to paste. No markdown: LinkedIn renders asterisks and backticks literally.
+Attach share-vertical.gif (1080x1350). The link is in the body; the first comment carries the rest.
 
-`maxUnavailable: 100%` with `maxSurge: 0` — every replica gone at once, on every rollout. A migration dropping a column the previous release still reads. An HPA with no `minReplicas`. An ingress with no readiness gate.
+```
+I asked an AI agent to write 45 Kubernetes deploys.
 
-It wrote them cheerfully. It is a good model. It did that because the ticket asked for exactly that, and nothing in the room was allowed to say no.
+27 of them would have taken production down.
 
-**That is the actual shape of the problem, and it is not the one we keep talking about.**
+maxUnavailable: 100%, with maxSurge: 0. A migration dropping a column the previous release still reads. It wrote them cheerfully — it is a good model. It did that because the ticket asked for exactly that, and nothing in the room was allowed to say no.
 
-I assumed agents miss bugs. They mostly don't. On 30 diffs each carrying one planted defect, Claude Code found **30 of 30** — and found 30 of 30 with no reviewer installed at all. Detection is close to solved at this size.
+That is the real problem, and it is not the one we keep talking about.
 
-What is missing is everything that isn't in the ticket:
+Your agent writes the change, reviews its own diff, agrees with itself, and commits. Every step is the same model.
 
-▪️ the blast radius of a deploy nobody asked it to think about
-▪️ the retry cap that exists because of an incident in 2019
-▪️ the flag that was turned off after it double-charged 1,204 customers
-▪️ and — the one that surprised me most — **the judgement to stay quiet when the change is fine**
+So I gave it three senior engineers who are allowed to say no:
 
-None of that is a smarter model. It is context, and a job description.
+🔍 The Grump — reads the diff
+🚨 The Paranoid SRE — reads the deploy, not the code
+📜 Tenured — reads the git log and the postmortem
 
-So I wrote three, as three senior engineers your agent already knows how to read:
+Each is one markdown file plus a hook. Before the agent may touch a file, something outside it answers one question: allow, or deny.
 
-▪️ **The Grump** — the staff engineer who has rejected four thousand pull requests. Reads the diff. `APPROVE` / `REQUEST_CHANGES` / `BLOCK`
-▪️ **The Paranoid SRE** — has been paged for every mistake on the card. Reads the deploy, not the code. `SHIP` / `HOLD` / `PAGE`
-▪️ **Tenured** — was there for INC-2019-07. Reads the git log, the postmortems and the ADR that says *don't*. `NEW` / `SEEN_BEFORE` / `DO_NOT_REPEAT`
+2,000 recorded runs. Defects that reached the branch, unaided → with the gate:
 
-None of them is an agent. No second model, no extra API bill — a markdown file, and a hook.
+▪️ Deploys — 60% → 0%
+▪️ Code review — 29% → 0%
+▪️ Repository history — 10% → 0%
 
-**The hook is the part that matters.** Before your agent may touch a file, something outside it asks one question: allow, or deny. If the review the agent just wrote says BLOCK, the write is refused. If it skipped the review and went straight for the file, refused until it doesn't.
+Two things I would rather not write:
 
-That's the whole trick, and it's smaller than it sounds: **something other than the model gets to decide the work is finished.** A prompt can never do that, because a prompt is advice to the same model that wrote the code.
+Most of that is just the prompt. A generic "be careful" takes 29% to 8% on its own. The gate earns the last step, not the first.
 
-Then I measured whether it actually helped. Two thousand recorded runs, scored by fixed regexes written before a single run — never a model grading another model, because that is how you end up measuring your own opinion and calling it evidence.
+And detection was never the problem. 30 of 30 planted bugs found with my reviewer — and 30 of 30 without it. What agents are bad at is stopping. On four changes with nothing wrong in them: 4 false alarms, down to 0, still catching 12 of 12 real ones.
 
-Defects that reached the branch, unaided → with the gate:
+A senior engineer who objects to everything is not careful. They are noise with a conscience, and you stop reading them by Thursday.
 
-▪️ **Paranoid SRE** — deploys · Claude **60% → 0%** · IBM Bob **27% → 2%**
-▪️ **The Grump** — code review · Antigravity **29% → 0%** · IBM Bob **18% → 0%** · Claude **7% → 2%**
-▪️ **Tenured** — repo history · IBM Bob **10% → 0%** · Claude **0% → 0%**
-
-Two things in there I'd rather not write, and am writing anyway.
-
-**Most of the improvement is just the prompt.** On the code-review corpus a generic "be careful" instruction takes 29% down to 8% by itself. If that were the whole story I'd tell you to close this and go write that instruction — it takes a minute. The gate earns the last step, not the first one.
-
-**And that last row is zeros.** On Tenured's corpus the stronger model shipped nothing either way. There was nothing there to prevent, and a win claimed from a row of zeros is the kind of thing a reader checks once and never trusts again.
-
-Where it helped most was the thing I wasn't looking for. On four changes with genuinely nothing wrong in them:
-
-▪️ Claude Code — 4 of 4 false alarms → **0**
-▪️ Codex CLI — 3.5 of 4 → **0**
-▪️ IBM Bob — 3 of 4 → **0**
-▪️ Antigravity — 3 of 3 → **0**
-
-All four still caught 12 of 12 real ones. That last bit matters more than it looks: approving everything also scores zero false alarms, so a quiet reviewer is only interesting if it is still catching things.
-
-We all know the human version. A senior engineer who objects to everything isn't careful — they're noise with a conscience, and you quietly stop reading their comments by Thursday. The ones worth having stay quiet on work that's fine, which is exactly why you look up when they don't.
-
-If you take one thing, take the experiment rather than the tool: **give whatever reviewer you're evaluating four changes with nothing wrong in them, and count how many it objects to.** An afternoon's work, and it will tell you more about whether you'll still be using it in a month than any benchmark of planted bugs.
-
-The whole write-up — all three personas, the hook that refuses the write, the two hypotheses of mine the data killed, and two bugs I found in my own benchmark while writing it:
-
+Full write-up, all the numbers, and the two hypotheses of mine the data killed:
 https://sandeepbazar.github.io/blogs/lazy-senior-dev/your-ai-agent-has-nobody-to-answer-to/
+
+#AgenticAI #AICodeReview #DeveloperTools #Kubernetes #SRE
+```
 
 ## First comment
 
-If you'd rather check me than trust me: each persona ships with the benchmark, the raw transcripts, the per-case tables, and the control arm that makes my own numbers look worse. `npm run bench` runs it against your agent.
+```
+The three, each one markdown file — no second model, no extra API bill:
 
-Two more agents are still finishing their sweeps. The tables regenerate from the records, so the numbers in that post will change under it — including if they disagree with me.
+🔍 The Grump, code review → https://lazy-senior-dev.github.io/grumpy-reviewer/
+🚨 The Paranoid SRE, deploys → https://lazy-senior-dev.github.io/paranoid-sre/
+📜 Tenured, repository memory → https://lazy-senior-dev.github.io/tenured/
 
-If your numbers disagree with mine, please publish them. That's considerably more useful to me than a star.
+Install one:
+npx github:lazy-senior-dev/grumpy-reviewer install
+
+Works in Claude Code, Codex, Copilot CLI, Cursor, Windsurf, IBM Bob, Antigravity and 7 more. Also a GitHub Action, so it reviews human pull requests too.
+
+If you would rather check me than trust me: each ships with the benchmark, the raw transcripts, the per-case tables, and the control arm that makes my own numbers look worse. npm run bench runs it against your own agent.
+
+Two more agents are still finishing their sweeps. The tables regenerate from the records, so those numbers will move — including if they end up disagreeing with me.
+```
 
 ## Alternate hook
 
-**I asked an AI agent to write 45 Kubernetes deploys. 27 of them would have taken production down.**
+```
+Detection was never the problem.
 
-Not because the model is weak — it's a good model. Because the ticket asked for exactly that, and nothing in the room was allowed to say no.
+I gave four AI coding agents 30 diffs, each with one planted bug. They found 30 of 30 — and 30 of 30 with no reviewer installed at all.
 
-So I gave it three senior engineers who are. Two thousand recorded runs later, the one thing a better prompt could not replace was the refusal.
+Then I gave them four changes with nothing wrong in them. They raised 4 false alarms out of 4.
+
+An assistant that objects to everything is not cautious. It is noise with a conscience, and you stop reading it by Thursday.
+```

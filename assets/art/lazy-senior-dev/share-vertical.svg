@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1350" role="img" aria-label="Top: an agent writes a change, reviews its own diff, agrees with itself and commits, in a closed loop, until a gate is placed in it and refuses the write. Below, three reviewers stand at that gate. The Grump reads the diff and blocks an API key compared with double equals, taking defects reaching the branch from 29 percent to 0. The Paranoid SRE reads the deploy and pages on maxUnavailable 100 percent, from 60 percent to 0. Tenured reads the repository's history and refuses to re-add a dependency removed for a CVE, from 10 percent to 0.">
+  <style>
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .sans{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    .cap{font-size:16px;font-weight:700;letter-spacing:.18em;fill:#5a6b8c}
+    .ttl{font-size:40px;font-weight:800;fill:#e8ecf8}
+    .sub{font-size:20px;fill:#93a4c8}
+    .n{font-size:18px;fill:#e8ecf8}
+    .nm{font-size:25px;font-weight:800;fill:#e8ecf8}
+    .role{font-size:17px;fill:#93a4c8}
+    .code{font-size:16px}
+    .vd{font-size:15px;font-weight:700;letter-spacing:.05em}
+    .big{font-size:34px;font-weight:800}
+    .lbl{font-size:14px;fill:#5a6b8c}
+
+    /* Everything is on screen the whole time and everything is moving: one 12s timeline, each row
+       offset inside it so the eye is led down the card instead of being asked to watch four things
+       at once. */
+    @keyframes orbit{to{transform:rotate(360deg)}}
+    @keyframes flow{to{stroke-dashoffset:-34}}
+    @keyframes gatebar{0%,20%{opacity:.25;transform:scaleY(.82)}28%,72%{opacity:1;transform:scaleY(1)}82%,100%{opacity:.25;transform:scaleY(.82)}}
+    @keyframes refuse{0%,22%{opacity:0;transform:scale(.82)}30%{opacity:1;transform:scale(1.08)}38%,70%{opacity:1;transform:scale(1)}80%,100%{opacity:0;transform:scale(.94)}}
+    @keyframes nudge{0%,20%{transform:translateX(0)}28%{transform:translateX(-30px)}36%,100%{transform:translateX(-18px)}}
+
+    /* one stamp per row, staggered */
+    @keyframes stamp1{0%,24%{opacity:0;transform:scale(.7) rotate(-8deg)}31%{opacity:1;transform:scale(1.12) rotate(-3deg)}38%,92%{opacity:1;transform:scale(1) rotate(-3deg)}100%{opacity:0}}
+    @keyframes stamp2{0%,40%{opacity:0;transform:scale(.7) rotate(-8deg)}47%{opacity:1;transform:scale(1.12) rotate(-3deg)}54%,92%{opacity:1;transform:scale(1) rotate(-3deg)}100%{opacity:0}}
+    @keyframes stamp3{0%,56%{opacity:0;transform:scale(.7) rotate(-8deg)}63%{opacity:1;transform:scale(1.12) rotate(-3deg)}70%,92%{opacity:1;transform:scale(1) rotate(-3deg)}100%{opacity:0}}
+    @keyframes strike1{0%,26%{width:0}34%,100%{width:322px}}
+    @keyframes strike2{0%,42%{width:0}50%,100%{width:322px}}
+    @keyframes strike3{0%,58%{width:0}66%,100%{width:322px}}
+    @keyframes drop1{0%,22%{opacity:0;transform:translateY(-8px)}30%,100%{opacity:1;transform:translateY(0)}}
+    @keyframes drop2{0%,38%{opacity:0;transform:translateY(-8px)}46%,100%{opacity:1;transform:translateY(0)}}
+    @keyframes drop3{0%,54%{opacity:0;transform:translateY(-8px)}62%,100%{opacity:1;transform:translateY(0)}}
+
+    .orb{animation:orbit 6s linear infinite;transform-origin:540px 372px}
+    .fl{stroke-dasharray:7 10;animation:flow 1.6s linear infinite}
+    .gb{animation:gatebar 12s ease-in-out infinite;transform-origin:540px 372px}
+    .rf{animation:refuse 12s ease-out infinite;transform-origin:760px 372px}
+    .nd{animation:nudge 12s ease-in-out infinite}
+    .s1{animation:stamp1 12s ease-out infinite;transform-origin:center}
+    .s2{animation:stamp2 12s ease-out infinite;transform-origin:center}
+    .s3{animation:stamp3 12s ease-out infinite;transform-origin:center}
+    .k1{animation:strike1 12s ease-out infinite}
+    .k2{animation:strike2 12s ease-out infinite}
+    .k3{animation:strike3 12s ease-out infinite}
+    .d1{animation:drop1 12s ease-out infinite}
+    .d2{animation:drop2 12s ease-out infinite}
+    .d3{animation:drop3 12s ease-out infinite}
+    @media (prefers-reduced-motion:reduce){
+      .orb,.fl,.gb,.rf,.nd,.s1,.s2,.s3,.k1,.k2,.k3,.d1,.d2,.d3{animation:none}
+      .rf,.s1,.s2,.s3,.d1,.d2,.d3{opacity:1;transform:none}
+      .k1,.k2,.k3{width:322px}
+    }
+  </style>
+
+  <rect width="1080" height="1350" fill="#0b1020"/>
+  <rect x="0" y="0" width="1080" height="5" fill="#8ea2ff" opacity=".7"/>
+
+  <!-- ── heading ───────────────────────────────────────────────── -->
+  <text class="sans cap" x="56" y="74">THE LOOP NOBODY IS WATCHING</text>
+  <text class="sans ttl" x="56" y="128">Your agent writes it, reviews it,</text>
+  <text class="sans ttl" x="56" y="176">and agrees with itself.</text>
+
+  <!-- ── the loop, with a gate in it ───────────────────────────── -->
+  <circle cx="540" cy="372" r="128" fill="none" stroke="#1e2a4a" stroke-width="2"/>
+  <circle cx="540" cy="372" r="128" fill="none" stroke="#8ea2ff" stroke-width="2.5" class="fl" opacity=".55"/>
+  <g class="orb"><circle cx="540" cy="244" r="9" fill="#8ea2ff"/></g>
+
+  <rect x="416" y="222" width="248" height="44" rx="11" fill="#121a30" stroke="#1e2a4a"/>
+  <text class="sans n" x="540" y="250" text-anchor="middle">writes the change</text>
+  <rect x="686" y="350" width="252" height="44" rx="11" fill="#121a30" stroke="#1e2a4a"/>
+  <text class="sans n" x="812" y="378" text-anchor="middle">reviews its own diff</text>
+  <rect x="424" y="478" width="232" height="44" rx="11" fill="#121a30" stroke="#1e2a4a"/>
+  <text class="sans n" x="540" y="506" text-anchor="middle">agrees with itself</text>
+  <g class="nd">
+    <rect x="146" y="350" width="196" height="44" rx="11" fill="#121a30" stroke="#8ea2ff" stroke-width="1.5"/>
+    <text class="sans n" x="244" y="378" text-anchor="middle">commits</text>
+  </g>
+
+  <!-- the gate sits between "agrees" and "commits" -->
+  <rect x="398" y="336" width="22" height="72" rx="6" fill="#f43f5e" class="gb"/>
+  <g class="rf">
+    <rect x="600" y="586" width="378" height="0" fill="none"/>
+  </g>
+  <text class="sans sub" x="540" y="364" text-anchor="middle" fill="#5a6b8c">nothing here</text>
+  <text class="sans sub" x="540" y="390" text-anchor="middle" fill="#5a6b8c">can say no</text>
+
+  <text class="sans sub" x="56" y="566">So I put three senior engineers in the loop — and one of them can refuse the write.</text>
+
+  <!-- ── the three, each with the thing it catches ─────────────── -->
+  <!-- 1. the Grump -->
+  <rect x="56" y="596" width="968" height="222" rx="16" fill="#121a30" stroke="#1e2a4a"/>
+  <circle cx="96" cy="640" r="13" fill="#8ea2ff" fill-opacity=".3"/>
+  <text class="sans nm" x="124" y="648">The Grump</text>
+  <text class="sans role" x="124" y="678">reads the diff · rejected 4,000 pull requests</text>
+  <rect x="124" y="702" width="340" height="42" rx="9" fill="#0b1020" stroke="#1e2a4a"/>
+  <text class="mono code" x="140" y="729" fill="#93a4c8">if key == API_KEY:</text>
+  <rect class="k1" x="140" y="723" height="2.5" fill="#f43f5e"/>
+  <g class="d1"><text class="mono code" x="124" y="778" fill="#22c55e">→ hmac.compare_digest(key, API_KEY)</text></g>
+  <g class="s1">
+    <rect x="516" y="694" width="196" height="54" rx="10" fill="#f43f5e" fill-opacity=".14" stroke="#f43f5e" stroke-width="1.8"/>
+    <text class="mono vd" x="614" y="727" fill="#f43f5e" text-anchor="middle">BLOCK</text>
+  </g>
+  <text class="sans big" x="880" y="700" fill="#f43f5e" text-anchor="middle">29%</text>
+  <text class="sans" x="924" y="700" font-size="24" fill="#5a6b8c">→</text>
+  <text class="sans big" x="968" y="700" fill="#22c55e" text-anchor="middle">0%</text>
+  <text class="sans lbl" x="924" y="726" text-anchor="middle">defects reaching the branch</text>
+
+  <!-- 2. the Paranoid SRE -->
+  <rect x="56" y="838" width="968" height="222" rx="16" fill="#121a30" stroke="#1e2a4a"/>
+  <circle cx="96" cy="882" r="13" fill="#38bdf8" fill-opacity=".3"/>
+  <text class="sans nm" x="124" y="890">The Paranoid SRE</text>
+  <text class="sans role" x="124" y="920">reads the deploy, not the code · paged for all of it</text>
+  <rect x="124" y="944" width="340" height="42" rx="9" fill="#0b1020" stroke="#1e2a4a"/>
+  <text class="mono code" x="140" y="971" fill="#93a4c8">maxUnavailable: 100%</text>
+  <rect class="k2" x="140" y="965" height="2.5" fill="#f43f5e"/>
+  <g class="d2"><text class="mono code" x="124" y="1020" fill="#22c55e">→ maxUnavailable: 25%, maxSurge: 1</text></g>
+  <g class="s2">
+    <rect x="516" y="936" width="196" height="54" rx="10" fill="#f43f5e" fill-opacity=".14" stroke="#f43f5e" stroke-width="1.8"/>
+    <text class="mono vd" x="614" y="969" fill="#f43f5e" text-anchor="middle">PAGE</text>
+  </g>
+  <text class="sans big" x="880" y="942" fill="#f43f5e" text-anchor="middle">60%</text>
+  <text class="sans" x="924" y="942" font-size="24" fill="#5a6b8c">→</text>
+  <text class="sans big" x="968" y="942" fill="#22c55e" text-anchor="middle">0%</text>
+  <text class="sans lbl" x="924" y="968" text-anchor="middle">45 deploys, 27 took prod down</text>
+
+  <!-- 3. Tenured -->
+  <rect x="56" y="1080" width="968" height="222" rx="16" fill="#121a30" stroke="#1e2a4a"/>
+  <circle cx="96" cy="1124" r="13" fill="#f472b6" fill-opacity=".3"/>
+  <text class="sans nm" x="124" y="1132">Tenured</text>
+  <text class="sans role" x="124" y="1162">reads the log and the postmortem · was there for INC-2019-07</text>
+  <rect x="124" y="1186" width="340" height="42" rx="9" fill="#0b1020" stroke="#1e2a4a"/>
+  <text class="mono code" x="140" y="1213" fill="#93a4c8">+ xml-parse-lite</text>
+  <rect class="k3" x="140" y="1207" height="2.5" fill="#f43f5e"/>
+  <g class="d3"><text class="mono code" x="124" y="1262" fill="#22c55e">→ removed for CVE-2024-3104. use defusedxml</text></g>
+  <g class="s3">
+    <rect x="516" y="1178" width="248" height="54" rx="10" fill="#f43f5e" fill-opacity=".14" stroke="#f43f5e" stroke-width="1.8"/>
+    <text class="mono vd" x="640" y="1211" fill="#f43f5e" text-anchor="middle">DO_NOT_REPEAT</text>
+  </g>
+  <text class="sans big" x="880" y="1184" fill="#f43f5e" text-anchor="middle">10%</text>
+  <text class="sans" x="924" y="1184" font-size="24" fill="#5a6b8c">→</text>
+  <text class="sans big" x="968" y="1184" fill="#22c55e" text-anchor="middle">0%</text>
+  <text class="sans lbl" x="924" y="1210" text-anchor="middle">changes that repeat history</text>
+
+  <text class="sans" x="56" y="1332" font-size="15.5" fill="#5a6b8c">2,000 recorded runs · four agents · scored by fixed checks written before any run</text>
+  <text class="sans" x="1024" y="1332" font-size="15.5" fill="#5a6b8c" text-anchor="end">lazy-senior-dev</text>
+</svg>

@@ -78,16 +78,16 @@ Then I did the part I had been putting off, which was finding out whether any of
 I gave agents tickets that quietly invite a classic mistake — a timing-unsafe key comparison, a swallowed exception, an unbounded retry — and let them write the code themselves. Four arms: no skill, a generic "be careful" prompt, the ruleset loaded, and the ruleset plus the gate. Five runs per ticket per arm. Every shipped diff is scored by fixed regexes written before any run, never by a model judging a model.
 
 <!-- arms:start -->
-| Arm | Antigravity CLI (n=90) | IBM Bob Shell (n=90) | Claude Code (n=90) |
-|---|---|---|---|
-| no skill | 26 (29%) | 16 (18%) | 6 (7%) |
-| generic "be careful" prompt | 7 (8%) | 4 (4%) | 4 (4%) |
-| ruleset loaded | 5 (6%) | 3 (3%) | 4 (4%) |
-| **ruleset + gate** | **0 (0%)** | **0 (0%)** | **2 (2%)** |
+| Arm | Antigravity CLI (n=90) | IBM Bob Shell (n=90) | Codex CLI (n=72) | Claude Code (n=90) |
+|---|---|---|---|---|
+| no skill | 26 (29%) | 16 (18%) | 13 (18%) | 6 (7%) |
+| generic "be careful" prompt | 7 (8%) | 4 (4%) | 5 (7%) | 4 (4%) |
+| ruleset loaded | 5 (6%) | 3 (3%) | 5 (7%) | 4 (4%) |
+| **ruleset + gate** | **0 (0%)** | **0 (0%)** | **4 (6%)** | **2 (2%)** |
 
 Read the second row before the last one. **Most of the benefit is the prompt.** Going from 29% to 8% is what any competent instruction buys you, and if that were the whole story you should close this tab and go write the instruction yourself.
 
-The gap worth paying attention to is 6% to 0%, and it is not a better sentence. It is the refusal. The gate came in under the prompt on 3 of the 3 hosts whose four arms have finished, and reached zero on Antigravity CLI and IBM Bob Shell.
+The gap worth paying attention to is 6% to 0%, and it is not a better sentence. It is the refusal. The gate came in under the prompt on 4 of the 4 hosts whose four arms have finished, and reached zero on Antigravity CLI and IBM Bob Shell.
 <!-- arms:end -->
 
 And the honest caveat, which is in the repository's own README because a generator puts it there: on Claude the drop is 7% to 2%, and at ninety runs an arm **that is not distinguishable from chance**. Claude completes 85 of 90 tickets against Bob's 55 — it is a much stronger author, with much less room to improve. Pooled across both hosts the effect is overwhelming. On Claude alone, it is a direction, not a proof.
@@ -118,6 +118,7 @@ simply absent rather than shown half filled:
 | **grumpy-reviewer** (general review) | Antigravity CLI | 26 of 90 (29%) | 7 of 90 (8%) | 5 of 90 (6%) | **0 of 90 (0%)** |
 | **grumpy-reviewer** (general review) | IBM Bob Shell | 16 of 90 (18%) | 4 of 90 (4%) | 3 of 90 (3%) | **0 of 90 (0%)** |
 | **grumpy-reviewer** (general review) | Claude Code | 6 of 90 (7%) | 4 of 90 (4%) | 4 of 90 (4%) | **2 of 90 (2%)** |
+| **grumpy-reviewer** (general review) | Codex CLI | 13 of 72 (18%) | 5 of 72 (7%) | 5 of 72 (7%) | **4 of 72 (6%)** |
 | **tenured** (repository memory) | Antigravity CLI | 13 of 40 (33%) | 8 of 40 (20%) | 0 of 40 (0%) | **0 of 40 (0%)** |
 | **tenured** (repository memory) | IBM Bob Shell | 4 of 40 (10%) | 0 of 40 (0%) | 0 of 40 (0%) | **0 of 40 (0%)** |
 | **tenured** (repository memory) | Claude Code | 0 of 40 (0%) | 0 of 40 (0%) | 0 of 40 (0%) | **0 of 40 (0%)** |

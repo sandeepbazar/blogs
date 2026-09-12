@@ -34,17 +34,17 @@ Then I did the part I'd been putting off: checking whether any of it helped.
 
 Two thousand recorded runs. Agents writing real code against tickets that quietly invite a classic mistake. Every result scored by fixed regexes written before a single run — never a model grading another model, because that's how you end up measuring your own opinion and calling it evidence.
 
-**The one that unsettled me was the deploy corpus.**
+Each persona has its own corpus, because "did it write a bug" means something different for a diff, a deploy, and a change that contradicts your own history. Defects that reached the branch, unaided and then with the gate:
 
-Ask Claude Code to write those deploys with nothing watching, and **27 of 45 runs shipped something that takes production down.** `maxUnavailable: 100%`. A migration dropping a column the previous release still reads. It wrote them cheerfully — not because the model is weak, but because the ticket asked for exactly that and nothing in the room said no.
+▪️ **Paranoid SRE** — deploys · Claude **60% → 0%** · IBM Bob **27% → 2%**
+▪️ **The Grump** — code review · Antigravity **29% → 0%** · IBM Bob **18% → 0%** · Claude **7% → 2%**
+▪️ **Tenured** — repo history · IBM Bob **10% → 0%** · Claude **0% → 0%**
 
-Across the code-review corpus, defects that reached the branch — 90 runs per arm:
+**That first line is the one that unsettled me.** Ask Claude Code to write 45 Kubernetes deploys with nothing watching, and **27 of them shipped something that takes production down.** `maxUnavailable: 100%`. A migration dropping a column the previous release still reads. It wrote them cheerfully — not because the model is weak, but because the ticket asked for exactly that and nothing in the room said no.
 
-▪️ **Antigravity** — 29% alone → 8% with a careful prompt → **0% with the gate**
-▪️ **IBM Bob** — 18% → 4% → **0%**
-▪️ **Claude Code** — 7% → 4% → **2%**
+And read that last line too, because it's the honest one: on Tenured's corpus Claude shipped nothing either way. There was nothing there for a reviewer to prevent, and I'm not going to claim a win from a row of zeros.
 
-Look at the middle number before the last one, because it's the uncomfortable one. **Most of the benefit is just the prompt.** 29% to 8% is what any decent instruction buys you, and if that were the whole story I'd tell you to close this and go write it yourself. It'd take a minute.
+Now the uncomfortable part, which the full tables make obvious. **Most of that improvement is just the prompt.** On the code-review corpus, a generic "be careful" instruction takes 29% down to 8% on its own — and if that were the whole story I'd tell you to close this and go write that instruction yourself. It'd take a minute.
 
 What a prompt can't do is the last step.
 

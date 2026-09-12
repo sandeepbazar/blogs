@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 560" role="img" aria-label="On four changes with nothing wrong in them, Claude Code raises four false alarms out of four unaided, Codex three and a half, IBM Bob three, and Antigravity three of three. With the persona loaded every one of them raises none, while still catching twelve of twelve planted defects.">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 650" role="img" aria-label="On 4 changes with nothing wrong in them, 4 agents raise false alarms unaided and none with the persona loaded, while still catching the seeded defects.">
   <style>
     .sans{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
     .cap{font-size:14px;font-weight:700;letter-spacing:.14em;fill:#5a6b8c}
@@ -12,19 +12,14 @@
     .b{animation:grow 8s ease-out infinite;transform-origin:left center}
     .z{animation:clear 8s ease-out infinite}
     .k{animation:hold 8s ease-out infinite}
-    @media (prefers-reduced-motion:reduce){
-      .b,.z,.k{animation:none;opacity:1;transform:none}
-    }
+    @media (prefers-reduced-motion:reduce){ .b,.z,.k{animation:none;opacity:1;transform:none} }
   </style>
-  <rect width="820" height="560" fill="#0b1020"/>
-
-  <text class="sans cap" x="40" y="40">FOUR CHANGES WITH NOTHING WRONG IN THEM</text>
+  <rect width="820" height="650" fill="#0b1020"/>
+  <text class="sans cap" x="40" y="40">4 CHANGES WITH NOTHING WRONG IN THEM</text>
   <text class="sans h" x="40" y="76">An unaided agent finds something anyway</text>
-
   <text class="sans cap" x="238" y="124">FALSE ALARMS, UNAIDED</text>
   <text class="sans cap" x="612" y="124">LOADED</text>
   <text class="sans cap" x="700" y="124">CAUGHT</text>
-
   <g>
     <text class="sans ag" x="40" y="172">Claude Code</text>
     <rect x="238" y="154" width="330" height="24" rx="7" fill="#121a30"/>
@@ -54,10 +49,8 @@
     <g class="z"><text class="zero" x="626" y="458" text-anchor="middle">0</text></g>
     <g class="k"><text class="sans sm" x="730" y="456" text-anchor="middle">12/12</text></g>
   </g>
-
-  <line x1="588" y1="140" x2="588" y2="472" stroke="#1e2a4a" stroke-width="1.5"/>
-  <line x1="672" y1="140" x2="672" y2="472" stroke="#1e2a4a" stroke-width="1.5"/>
-
-  <text class="sans" x="40" y="524" font-size="17" font-weight="700" fill="#e8ecf8">The last column is what makes the rest mean anything.</text>
-  <text class="sans sm" x="40" y="548" fill="#5a6b8c">Approving everything also scores zero false alarms.</text>
+  <line x1="588" y1="140" x2="588" y2="512" stroke="#1e2a4a" stroke-width="1.5"/>
+  <line x1="672" y1="140" x2="672" y2="512" stroke="#1e2a4a" stroke-width="1.5"/>
+  <text class="sans" x="40" y="614" font-size="17" font-weight="700" fill="#e8ecf8">The last column is what makes the rest mean anything.</text>
+  <text class="sans sm" x="40" y="638" fill="#5a6b8c">Approving everything also scores zero false alarms.</text>
 </svg>

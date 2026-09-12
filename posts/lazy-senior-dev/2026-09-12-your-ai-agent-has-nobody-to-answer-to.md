@@ -1,6 +1,6 @@
 ---
 title: "Your AI Agent Has Nobody to Answer To. Three Senior Engineers to Break the Loop."
-dek: "Your agent reviews its own work, agrees with itself, and commits. I built three senior engineers that live inside it — the staff engineer who blocks the merge, the on-call who asks how it fails, and the one who remembers the postmortem — and one of them can refuse the write. Across 1,900 recorded runs on four agents, that refusal is the only thing a better prompt could not replace."
+dek: "Your agent reviews its own work, agrees with itself, and commits. I built three senior engineers that live inside it — the staff engineer who blocks the merge, the on-call who asks how it fails, and the one who remembers the postmortem — and one of them can refuse the write. Across 2,000 recorded runs on four agents, that refusal is the only thing a better prompt could not replace."
 date: 2026-09-12
 slug: your-ai-agent-has-nobody-to-answer-to
 category: "Agentic AI"

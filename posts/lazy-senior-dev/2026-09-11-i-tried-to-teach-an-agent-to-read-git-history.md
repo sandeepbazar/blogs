@@ -1,6 +1,6 @@
 ---
 title: "I Tried to Teach an Agent to Read Git History. It Already Knew."
-dek: "I built a review persona whose whole claim was that it reads the repository's past — the reverts, the postmortems, the ADR that says don't. Then I measured whether it made any difference. On a strong model it made none: the unaided agent already named the incident in 94% of runs. The useful finding was on the other side of that number, and it changed what I ship."
+dek: "I built a review persona whose whole claim was that it reads the repository's past — the reverts, the postmortems, the ADR that says don't. Then I measured whether it made any difference. On a strong model it made none: the unaided agent already named the incident in 90% of runs. The useful finding was on the other side of that number, and it changed what I ship."
 date: 2026-09-11
 slug: i-tried-to-teach-an-agent-to-read-git-history
 category: "Agentic AI"
@@ -33,14 +33,16 @@ That is about as falsifiable as this kind of claim gets. So I ran it.
 
 ## The number that ended the hypothesis
 
+<!-- cites:start -->
 | Agent | Model | no skill | generic prompt | Tenured | Tenured + gate |
 |---|---|---|---|---|---|
-| Claude Code | `claude-sonnet-5` (n=16/arm) | **94%** | 94% | 88% | 94% |
-| IBM Bob Shell | `bob-default` (n=40/arm) | 23% | 33% | 40% | 35% |
+| Claude Code | `claude-sonnet-5` (n=40/arm) | **90%** | 90% | 88% | 95% |
+| IBM Bob Shell | `bob-default` (n=40/arm) | **23%** | 33% | 40% | 35% |
+<!-- cites:end -->
 
-On `claude-sonnet-5`, the agent with no persona, no skill and no instruction to look at anything named the incident in **94% of runs**. With my persona loaded: 88%.
+On `claude-sonnet-5`, the agent with no persona, no skill and no instruction to look at anything named the incident in **90% of runs**. With my persona loaded: 88%.
 
-There is no effect here. There is no room for one. You cannot improve on 94% with a markdown file, and the 6-point gap is noise at sixteen runs an arm.
+There is no effect here. There is no room for one. You cannot improve on 90% with a markdown file, and the 2-point gap is noise at 40 runs an arm.
 
 The weaker host shows a lift — 23% to 40% — and I am not going to publish that as a finding either. At forty runs per arm that is well inside what chance produces, and the honest description of the row is "possibly something, measured badly".
 
@@ -54,12 +56,14 @@ Here is the part I did not expect.
 
 Ask an unaided agent *"does this change repeat something this repository already tried and undid?"* and it will read the history, find something that rhymes, and say **yes**. Almost every time. On four clean diffs that repeat nothing at all:
 
-| Agent | false alarms, unaided | false alarms, with Tenured | seeded defects caught |
+<!-- noise:start -->
+| Agent | false alarms, unaided | with the persona | seeded defects caught |
 |---|---|---|---|
 | Claude Code | 4 of 4 | **0 of 4** | 12 of 12 |
 | Codex CLI | 3.5 of 4 | **0 of 4** | 12 of 12 |
 | IBM Bob Shell | 3 of 4 | **0 of 4** | 12 of 12 |
 | Antigravity CLI | 3 of 3 | **0 of 3** | 12 of 12 |
+<!-- noise:end -->
 
 Four independent agents. Three to four false alarms out of four, down to zero — while catching every planted defect.
 
@@ -75,12 +79,14 @@ The second thing I measure is what happens when the agent writes the code itself
 
 On IBM Bob Shell, with the code-review persona:
 
-| Arm | Shipped the defect |
-|---|---|
-| no skill | 16 of 90 (18%) |
-| generic "be careful" prompt | 4 of 90 (4%) |
-| ruleset loaded | 3 of 90 (3%) |
-| **ruleset + gate** | **0 of 90 (0%)** |
+<!-- armsgrumpy:start -->
+| Arm | Antigravity CLI (n=90) | IBM Bob Shell (n=90) | Claude Code (n=90) |
+|---|---|---|---|
+| no skill | 26 (29%) | 16 (18%) | 6 (7%) |
+| generic "be careful" prompt | 7 (8%) | 4 (4%) | 4 (4%) |
+| ruleset loaded | 5 (6%) | 3 (3%) | 4 (4%) |
+| **ruleset + gate** | **0 (0%)** | **0 (0%)** | **2 (2%)** |
+<!-- armsgrumpy:end -->
 
 The gap that matters is not the first one. Going from 18% to 4% is what any competent prompt buys you, and if that were the whole story you would be right to close the tab and write the prompt yourself.
 

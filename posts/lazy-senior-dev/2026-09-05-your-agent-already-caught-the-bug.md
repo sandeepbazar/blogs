@@ -33,11 +33,15 @@ Two places, and both are about discipline rather than intelligence.
 
 Those two failures are what the personas fix, and they fix them hard:
 
+<!-- discipline:start -->
 | | Agent alone | With the persona |
 |---|---|---|
 | Planted defects caught (of 30) | 30 | 30 |
 | **False alarms on clean diffs** | **4** | **0** |
 | **Replies with no usable verdict, per run** | **3** | **0** |
+
+Median of 3 runs on Claude Code (`claude-sonnet-5`), measured 2026-09-12.
+<!-- discipline:end -->
 
 Same model. Same diffs. The entire delta is behavioural.
 
@@ -54,13 +58,17 @@ So I built a second tier. Eighteen tickets, each one phrased to invite a classic
 
 Here is what shipped:
 
+<!-- personas:start -->
 | Persona | Agent | Agent alone | Generic prompt | Persona | Persona + gate |
 |---|---|---|---|---|---|
-| **paranoid-sre** (deploys, blast radius) | IBM Bob | 12 of 18 (67%) | 4 of 18 (22%) | **0 (0%)** | **0 (0%)** |
-| **paranoid-sre** | Claude Code | 11 of 18 (61%) | 0 of 18 (0%) | **0 (0%)** | **0 (0%)** |
-| **grumpy-reviewer** (general review) | IBM Bob | 8 of 36 (22%) | 3 of 36 (8%) | 2 (6%) | **1 (3%)** |
-| **grumpy-reviewer** | Claude Code | 6 of 36 (17%) | 2 of 36 (6%) | **0 (0%)** | **0 (0%)** |
-| **tenured** (repository memory) | IBM Bob | 3 of 16 (19%) | 0 (0%) | **0 (0%)** | **0 (0%)** |
+| **paranoid-sre** (deploys, blast radius) | IBM Bob Shell | 12 of 45 (27%) | 3 of 45 (7%) | 1 of 45 (2%) | **1 of 45 (2%)** |
+| **paranoid-sre** (deploys, blast radius) | Claude Code | 27 of 45 (60%) | 0 of 45 (0%) | 0 of 45 (0%) | **0 of 45 (0%)** |
+| **grumpy-reviewer** (general review) | Antigravity CLI | 26 of 90 (29%) | 7 of 90 (8%) | 5 of 90 (6%) | **0 of 90 (0%)** |
+| **grumpy-reviewer** (general review) | IBM Bob Shell | 16 of 90 (18%) | 4 of 90 (4%) | 3 of 90 (3%) | **0 of 90 (0%)** |
+| **grumpy-reviewer** (general review) | Claude Code | 6 of 90 (7%) | 4 of 90 (4%) | 4 of 90 (4%) | **2 of 90 (2%)** |
+| **tenured** (repository memory) | IBM Bob Shell | 4 of 40 (10%) | 0 of 40 (0%) | 0 of 40 (0%) | **0 of 40 (0%)** |
+| **tenured** (repository memory) | Claude Code | 0 of 40 (0%) | 0 of 40 (0%) | 0 of 40 (0%) | **0 of 40 (0%)** |
+<!-- personas:end -->
 
 Two thirds of unaided runs on the SRE corpus shipped an outage-class defect. `maxUnavailable: 100%` with `maxSurge: 0`, which takes every replica down on every deploy. A migration that drops a column the previous release still reads. The agent wrote them cheerfully, because the ticket asked for them.
 

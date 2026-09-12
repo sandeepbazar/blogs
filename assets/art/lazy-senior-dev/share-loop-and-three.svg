@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="An agent writes a change, reviews its own diff, agrees with itself and commits, in a closed loop with nothing outside it. A gate is then placed in the loop and refuses the write while a BLOCK verdict stands. Three reviewers stand at that gate: the Grump on the diff, the Paranoid SRE on the deploy, and Tenured on the repository's history. Defects reaching the branch fall from 29 percent unaided to 0 percent with the gate.">
+  <style>
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .sans{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    .cap{font-size:14px;font-weight:700;letter-spacing:.18em;fill:#5a6b8c}
+    .ttl{font-size:33px;font-weight:800;fill:#e8ecf8}
+    .sub{font-size:17px;fill:#93a4c8}
+    .n{font-size:17px;fill:#e8ecf8}
+    .nm{font-size:19px;font-weight:700;fill:#e8ecf8}
+    .rl{font-size:14.5px;fill:#93a4c8}
+    .vd{font-size:13px;font-weight:700;letter-spacing:.06em}
+    .num{font-size:46px;font-weight:800}
+    .lbl{font-size:14px;fill:#93a4c8}
+
+    /* One 12s master timeline. Every beat is a window on it, which is what lets the whole thing be
+       seeked to an exact moment and captured frame by frame. */
+    @keyframes beat1{0%{opacity:0}3%,28%{opacity:1}33%,100%{opacity:0}}
+    @keyframes beat2{0%,31%{opacity:0}36%,62%{opacity:1}67%,100%{opacity:0}}
+    @keyframes beat3{0%,65%{opacity:0}70%,97%{opacity:1}100%{opacity:0}}
+    @keyframes orbit{to{transform:rotate(360deg)}}
+    @keyframes flow{to{stroke-dashoffset:-36}}
+    @keyframes slam{0%,36%{opacity:0;transform:scale(.8)}41%{opacity:1;transform:scale(1.1)}46%,62%{opacity:1;transform:scale(1)}67%,100%{opacity:0}}
+    @keyframes shove{0%,33%{transform:translateX(0)}38%{transform:translateX(-26px)}44%,100%{transform:translateX(-14px)}}
+    @keyframes pop{0%,68%{opacity:0;transform:translateY(10px)}74%,97%{opacity:1;transform:translateY(0)}100%{opacity:0}}
+    @keyframes pop2{0%,71%{opacity:0;transform:translateY(10px)}77%,97%{opacity:1;transform:translateY(0)}100%{opacity:0}}
+    @keyframes pop3{0%,74%{opacity:0;transform:translateY(10px)}80%,97%{opacity:1;transform:translateY(0)}100%{opacity:0}}
+    @keyframes pop4{0%,83%{opacity:0;transform:translateY(8px)}89%,97%{opacity:1;transform:translateY(0)}100%{opacity:0}}
+
+    .b1{animation:beat1 12s linear infinite}
+    .b2{animation:beat2 12s linear infinite}
+    .b3{animation:beat3 12s linear infinite}
+    .orb{animation:orbit 6s linear infinite;transform-origin:600px 360px}
+    .fl{stroke-dasharray:7 10;animation:flow 1.6s linear infinite}
+    .sl{animation:slam 12s linear infinite;transform-origin:600px 360px}
+    .sh{animation:shove 12s linear infinite}
+    .p1{animation:pop 12s linear infinite}
+    .p2{animation:pop2 12s linear infinite}
+    .p3{animation:pop3 12s linear infinite}
+    .p4{animation:pop4 12s linear infinite}
+    @media (prefers-reduced-motion:reduce){
+      .b1,.b2,.orb,.fl,.sl,.sh{animation:none;opacity:0}
+      .b3,.p1,.p2,.p3,.p4{animation:none;opacity:1;transform:none}
+    }
+  </style>
+
+  <rect width="1200" height="630" fill="#0b1020"/>
+  <rect x="0" y="0" width="1200" height="4" fill="#8ea2ff" opacity=".6"/>
+
+  <!-- ══ beat 1: the loop nobody is watching ══ -->
+  <g class="b1">
+    <text class="sans cap" x="60" y="72">THE LOOP NOBODY IS WATCHING</text>
+    <text class="sans ttl" x="60" y="118">Your agent writes it, reviews it, and agrees with itself</text>
+    <text class="sans sub" x="60" y="152">Every step is the same model. At 2 a.m. With no one else in the room.</text>
+
+    <circle cx="600" cy="360" r="126" fill="none" stroke="#1e2a4a" stroke-width="2"/>
+    <circle cx="600" cy="360" r="126" fill="none" stroke="#8ea2ff" stroke-width="2.5" class="fl" opacity=".6"/>
+    <g class="orb"><circle cx="600" cy="234" r="9" fill="#8ea2ff"/></g>
+
+    <rect x="478" y="212" width="244" height="44" rx="11" fill="#121a30" stroke="#1e2a4a"/>
+    <text class="sans n" x="600" y="240" text-anchor="middle">writes the change</text>
+    <rect x="744" y="338" width="252" height="44" rx="11" fill="#121a30" stroke="#1e2a4a"/>
+    <text class="sans n" x="870" y="366" text-anchor="middle">reviews its own diff</text>
+    <rect x="486" y="464" width="228" height="44" rx="11" fill="#121a30" stroke="#1e2a4a"/>
+    <text class="sans n" x="600" y="492" text-anchor="middle">agrees with itself</text>
+    <rect x="214" y="338" width="196" height="44" rx="11" fill="#121a30" stroke="#1e2a4a"/>
+    <text class="sans n" x="312" y="366" text-anchor="middle">commits</text>
+
+    <text class="sans sub" x="600" y="356" text-anchor="middle" fill="#5a6b8c">nothing here</text>
+    <text class="sans sub" x="600" y="380" text-anchor="middle" fill="#5a6b8c">can say no</text>
+  </g>
+
+  <!-- ══ beat 2: the gate ══ -->
+  <g class="b2">
+    <text class="sans cap" x="60" y="72">ONE STEP IT DOES NOT GET TO DECIDE</text>
+    <text class="sans ttl" x="60" y="118">Something outside the model decides it is finished</text>
+    <text class="sans sub" x="60" y="152">A hook reads the verdict the agent just printed, and answers allow or deny.</text>
+
+    <line x1="150" y1="360" x2="1050" y2="360" stroke="#1e2a4a" stroke-width="2"/>
+    <g class="sh">
+      <rect x="196" y="336" width="196" height="48" rx="11" fill="#121a30" stroke="#8ea2ff" stroke-width="1.6"/>
+      <text class="mono" x="216" y="366" font-size="16" fill="#e8ecf8">Edit app.py</text>
+    </g>
+    <rect x="560" y="306" width="28" height="108" rx="7" fill="#f43f5e"/>
+    <g class="sl">
+      <rect x="628" y="318" width="330" height="84" rx="13" fill="#f43f5e" fill-opacity=".12" stroke="#f43f5e" stroke-width="1.8"/>
+      <text class="mono vd" x="652" y="350" fill="#f43f5e">permissionDecision: "deny"</text>
+      <text class="sans rl" x="652" y="376">BLOCK stands. Fix the finding,</text>
+      <text class="sans rl" x="652" y="396">print a verdict, then retry.</text>
+    </g>
+    <text class="sans cap" x="150" y="470">AGENT</text>
+    <text class="sans cap" x="540" y="470">THE GATE</text>
+    <text class="sans cap" x="990" y="470">BRANCH</text>
+  </g>
+
+  <!-- ══ beat 3: the three, and the result ══ -->
+  <g class="b3">
+    <text class="sans cap" x="60" y="72">THREE SENIOR ENGINEERS, INSIDE THE AGENT</text>
+    <text class="sans ttl" x="60" y="118">Each asks the question the ticket did not</text>
+
+    <g class="p1">
+      <rect x="60" y="158" width="352" height="150" rx="14" fill="#121a30" stroke="#1e2a4a"/>
+      <circle cx="92" cy="192" r="11" fill="#8ea2ff" fill-opacity=".25"/>
+      <text class="sans nm" x="116" y="198">The Grump</text>
+      <text class="sans rl" x="82" y="228">Rejected four thousand pull requests.</text>
+      <text class="sans rl" x="82" y="250">Reads the diff, names the line.</text>
+      <text class="mono vd" x="82" y="284" fill="#93a4c8">APPROVE · <tspan fill="#f43f5e">BLOCK</tspan></text>
+    </g>
+    <g class="p2">
+      <rect x="424" y="158" width="352" height="150" rx="14" fill="#121a30" stroke="#1e2a4a"/>
+      <circle cx="456" cy="192" r="11" fill="#38bdf8" fill-opacity=".25"/>
+      <text class="sans nm" x="480" y="198">The Paranoid SRE</text>
+      <text class="sans rl" x="446" y="228">Paged for every mistake on the card.</text>
+      <text class="sans rl" x="446" y="250">Reads the deploy, not the code.</text>
+      <text class="mono vd" x="446" y="284" fill="#93a4c8">SHIP · <tspan fill="#f43f5e">PAGE</tspan></text>
+    </g>
+    <g class="p3">
+      <rect x="788" y="158" width="352" height="150" rx="14" fill="#121a30" stroke="#1e2a4a"/>
+      <circle cx="820" cy="192" r="11" fill="#f472b6" fill-opacity=".25"/>
+      <text class="sans nm" x="844" y="198">Tenured</text>
+      <text class="sans rl" x="810" y="228">Was there for INC-2019-07.</text>
+      <text class="sans rl" x="810" y="250">Reads the log and the postmortem.</text>
+      <text class="mono vd" x="810" y="284" fill="#93a4c8">NEW · <tspan fill="#f43f5e">DO_NOT_REPEAT</tspan></text>
+    </g>
+
+    <g class="p4">
+      <rect x="60" y="340" width="1080" height="150" rx="14" fill="#121a30" stroke="#1e2a4a"/>
+      <text class="sans cap" x="86" y="374">DEFECTS REACHING THE BRANCH — THE AGENT WROTE THE CODE, 90 RUNS PER ARM</text>
+      <text class="sans num" x="150" y="440" fill="#f43f5e" text-anchor="middle">29%</text>
+      <text class="sans lbl" x="150" y="466" text-anchor="middle">no skill</text>
+      <text class="sans num" x="390" y="440" fill="#93a4c8" text-anchor="middle">8%</text>
+      <text class="sans lbl" x="390" y="466" text-anchor="middle">careful prompt</text>
+      <text class="sans num" x="630" y="440" fill="#93a4c8" text-anchor="middle">6%</text>
+      <text class="sans lbl" x="630" y="466" text-anchor="middle">ruleset loaded</text>
+      <text class="sans num" x="870" y="440" fill="#22c55e" text-anchor="middle">0%</text>
+      <text class="sans lbl" x="870" y="466" text-anchor="middle">ruleset + gate</text>
+      <line x1="980" y1="368" x2="980" y2="462" stroke="#1e2a4a" stroke-width="1.5"/>
+      <text class="sans" x="1006" y="404" font-size="15" font-weight="700" fill="#e8ecf8">Most of it is</text>
+      <text class="sans" x="1006" y="424" font-size="15" font-weight="700" fill="#e8ecf8">the prompt.</text>
+      <text class="sans" x="1006" y="450" font-size="13.5" fill="#93a4c8">The gate earns the last step.</text>
+    </g>
+  </g>
+
+  <text class="sans" x="60" y="586" font-size="13.5" fill="#5a6b8c">Antigravity CLI, gemini-3.6-flash-medium. IBM Bob Shell 18% to 0%. Claude Code 7% to 2%.</text>
+  <text class="sans" x="1140" y="586" font-size="13.5" fill="#5a6b8c" text-anchor="end">lazy-senior-dev</text>
+</svg>

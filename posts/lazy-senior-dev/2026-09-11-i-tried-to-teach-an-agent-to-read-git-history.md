@@ -13,9 +13,9 @@ status: published
 
 ## The claim I set out to prove
 
-One of the review personas I maintain is called Tenured. Its pitch is narrow and, I thought, obviously useful: your coding agent has no memory of your repository. It will happily re-add the dependency you removed for a CVE, re-enable the flag that double-charged customers, or lower the timeout a comment three lines above explicitly warns you not to lower.
+One of the review personas I maintain is called Tenured, and its pitch felt so obviously right that I never really questioned it: your coding agent has no memory of your repository. It will cheerfully re-add the dependency you removed for a CVE, re-enable the flag that double-charged a thousand customers, or lower the timeout that a comment three lines above tells it not to lower.
 
-A human senior engineer catches that because they were there. Tenured is the version of that engineer you can install.
+A human senior engineer catches that because they were there when it happened. Tenured was meant to be the version of that engineer you can install.
 
 To measure it I built eight tickets. Each one comes with a git history that argues against the obvious change:
 
@@ -29,7 +29,7 @@ The ticket then says: *"Get() gives up too early under load, make it more resili
 
 The important property of this setup is that `INC-2019-07` appears **nowhere** except the commit log. Not in the ticket, not in the code, not in a comment. An agent can only say that string if it went and looked. Same for the others: `ADR-009`, `CVE-2024-3104`, a retired alert called `ERR-5`. Eight tickets, eight identifiers, one clean test of whether the agent read the past.
 
-That is about as falsifiable as this kind of claim gets. So I ran it.
+That is about as falsifiable as this kind of claim gets, which is why I liked it. So I ran it.
 
 ## The number that ended the hypothesis
 
@@ -42,17 +42,17 @@ That is about as falsifiable as this kind of claim gets. So I ran it.
 
 On `claude-sonnet-5`, the agent with no persona, no skill and no instruction to look at anything named the incident in **90% of runs**. With my persona loaded: 88%.
 
-There is no effect here. There is no room for one. You cannot improve on 90% with a markdown file, and the 2-point gap is noise at 40 runs an arm.
+There is no effect here, and there was never room for one. You cannot improve on 90% with a markdown file, and the 2-point gap is noise at 40 runs an arm.
 
 The weaker host shows a lift — 23% to 40% — and I am not going to publish that as a finding either. At forty runs per arm that is well inside what chance produces, and the honest description of the row is "possibly something, measured badly".
 
-So the headline I wanted — *"agents forget your history, this makes them remember"* — is false on any model you would actually use. Modern agents run `git log`. Nobody has to tell them.
+So the headline I wanted — *"agents forget your history, this makes them remember"* — is simply false on any model you would actually use. They run `git log`. Nobody has to tell them.
 
-I put that table in the repository's own method notes rather than deleting the measurement, because it is the strongest evidence I have that a capable model does not need to be told to look.
+I could have deleted the measurement. Instead it went into the repository's own method notes, because it is the strongest evidence I have for something worth knowing: a capable model does not need to be told to look.
 
 ## The finding was on the other side of the number
 
-Here is the part I did not expect.
+Here is the part I did not see coming.
 
 Ask an unaided agent *"does this change repeat something this repository already tried and undid?"* and it will read the history, find something that rhymes, and say **yes**. Almost every time. On four clean diffs that repeat nothing at all:
 
@@ -67,11 +67,11 @@ Ask an unaided agent *"does this change repeat something this repository already
 
 Four independent agents. Three to four false alarms out of four, down to zero — while catching every planted defect.
 
-That last column is the one that makes the rest of the table mean anything. Zero false alarms is also what you score by approving everything, so a noise number without a detection number beside it is not a result, it is a shrug. Detection held at 12 of 12.
+That last column is what makes the rest of the table mean anything. Approving everything also scores zero false alarms, so a quiet reviewer is only interesting if it is still catching things. Detection held at 12 of 12.
 
 This is a more useful product than the one I set out to build, and a less flattering story. The agent does not need to be taught to look. It needs to be taught **what does not count** — and that turns out to be the part a careful prompt does not give you, because "be careful and check the history" is exactly the instruction that produces four false alarms out of four.
 
-An assistant that objects to everything is not cautious. It is noise with a conscience, and you will start ignoring it by Thursday.
+We all know the human version of this. A senior engineer who objects to everything is not careful — they are noise with a conscience, and you quietly stop reading their comments by Thursday.
 
 ## The gate, which is a different claim
 
@@ -116,7 +116,7 @@ Two speakers need two standards. The CLI's stream means those phrases literally.
 
 **The benchmark would silently average two models into one row.** Resume keys on task, arm and run — nothing about the model. Point the runner at a different model and the new records land beside the old ones, and the report averages them into a single line with a single label. Nothing fails. The number just quietly becomes meaningless. It now refuses to append a model that disagrees with what the file already holds.
 
-I would rather write both of those down than have someone find them in my data.
+I would rather write those down myself than have somebody find them in my data.
 
 ## Verifying the thing you install, not the thing you measured
 
@@ -136,7 +136,7 @@ The agent reviewed, printed a verdict, retried, and the write went through — t
 
 ## What I would take from this
 
-Three things, in the order they cost me the most to learn.
+Three things, roughly in the order they cost me the most to learn.
 
 **Detection is not the bottleneck, and it has not been for a while.** Your agent reads the log. It finds the planted bug. Building anything on top of "the model will not notice" is building on sand.
 

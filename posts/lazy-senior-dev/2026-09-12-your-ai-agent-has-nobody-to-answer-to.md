@@ -15,19 +15,23 @@ status: published
 
 ## The loop nobody is watching
 
-Your coding agent writes a change. Then it reviews the change. Then it decides the change is good. Then it writes the file.
+It was about two in the morning when I noticed what my coding agent had actually been doing all evening.
 
-Every step in that loop is the same model, agreeing with itself, at two in the morning, with nobody in the room.
+It wrote a change. Then it reviewed the change. Then it decided the change was good. Then it wrote the file.
+
+Every step in that loop was the same model, agreeing with itself, with nobody else in the room.
 
 ![The same model writes the change, reviews its own diff, agrees with itself and commits, with nothing outside the loop; beside it the same loop with a gate that refuses the write until the verdict approves](/blogs/assets/art/lazy-senior-dev/the-loop-nobody-watches.svg)
 
-We have spent forty years building institutions around the opposite instinct. Code review exists because the author is the worst possible judge of their own work — not because they are careless, but because they cannot see the thing they did not think of. Then we handed the keyboard to something that reviews its own diffs by default and ships them without asking.
+We spent forty years building institutions around the opposite instinct. Code review exists because the author is the worst possible judge of their own work — not because they are careless, but because they cannot see the thing they never thought of. That is the entire reason somebody else reads it.
 
-The obvious fix is to tell it to be careful. I measured that. It helps, and then it stops helping, and where it stops is the interesting part.
+Then we handed the keyboard to something that reviews its own diffs by default, and called it productivity.
+
+The obvious fix is to tell it to be careful. I measured that too. It helps, and then it stops helping, and where it stops turned out to be the interesting part.
 
 ## Three engineers, not one assistant
 
-"Be more careful" is not a job description. So I wrote three, each with a different question and a different vocabulary:
+"Be more careful" is not a job description. Nobody has ever been hired to do it. So I tried writing three people instead, each with one question they actually care about and their own vocabulary for answering it:
 
 **The Grump** — the staff engineer who has rejected four thousand pull requests. He reads the diff. Ten questions, in order, answered in writing, then a verdict: `APPROVE`, `REQUEST_CHANGES`, or `BLOCK`. Every objection names a file, a line, how it fails in production, and the smallest fix. He approves with one word: *Fine.*
 
@@ -41,13 +45,13 @@ The obvious fix is to tell it to be careful. I measured that. It helps, and then
 
 ![Tenured checks a change against the repository's own history so it does not repeat itself](https://lazy-senior-dev.github.io/assets/hero/tenured-dark.svg)
 
-They compose. The Grump reviews the diff, the SRE asks what it does to production, Tenured asks whether you already tried it in 2024.
+They compose, the way real colleagues do. The Grump reviews the diff, the SRE asks what it does to production, and Tenured asks whether you already tried this in 2024 and undid it.
 
-None of them is an agent. There is no second model, no API key, no extra bill. Each is one markdown ruleset that compiles into whatever your host already reads — a skill, a plugin, an MCP server, an `AGENTS.md`, a rules file, a GitHub Action. Fourteen hosts, one set of rules.
+None of them is an agent. There is no second model, no API key, no extra bill — each is a markdown file your existing agent already knows how to read, compiled into whatever shape your host wants: a skill, a plugin, an MCP server, an `AGENTS.md`, a rules file, a GitHub Action. Fourteen hosts, one set of rules.
 
 ## The part that is not a prompt
 
-Here is the thing that actually separates this from a well-written system prompt, and it is small and unglamorous.
+Here is the thing that actually separates this from a well-written system prompt. It is smaller and less interesting than I wanted it to be.
 
 The persona is a `PreToolUse` hook. Before your agent is allowed to run `Edit`, `Write`, `MultiEdit`, `Bash` or `apply_patch`, the hook runs first and answers one question: **allow, or deny.**
 
@@ -65,11 +69,13 @@ PreToolUse:Edit  permissionDecision: "deny"
 
 The agent reviewed, printed a verdict, retried — and this time the code used a constant-time comparison instead of `==` on an API key.
 
-That is the whole idea. **Something outside the model decides whether the work is done.** A prompt cannot do that, because a prompt is advice to the same model that wrote the code.
+That is the whole trick. **Something other than the model gets to decide the work is finished.** A prompt can never do that, because a prompt is advice to the same model that wrote the code.
 
 ## What 1,400 runs actually show
 
-I gave agents tickets that each invite a classic defect — a timing-unsafe key comparison, a swallowed exception, an unbounded retry — and let them write the code themselves. Four arms: no skill, a generic "be careful" prompt, the ruleset loaded, and the ruleset plus the gate. Five runs per ticket per arm. Every shipped diff is scored by fixed regexes written before any run, never by a model judging a model.
+Then I did the part I had been putting off, which was finding out whether any of it helped.
+
+I gave agents tickets that quietly invite a classic mistake — a timing-unsafe key comparison, a swallowed exception, an unbounded retry — and let them write the code themselves. Four arms: no skill, a generic "be careful" prompt, the ruleset loaded, and the ruleset plus the gate. Five runs per ticket per arm. Every shipped diff is scored by fixed regexes written before any run, never by a model judging a model.
 
 <!-- arms:start -->
 | Arm | Antigravity CLI (n=90) | IBM Bob Shell (n=90) | Claude Code (n=90) |
@@ -88,13 +94,13 @@ And the honest caveat, which is in the repository's own README because a generat
 
 ## The result I did not expect, and now think is the main one
 
-Detection was never the problem.
+Detection was never the problem, and I had built the whole thing assuming it was.
 
-On thirty diffs each carrying one planted defect, Claude Code caught **30 of 30** with my reviewer installed — and **30 of 30** without it. Modern agents are not bad at noticing that an unchecked `.get()` will `KeyError` in production.
+On thirty diffs each carrying one planted defect, Claude Code caught **30 of 30** with my reviewer installed — and **30 of 30** without it. These models are not bad at noticing that an unchecked `.get()` will `KeyError` in production. They are rather good at it.
 
 What they are bad at is **stopping**.
 
-Ask an unaided agent whether a change is risky and it will find something. On clean diffs with nothing wrong in them at all:
+Ask one whether a change looks risky and it will find you something. On clean diffs with nothing wrong in them at all:
 
 ![On four changes with nothing wrong in them, four agents raise three to four false alarms out of four unaided and none with the persona loaded, while still catching twelve of twelve planted defects](/blogs/assets/art/lazy-senior-dev/quiet-on-clean-code.svg)
 
@@ -102,11 +108,11 @@ Four independent agents. Three to four false alarms out of four, down to zero �
 
 That last column is what makes the rest mean anything. Zero false alarms is also what you score by approving everything, so a noise number without a detection number beside it is not a result, it is a shrug.
 
-An assistant that objects to everything is not cautious. It is noise with a conscience, and you will start ignoring it by Thursday. The reviewer that helps is the one that is **quiet on code that is fine** — because that is what makes the one time it speaks up worth reading.
+We all know the human version of this. A senior engineer who objects to everything is not careful — they are noise with a conscience, and you quietly stop reading their comments by Thursday. The ones worth having are the ones who stay **quiet on work that is fine**, which is exactly why you look up when they don't.
 
 ## Things I found by measuring my own tool
 
-Building the benchmark caught more than the personas did.
+The benchmark caught more of my mistakes than the personas caught of the agents'. Three are worth writing down.
 
 **A regular expression in the shipped hook could hang it.** The pattern that reads a finding's file and line backtracked exponentially — 45 characters took 293 milliseconds, 60 would take minutes. It runs inside the hook, the hook has a timeout, and on timeout it **fails open**. A finding line shaped that way was a route to making the gate allow a write it had just refused. Found by a scanner, not by my tests, which is the part that stung.
 

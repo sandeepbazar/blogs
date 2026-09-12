@@ -15,13 +15,13 @@ status: published
 
 ## The result I did not want
 
-I built three AI review personas and benchmarked them properly, expecting to show they catch more bugs than a bare agent.
+I built three AI review personas and benchmarked them properly, fully expecting to show they catch more bugs than a bare agent.
 
-They do not.
+They do not. Not one more.
 
 On a corpus of thirty small diffs each carrying exactly one planted defect, Claude Code caught **30 of 30** with my reviewer installed — and **30 of 30** without it. Codex went from 29 to 30. IBM Bob Shell: 30 either way. The headline I was hoping for did not survive contact with the data.
 
-That finding is worth more than the one I wanted, because it relocates the problem. Modern coding agents are not bad at *noticing* that an unchecked `.get()` will `KeyError` in production. Detection is close to solved on defects of this size. The failure is somewhere else entirely, and it is somewhere much more annoying.
+That finding turned out to be worth more than the one I went looking for, because it moves the problem somewhere else entirely. Modern coding agents are not bad at *noticing* that an unchecked `.get()` will `KeyError` in production. Detection is close to solved on defects of this size. The failure is somewhere else entirely, and it is somewhere much more annoying.
 
 ## Where they actually fail
 

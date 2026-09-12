@@ -12,47 +12,53 @@ that preview does not render; an uploaded image replaces the link card.
 
 ## Post
 
-It was about two in the morning when I noticed what my coding agent had actually been doing all evening.
+It was about two in the morning when I noticed what my coding agent had been doing all evening.
 
 It wrote a change. Then it reviewed the change. Then it decided the change was good. Then it wrote the file.
 
 Every step in that loop was the same model, agreeing with itself, with nobody else in the room.
 
-We spent forty years building code review around the opposite instinct — that the author is the worst possible judge of their own work. Not because they are careless, but because they cannot see the thing they never thought of. That is the whole reason someone else reads it.
+We spent forty years building code review around the opposite instinct — that the author is the worst possible judge of their own work. Not because they're careless, but because they can't see the thing they never thought of. That's the entire reason somebody else reads it.
 
-Then we handed the keyboard to something that reviews its own diffs by default, and we called it productivity.
+Then we handed the keyboard to something that reviews its own diffs by default, and called it productivity.
 
-So I tried giving it a colleague. Three, actually:
+So I tried giving it colleagues. Three of them:
 
-▪️ **The Grump** — the staff engineer who has rejected four thousand pull requests. Reads the diff. `APPROVE` / `REQUEST_CHANGES` / `BLOCK`
-▪️ **The Paranoid SRE** — has been paged for every mistake on the card. Doesn't read your code, reads your deploy. `SHIP` / `HOLD` / `PAGE`
-▪️ **Tenured** — was there in 2024. Reads the git log and the postmortem, and asks whether you already tried this. `NEW` / `SEEN_BEFORE` / `DO_NOT_REPEAT`
+▪️ **The Grump** — the staff engineer who has rejected four thousand pull requests. Reads the diff.
+▪️ **The Paranoid SRE** — has been paged for every mistake on the card. Doesn't read your code, reads your deploy.
+▪️ **Tenured** — was there in 2024. Reads the git log and the postmortem, and asks whether you already tried this.
 
-None of them is an agent. No second model, no extra API bill — just a markdown file your existing agent already knows how to read.
+None of them is an agent. No second model, no extra API bill — a markdown file your existing agent already knows how to read.
 
-Then I did the part I was dreading, which was checking whether any of it helped.
+Then I did the part I'd been putting off: checking whether any of it helped.
 
-Two thousand recorded runs. Agents writing real code against tickets that quietly invite a classic mistake. Every result scored by fixed regexes written before a single run — never a model grading another model, because that is how you end up measuring your own opinion.
+Two thousand recorded runs. Agents writing real code against tickets that quietly invite a classic mistake. Every result scored by fixed regexes written before a single run — never a model grading another model, because that's how you end up measuring your own opinion and calling it evidence.
 
-Defects that reached the branch, 90 runs per arm:
+**The one that unsettled me was the deploy corpus.**
 
-▪️ **Antigravity** — 29% on its own → 8% with a careful prompt → **0% with the gate**
+Ask Claude Code to write those deploys with nothing watching, and **27 of 45 runs shipped something that takes production down.** `maxUnavailable: 100%`. A migration dropping a column the previous release still reads. It wrote them cheerfully — not because the model is weak, but because the ticket asked for exactly that and nothing in the room said no.
+
+Across the code-review corpus, defects that reached the branch — 90 runs per arm:
+
+▪️ **Antigravity** — 29% alone → 8% with a careful prompt → **0% with the gate**
 ▪️ **IBM Bob** — 18% → 4% → **0%**
 ▪️ **Claude Code** — 7% → 4% → **2%**
 
-Look at the middle number before the last one, because it is the uncomfortable one. **Most of the benefit is just the prompt.** Going from 29% to 8% is what any decent instruction buys you, and if that were the whole story I would tell you to close this and go write that instruction yourself. It would take a minute.
+Look at the middle number before the last one, because it's the uncomfortable one. **Most of the benefit is just the prompt.** 29% to 8% is what any decent instruction buys you, and if that were the whole story I'd tell you to close this and go write it yourself. It'd take a minute.
 
-What a prompt cannot do is the last step.
+What a prompt can't do is the last step.
 
-The persona runs as a hook. Before the agent is allowed to touch a file, something outside it asks one question: allow, or deny. If the review the agent just wrote says BLOCK, the write is refused. If it skipped the review and went straight for the file, refused until it doesn't.
+The persona runs as a hook. Before the agent may touch a file, something outside it asks one question: allow, or deny. If the review the agent just wrote says BLOCK, the write is refused. If it skipped the review and went straight for the file — refused until it doesn't.
 
-That is the entire trick, and it is smaller than it sounds. **Something other than the model gets to decide the work is finished.** A prompt can never do that, because a prompt is advice to the same model that wrote the code.
+That's the whole trick, and it's smaller than it sounds. **Something other than the model gets to decide the work is finished.** A prompt never can, because a prompt is advice to the same model that wrote the code.
 
-Then came the finding I did not want, and now think is the important one.
+I'll be honest about where it doesn't help, because the tables are in the post either way: on two of the three corpora, a careful prompt already reaches the floor and the gate adds nothing to the number. What it adds there is that the number stays low when nobody's reading the prompt.
 
-Detection was never the problem. On 30 diffs each carrying one planted bug, Claude Code found 30 of 30 with my reviewer installed — and 30 of 30 without it. These models are not bad at noticing that an unchecked lookup will blow up in production.
+**Then came the finding I didn't want, and now think is the important one.**
 
-What they are bad at is **stopping**.
+Detection was never the problem. On 30 diffs each carrying one planted bug, Claude Code found 30 of 30 with my reviewer installed — and 30 of 30 without it. These models are not bad at spotting that an unchecked lookup will blow up in production.
+
+What they're bad at is **stopping**.
 
 Ask one whether a change looks risky and it will find you something. On four changes with genuinely nothing wrong in them:
 
@@ -61,26 +67,28 @@ Ask one whether a change looks risky and it will find you something. On four cha
 ▪️ IBM Bob — 3 of 4 → **0**
 ▪️ Antigravity — 3 of 3 → **0**
 
-And all four still caught 12 of 12 real ones. That last bit matters more than it looks: approving everything also scores zero false alarms, so a quiet reviewer is only interesting if it is still catching things.
+All four still caught 12 of 12 real ones. That last bit matters more than it looks: approving everything also scores zero false alarms, so a quiet reviewer is only interesting if it's still catching things.
 
-We all know the version of this person. A senior engineer who objects to everything isn't careful — they're noise with a conscience, and you quietly stop reading their comments by Thursday. The ones worth having are the ones who stay quiet on work that is fine, which is exactly why you look up when they don't.
+We all know the human version of this. A senior engineer who objects to everything isn't careful — they're noise with a conscience, and you quietly stop reading their comments by Thursday. The ones worth having stay quiet on work that's fine, which is exactly why you look up when they don't.
 
-If you take one thing from this, take the experiment rather than the tool: **give whatever reviewer you are evaluating four changes with nothing wrong in them, and count how many it objects to.** It is an afternoon's work and it will tell you more about whether you will still be using it in a month than any benchmark of planted bugs.
+If you take one thing, take the experiment rather than the tool: **give whatever reviewer you're evaluating four changes with nothing wrong in them, and count how many it objects to.** An afternoon's work, and it'll tell you more about whether you'll still be using it in a month than any benchmark of planted bugs.
 
-I wrote the whole thing up, including the two hypotheses of mine the data killed and the two bugs I found in my own benchmark while writing it:
+The whole write-up — all three personas, the hook that refuses the write, the two hypotheses of mine the data killed, and two bugs I found in my own benchmark while writing it:
 
 https://sandeepbazar.github.io/blogs/lazy-senior-dev/your-ai-agent-has-nobody-to-answer-to/
 
 ## First comment
 
-If you want to check me rather than trust me: each persona ships with the benchmark, the raw transcripts, the per-case tables, and the control arm that makes my own numbers look worse. `npm run bench` runs it against your agent.
+If you'd rather check me than trust me: each persona ships with the benchmark, the raw transcripts, the per-case tables, and the control arm that makes my own numbers look worse. `npm run bench` runs it against your agent.
 
-If your numbers disagree with mine, please publish them. That is considerably more useful to me than a star.
+Two more agents are still finishing their sweeps. The tables regenerate from the records, so the numbers in that post will change under it — including if they disagree with me.
+
+If your numbers disagree with mine, please publish them. That's considerably more useful to me than a star.
 
 ## Alternate hook
 
-I spent weeks building a reviewer that reads your repository's history — the reverts, the postmortems, the ADR that says *don't*. Then I measured whether it changed anything, and the honest answer was no.
+**I asked an AI agent to write 45 Kubernetes deploys. 27 of them would have taken production down.**
 
-The agent already reads the log. It named the incident in 90% of runs with nothing installed at all.
+Not because the model is weak — it's a good model. Because the ticket asked for exactly that, and nothing in the room was allowed to say no.
 
-What it could not do was stop flagging changes that were fine: four false alarms out of four, on every agent I tested. That turned out to be the real gap, and almost nobody measures it.
+So I gave it three senior engineers who are. Two thousand recorded runs later, the one thing a better prompt could not replace was the refusal.

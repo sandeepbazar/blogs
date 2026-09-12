@@ -92,6 +92,37 @@ The gap worth paying attention to is 6% to 0%, and it is not a better sentence. 
 
 And the honest caveat, which is in the repository's own README because a generator puts it there: on Claude the drop is 7% to 2%, and at ninety runs an arm **that is not distinguishable from chance**. Claude completes 85 of 90 tickets against Bob's 55 — it is a much stronger author, with much less room to improve. Pooled across both hosts the effect is overwhelming. On Claude alone, it is a direction, not a proof.
 
+## The other two, on their own corpora
+
+The table above is the code reviewer. The SRE and Tenured were measured the same way, on their own
+tickets — deploys that take every replica down at once, migrations that drop a column the previous
+release still reads, changes that re-enable a flag a postmortem turned off.
+
+Every agent below has finished all four arms on that persona's corpus. An agent still running is
+simply absent rather than shown half filled:
+
+<!-- personas:start -->
+| Persona | Agent | Agent alone | Generic prompt | Persona | Persona + gate |
+|---|---|---|---|---|---|
+| **paranoid-sre** (deploys, blast radius) | IBM Bob Shell | 12 of 45 (27%) | 3 of 45 (7%) | 1 of 45 (2%) | **1 of 45 (2%)** |
+| **paranoid-sre** (deploys, blast radius) | Claude Code | 27 of 45 (60%) | 0 of 45 (0%) | 0 of 45 (0%) | **0 of 45 (0%)** |
+| **grumpy-reviewer** (general review) | Antigravity CLI | 26 of 90 (29%) | 7 of 90 (8%) | 5 of 90 (6%) | **0 of 90 (0%)** |
+| **grumpy-reviewer** (general review) | IBM Bob Shell | 16 of 90 (18%) | 4 of 90 (4%) | 3 of 90 (3%) | **0 of 90 (0%)** |
+| **grumpy-reviewer** (general review) | Claude Code | 6 of 90 (7%) | 4 of 90 (4%) | 4 of 90 (4%) | **2 of 90 (2%)** |
+| **tenured** (repository memory) | IBM Bob Shell | 4 of 40 (10%) | 0 of 40 (0%) | 0 of 40 (0%) | **0 of 40 (0%)** |
+| **tenured** (repository memory) | Claude Code | 0 of 40 (0%) | 0 of 40 (0%) | 0 of 40 (0%) | **0 of 40 (0%)** |
+<!-- personas:end -->
+
+The SRE corpus is the one that frightened me. **Ask Claude Code to write those deploys unaided and
+27 of 45 runs shipped something that takes production down** — the highest unaided rate anywhere in
+this project, and not because the model is weak. It is because the ticket asked for exactly that and
+nothing in the room said no.
+
+Notice also that the gate is not doing the work everywhere. On the SRE and memory corpora a careful
+prompt already reaches the floor, and the tables say so rather than claiming otherwise. What the
+gate gives you there is not a lower number, it is a guarantee that the number stays low when nobody
+is reading the prompt.
+
 ## The result I did not expect, and now think is the main one
 
 Detection was never the problem, and I had built the whole thing assuming it was.

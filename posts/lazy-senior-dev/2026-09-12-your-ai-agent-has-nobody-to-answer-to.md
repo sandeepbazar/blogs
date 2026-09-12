@@ -1,5 +1,5 @@
 ---
-title: "Your AI Agent Has Nobody to Answer To. I Gave It Three Senior Engineers."
+title: "Your AI Agent Has Nobody to Answer To. Three Senior Engineers to Break the Loop."
 dek: "Your agent reviews its own work, agrees with itself, and commits. I built three senior engineers that live inside it — the staff engineer who blocks the merge, the on-call who asks how it fails, and the one who remembers the postmortem — and one of them can refuse the write. Across 1,400 recorded runs on four agents, that refusal is the only thing a better prompt could not replace."
 date: 2026-09-12
 slug: your-ai-agent-has-nobody-to-answer-to
@@ -11,11 +11,15 @@ canonical: self
 status: published
 ---
 
+![An agent's write travels toward the branch and is stopped by a gate. Three reviewers stand at it: the Grump who blocks the merge, the Paranoid SRE who asks how it fails, and Tenured who remembers the postmortem. Beneath, defects reaching the branch fall from 18% unaided to 0% with the gate](/blogs/assets/art/lazy-senior-dev/your-ai-agent-has-nobody-to-answer-to.svg)
+
 ## The loop nobody is watching
 
 Your coding agent writes a change. Then it reviews the change. Then it decides the change is good. Then it writes the file.
 
 Every step in that loop is the same model, agreeing with itself, at two in the morning, with nobody in the room.
+
+![The same model writes the change, reviews its own diff, agrees with itself and commits, with nothing outside the loop; beside it the same loop with a gate that refuses the write until the verdict approves](/blogs/assets/art/lazy-senior-dev/the-loop-nobody-watches.svg)
 
 We have spent forty years building institutions around the opposite instinct. Code review exists because the author is the worst possible judge of their own work — not because they are careless, but because they cannot see the thing they did not think of. Then we handed the keyboard to something that reviews its own diffs by default and ships them without asking.
 
@@ -27,9 +31,15 @@ The obvious fix is to tell it to be careful. I measured that. It helps, and then
 
 **The Grump** — the staff engineer who has rejected four thousand pull requests. He reads the diff. Ten questions, in order, answered in writing, then a verdict: `APPROVE`, `REQUEST_CHANGES`, or `BLOCK`. Every objection names a file, a line, how it fails in production, and the smallest fix. He approves with one word: *Fine.*
 
+![The Grump reads a diff, prints a verdict, and the write is refused until the findings are fixed](https://lazy-senior-dev.github.io/assets/hero/grumpy-reviewer-dark.svg)
+
 **The Paranoid SRE** — the on-call engineer who has been paged for every mistake on the card. He does not read your code; he reads your deploy. Limits, probes, rollouts, rollbacks, alerts. `SHIP` / `HOLD` / `PAGE`.
 
+![The Paranoid SRE reads a manifest and asks what happens at 3 a.m. when it rolls out](https://lazy-senior-dev.github.io/assets/hero/paranoid-sre-dark.svg)
+
 **Tenured** — the engineer who was there. Reads the git log, the postmortems, the ADR that says *don't*, and asks whether this repository has already tried this and undone it. `NEW` / `SEEN_BEFORE` / `DO_NOT_REPEAT`.
+
+![Tenured checks a change against the repository's own history so it does not repeat itself](https://lazy-senior-dev.github.io/assets/hero/tenured-dark.svg)
 
 They compose. The Grump reviews the diff, the SRE asks what it does to production, Tenured asks whether you already tried it in 2024.
 
@@ -50,6 +60,8 @@ PreToolUse:Edit  permissionDecision: "deny"
 "No verdict found for this write to app.py. If you have not reviewed it yet:
  answer the ten checklist questions in writing and print the verdict block."
 ```
+
+![The agent asks to edit a file, the hook reads the verdict it last printed, finds BLOCK and denies the write with the line and the reason, the agent fixes it and prints an approving verdict, and the retried write is allowed through](/blogs/assets/art/lazy-senior-dev/what-the-gate-does.svg)
 
 The agent reviewed, printed a verdict, retried — and this time the code used a constant-time comparison instead of `==` on an API key.
 
@@ -82,12 +94,7 @@ What they are bad at is **stopping**.
 
 Ask an unaided agent whether a change is risky and it will find something. On clean diffs with nothing wrong in them at all:
 
-| Agent | false alarms, unaided | with the persona | defects still caught |
-|---|---|---|---|
-| Claude Code | 4 of 4 | **0 of 4** | 12 of 12 |
-| Codex CLI | 3.5 of 4 | **0 of 4** | 12 of 12 |
-| IBM Bob Shell | 3 of 4 | **0 of 4** | 12 of 12 |
-| Antigravity CLI | 3 of 3 | **0 of 3** | 12 of 12 |
+![On four changes with nothing wrong in them, four agents raise three to four false alarms out of four unaided and none with the persona loaded, while still catching twelve of twelve planted defects](/blogs/assets/art/lazy-senior-dev/quiet-on-clean-code.svg)
 
 Four independent agents. Three to four false alarms out of four, down to zero — while catching every planted defect.
 
@@ -123,4 +130,4 @@ And if you take one thing from this and throw the rest away: **run the clean-inp
 
 ---
 
-*The three personas are documented at [grumpy-reviewer](https://lazy-senior-dev.github.io/grumpy-reviewer/), [paranoid-sre](https://lazy-senior-dev.github.io/paranoid-sre/) and [tenured](https://lazy-senior-dev.github.io/tenured/). Written in a personal capacity; the views here are my own and not those of my employer. Product and company names are the trademarks of their respective owners, and their appearance in a benchmark is a measurement, not an endorsement in either direction.*
+*The three personas are documented at [grumpy-reviewer](https://lazy-senior-dev.github.io/grumpy-reviewer/), [paranoid-sre](https://lazy-senior-dev.github.io/paranoid-sre/) and [tenured](https://lazy-senior-dev.github.io/tenured/). Product and company names are the trademarks of their respective owners, and their appearance in a benchmark is a measurement, not an endorsement in either direction.*

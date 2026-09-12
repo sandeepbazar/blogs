@@ -112,4 +112,4 @@ The benchmarks are in the repositories with the raw transcripts, the per-case ta
 
 ---
 
-*The three personas live under [lazy-senior-dev](https://lazy-senior-dev.github.io/) — [grumpy-reviewer](https://lazy-senior-dev.github.io/grumpy-reviewer/), [paranoid-sre](https://lazy-senior-dev.github.io/paranoid-sre/), [tenured](https://lazy-senior-dev.github.io/tenured/). Written in a personal capacity; the views here are my own and not those of my employer. Product and company names are the trademarks of their respective owners, and their appearance in a benchmark is a measurement, not an endorsement in either direction.*
+*The three personas live under [lazy-senior-dev](https://lazy-senior-dev.github.io/) — [grumpy-reviewer](https://lazy-senior-dev.github.io/grumpy-reviewer/), [paranoid-sre](https://lazy-senior-dev.github.io/paranoid-sre/), [tenured](https://lazy-senior-dev.github.io/tenured/). Product and company names are the trademarks of their respective owners, and their appearance in a benchmark is a measurement, not an endorsement in either direction.*

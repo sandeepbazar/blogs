@@ -20,7 +20,11 @@ I asked an AI agent to write 45 Kubernetes deploys.
 
 27 of them would have taken production down.
 
-maxUnavailable: 100%, with maxSurge: 0. A migration dropping a column the previous release still reads. It wrote them cheerfully — it is a good model. It did that because the ticket asked for exactly that, and nothing in the room was allowed to say no.
+One of them told Kubernetes it could shut down every copy of the service at the same time, and start no replacement until they were all gone. That is not a rolling update. That is the site being off, every time you deploy.
+
+Another deleted a database column while the version still running in production was reading from it.
+
+It wrote them cheerfully — it is a good model. It did that because the ticket asked for exactly that, and nothing in the room was allowed to say no.
 
 That is the real problem, and it is not the one we keep talking about.
 

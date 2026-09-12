@@ -38,6 +38,7 @@ That is about as falsifiable as this kind of claim gets, which is why I liked it
 |---|---|---|---|---|---|
 | Claude Code | `claude-sonnet-5` (n=40/arm) | **90%** | 90% | 88% | 95% |
 | IBM Bob Shell | `bob-default` (n=40/arm) | **23%** | 33% | 40% | 35% |
+| Antigravity CLI | `gemini-3.6-flash-medium` (n=40/arm) | **50%** | 60% | 88% | 93% |
 <!-- cites:end -->
 
 On `claude-sonnet-5`, the agent with no persona, no skill and no instruction to look at anything named the incident in **90% of runs**. With my persona loaded: 88%.

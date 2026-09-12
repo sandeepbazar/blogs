@@ -1,6 +1,6 @@
 ---
 title: "Your AI Agent Has Nobody to Answer To. Three Senior Engineers to Break the Loop."
-dek: "Your agent reviews its own work, agrees with itself, and commits. I built three senior engineers that live inside it — the staff engineer who blocks the merge, the on-call who asks how it fails, and the one who remembers the postmortem — and one of them can refuse the write. Across 2,000 recorded runs on four agents, that refusal is the only thing a better prompt could not replace."
+dek: "Your agent reviews its own work, agrees with itself, and commits. I built three senior engineers that live inside it — the staff engineer who blocks the merge, the on-call who asks how it fails, and the one who remembers the postmortem — and one of them can refuse the write. Across 2,400 recorded runs on four agents, that refusal is the only thing a better prompt could not replace."
 date: 2026-09-12
 slug: your-ai-agent-has-nobody-to-answer-to
 category: "Agentic AI"
@@ -92,6 +92,14 @@ The gap worth paying attention to is 6% to 0%, and it is not a better sentence. 
 
 And the honest caveat, which is in the repository's own README because a generator puts it there: on Claude the drop is 7% to 2%, and at ninety runs an arm **that is not distinguishable from chance**. Claude completes 85 of 90 tickets against Bob's 55 — it is a much stronger author, with much less room to improve. Pooled across both hosts the effect is overwhelming. On Claude alone, it is a direction, not a proof.
 
+### And it is not free
+
+<!-- cost:start -->
+A gate that refuses writes will sometimes refuse one the agent then gives up on. On **Antigravity CLI** the gated runs finished 73 tickets against 85 unaided — 14% fewer. That is the obvious objection to every zero above: a ticket nobody finished cannot ship a defect.
+
+So count it the harder way, per ticket the agent actually completed. Antigravity CLI shipped a defect in 31% of the tickets it finished unaided and 0% of the ones it finished gated. The effect survives the fairer denominator. The shortfall is real and it is a cost you are choosing — but an unfinished ticket is sitting in front of you, and a bad deploy is not.
+<!-- cost:end -->
+
 ## The other two, on their own corpora
 
 The table above is the code reviewer. The SRE and Tenured were measured the same way, on their own
@@ -104,11 +112,13 @@ simply absent rather than shown half filled:
 <!-- personas:start -->
 | Persona | Agent | Agent alone | Generic prompt | Persona | Persona + gate |
 |---|---|---|---|---|---|
+| **paranoid-sre** (deploys, blast radius) | Antigravity CLI | 29 of 45 (64%) | 21 of 45 (47%) | 1 of 45 (2%) | **0 of 45 (0%)** |
 | **paranoid-sre** (deploys, blast radius) | IBM Bob Shell | 12 of 45 (27%) | 3 of 45 (7%) | 1 of 45 (2%) | **1 of 45 (2%)** |
 | **paranoid-sre** (deploys, blast radius) | Claude Code | 27 of 45 (60%) | 0 of 45 (0%) | 0 of 45 (0%) | **0 of 45 (0%)** |
 | **grumpy-reviewer** (general review) | Antigravity CLI | 26 of 90 (29%) | 7 of 90 (8%) | 5 of 90 (6%) | **0 of 90 (0%)** |
 | **grumpy-reviewer** (general review) | IBM Bob Shell | 16 of 90 (18%) | 4 of 90 (4%) | 3 of 90 (3%) | **0 of 90 (0%)** |
 | **grumpy-reviewer** (general review) | Claude Code | 6 of 90 (7%) | 4 of 90 (4%) | 4 of 90 (4%) | **2 of 90 (2%)** |
+| **tenured** (repository memory) | Antigravity CLI | 13 of 40 (33%) | 8 of 40 (20%) | 0 of 40 (0%) | **0 of 40 (0%)** |
 | **tenured** (repository memory) | IBM Bob Shell | 4 of 40 (10%) | 0 of 40 (0%) | 0 of 40 (0%) | **0 of 40 (0%)** |
 | **tenured** (repository memory) | Claude Code | 0 of 40 (0%) | 0 of 40 (0%) | 0 of 40 (0%) | **0 of 40 (0%)** |
 <!-- personas:end -->

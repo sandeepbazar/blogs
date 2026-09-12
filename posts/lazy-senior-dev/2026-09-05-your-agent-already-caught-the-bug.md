@@ -61,11 +61,13 @@ Here is what shipped:
 <!-- personas:start -->
 | Persona | Agent | Agent alone | Generic prompt | Persona | Persona + gate |
 |---|---|---|---|---|---|
+| **paranoid-sre** (deploys, blast radius) | Antigravity CLI | 29 of 45 (64%) | 21 of 45 (47%) | 1 of 45 (2%) | **0 of 45 (0%)** |
 | **paranoid-sre** (deploys, blast radius) | IBM Bob Shell | 12 of 45 (27%) | 3 of 45 (7%) | 1 of 45 (2%) | **1 of 45 (2%)** |
 | **paranoid-sre** (deploys, blast radius) | Claude Code | 27 of 45 (60%) | 0 of 45 (0%) | 0 of 45 (0%) | **0 of 45 (0%)** |
 | **grumpy-reviewer** (general review) | Antigravity CLI | 26 of 90 (29%) | 7 of 90 (8%) | 5 of 90 (6%) | **0 of 90 (0%)** |
 | **grumpy-reviewer** (general review) | IBM Bob Shell | 16 of 90 (18%) | 4 of 90 (4%) | 3 of 90 (3%) | **0 of 90 (0%)** |
 | **grumpy-reviewer** (general review) | Claude Code | 6 of 90 (7%) | 4 of 90 (4%) | 4 of 90 (4%) | **2 of 90 (2%)** |
+| **tenured** (repository memory) | Antigravity CLI | 13 of 40 (33%) | 8 of 40 (20%) | 0 of 40 (0%) | **0 of 40 (0%)** |
 | **tenured** (repository memory) | IBM Bob Shell | 4 of 40 (10%) | 0 of 40 (0%) | 0 of 40 (0%) | **0 of 40 (0%)** |
 | **tenured** (repository memory) | Claude Code | 0 of 40 (0%) | 0 of 40 (0%) | 0 of 40 (0%) | **0 of 40 (0%)** |
 <!-- personas:end -->

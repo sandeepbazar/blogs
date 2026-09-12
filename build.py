@@ -671,6 +671,34 @@ def build_sitemap(posts: list[Post]) -> str:
 # ------------------------------------------------------------- validation --
 
 
+
+# The disclaimer is not decoration and not optional: every post on this site carries it, and the
+# way to keep that true is to fail the build rather than to remember. It lives in the post template,
+# so this catches a template edit that drops it, not a missing line in any one post.
+DISCLAIMER_MUST = (
+    "solely my own and do not reflect those of my employer",
+    "should not be considered as official guidance or advice",
+)
+
+
+def check_disclaimer(pages: dict[Path, str]) -> None:
+    missing = []
+    for path, markup in pages.items():
+        # Only pages that are a post: the home page and the collection indexes are not posts.
+        if 'class="post__body' not in markup:
+            continue
+        # Compare on collapsed whitespace. The template wraps the sentence across three lines, so a
+        # literal substring match fails on text that is plainly there -- which it did, and would
+        # have had someone "fixing" a disclaimer that was never broken.
+        flat = re.sub(r"\s+", " ", markup)
+        if not all(phrase in flat for phrase in DISCLAIMER_MUST):
+            missing.append(str(path.relative_to(OUT)))
+    if missing:
+        raise BuildError(
+            "posts published without the employer disclaimer:\n  " + "\n  ".join(sorted(missing))
+        )
+
+
 def check_internal_links(pages: dict[Path, str], urls: set[str]) -> None:
     """Fail on an internal link that resolves to no generated page.
 
@@ -769,6 +797,7 @@ def build() -> None:
     )
     (OUT / "404.html").write_text(notfound, encoding="utf-8")
 
+    check_disclaimer(pages)
     check_internal_links(
         pages,
         {p.url for p in onsite}

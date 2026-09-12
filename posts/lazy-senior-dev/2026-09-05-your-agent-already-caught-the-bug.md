@@ -102,7 +102,7 @@ Each is one markdown ruleset compiled to adapters for fourteen hosts — Claude 
 
 - **[tenured](https://lazy-senior-dev.github.io/tenured/)** — reads the git log, the postmortems and the ADRs, and asks whether the repository has tried this before and undone it. `NEW` / `SEEN_BEFORE` / `DO_NOT_REPEAT`.
 
-They compose. The Grump reviews the diff, the SRE asks what it does to production, Tenured asks whether you already tried it in 2024.
+They compose. The Grump reviews the diff, the SRE asks what it does to production, Tenured asks whether you already tried this in 2019 and undid it.
 
 Every rule maps to a **vendor-neutral** standard — MITRE CWE, OWASP, NIST SSDF, SEI CERT, CIS Benchmarks — and where no neutral identifier exists, the table says so rather than borrowing one. Releases carry SLSA build provenance, Sigstore signatures, and both CycloneDX and SPDX bills of materials.
 

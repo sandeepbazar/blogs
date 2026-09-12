@@ -45,7 +45,7 @@ The obvious fix is to tell it to be careful. I measured that too. It helps, and 
 
 ![Tenured checks a change against the repository's own history so it does not repeat itself](https://lazy-senior-dev.github.io/assets/hero/tenured-dark.svg)
 
-They compose, the way real colleagues do. The Grump reviews the diff, the SRE asks what it does to production, and Tenured asks whether you already tried this in 2024 and undid it.
+They compose, the way real colleagues do. The Grump reviews the diff, the SRE asks what it does to production, and Tenured asks whether you already tried this in 2019 and undid it.
 
 None of them is an agent. There is no second model, no API key, no extra bill — each is a markdown file your existing agent already knows how to read, compiled into whatever shape your host wants: a skill, a plugin, an MCP server, an `AGENTS.md`, a rules file, a GitHub Action. Fourteen hosts, one set of rules.
 

@@ -948,3 +948,24 @@ img { max-width: 100%; height: auto; }
   body { background: #fff; color: #000; }
   .post__layout { display: block; }
 }
+
+/* Archive search and the fold. The archive grows by one line per post forever, so a year is shown
+   ten deep and the rest wait behind a count. */
+.arcsearch { display: flex; align-items: center; gap: 12px; margin: 0 0 18px; }
+.arcsearch input {
+  flex: 1 1 auto; max-width: 420px; padding: 10px 14px;
+  border: 1px solid var(--line); border-radius: 10px;
+  background: var(--surface); color: var(--text); font: inherit; font-size: 0.95rem;
+}
+.arcsearch input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.arccount { color: var(--text-faint); font-size: 0.88rem; }
+.arcmore {
+  margin-top: 10px; padding: 7px 13px; font: inherit; font-size: 0.86rem;
+  color: var(--text-dim); background: none;
+  border: 1px dashed var(--line); border-radius: 8px; cursor: pointer;
+}
+.arcmore:hover { color: var(--text); border-style: solid; background: var(--surface); }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}

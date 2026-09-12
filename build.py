@@ -452,21 +452,38 @@ def render_featured(post: Post) -> str:
       </a>"""
 
 
+# A year is shown ten deep. The rest are rendered but folded away behind a count, so the archive
+# stays a page you can read rather than a wall that grows by one line every time something is
+# published -- and so a search still has everything to match against without another request.
+ARCHIVE_VISIBLE = 10
+
+
 def render_archive(posts: list[Post]) -> str:
     years: dict[int, list[Post]] = {}
     for post in posts:
         years.setdefault(post.date.year, []).append(post)
     blocks = []
     for year in sorted(years, reverse=True):
-        rows = "\n".join(
-            f'          <div class="arcrow"><span class="arcrow__date">{p.date:%b %d}</span>'
-            f'<a href="{esc(p.url)}"'
-            f'{" target=\"_blank\" rel=\"noopener\"" if p.is_offsite else ""}>{esc(p.title)}</a></div>'
-            for p in years[year]
-        )
+        entries = years[year]
+        rows = []
+        for i, p in enumerate(entries):
+            folded = ' data-fold="1" hidden' if i >= ARCHIVE_VISIBLE else ""
+            target = ' target="_blank" rel="noopener"' if p.is_offsite else ""
+            rows.append(
+                f'          <div class="arcrow"{folded} data-search="{esc((p.title + " " + p.category).lower())}">'
+                f'<span class="arcrow__date">{p.date:%b %d}</span>'
+                f'<a href="{esc(p.url)}"{target}>{esc(p.title)}</a></div>'
+            )
+        more = ""
+        if len(entries) > ARCHIVE_VISIBLE:
+            hidden = len(entries) - ARCHIVE_VISIBLE
+            more = (
+                f'\n          <button class="arcmore" type="button" data-year="{year}"'
+                f' aria-expanded="false">Show {hidden} more from {year}</button>'
+            )
         blocks.append(
-            f'        <div class="arcyear">\n          <h3>{year}</h3>\n'
-            f'          <div>\n{rows}\n          </div>\n        </div>'
+            f'        <div class="arcyear" data-year="{year}">\n          <h3>{year}</h3>\n'
+            f'          <div>\n' + "\n".join(rows) + f'\n          </div>{more}\n        </div>'
         )
     return "\n".join(blocks)
 

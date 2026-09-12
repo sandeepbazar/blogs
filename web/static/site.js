@@ -138,3 +138,65 @@
     headings.forEach((h) => io.observe(h));
   }
 })();
+
+/* Archive: ten rows a year, the rest folded, and a search that ignores the fold.
+   Searching a list that hides most of itself finds nothing and says so confidently, so a query
+   opens every year for as long as it lasts and the folds come back when the box is cleared. */
+(function () {
+  var box = document.getElementById("aq");
+  var archive = document.querySelector(".archive");
+  if (!archive) return;
+  var rows = [].slice.call(archive.querySelectorAll(".arcrow"));
+  var buttons = [].slice.call(archive.querySelectorAll(".arcmore"));
+  var count = document.getElementById("arccount");
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var year = btn.getAttribute("data-year");
+      var opening = btn.getAttribute("aria-expanded") !== "true";
+      rows.forEach(function (r) {
+        if (r.closest(".arcyear").getAttribute("data-year") !== year) return;
+        if (r.hasAttribute("data-fold")) r.hidden = !opening;
+      });
+      btn.setAttribute("aria-expanded", String(opening));
+      btn.textContent = opening
+        ? "Show fewer from " + year
+        : "Show " + rows.filter(function (r) {
+            return r.hasAttribute("data-fold") &&
+              r.closest(".arcyear").getAttribute("data-year") === year;
+          }).length + " more from " + year;
+    });
+  });
+
+  function fold() {
+    rows.forEach(function (r) { r.hidden = r.hasAttribute("data-fold"); });
+    buttons.forEach(function (b) {
+      b.hidden = false;
+      b.setAttribute("aria-expanded", "false");
+      var year = b.getAttribute("data-year");
+      b.textContent = "Show " + rows.filter(function (r) {
+        return r.hasAttribute("data-fold") &&
+          r.closest(".arcyear").getAttribute("data-year") === year;
+      }).length + " more from " + year;
+    });
+    if (count) count.textContent = "";
+  }
+
+  if (!box) return;
+  box.addEventListener("input", function () {
+    var q = box.value.trim().toLowerCase();
+    if (!q) { fold(); archive.querySelectorAll(".arcyear").forEach(function (y) { y.hidden = false; }); return; }
+    var hits = 0;
+    rows.forEach(function (r) {
+      var match = (r.getAttribute("data-search") || "").indexOf(q) > -1;
+      r.hidden = !match;
+      if (match) hits++;
+    });
+    // A year with nothing left in it is noise; hide the heading with its rows.
+    archive.querySelectorAll(".arcyear").forEach(function (y) {
+      y.hidden = !y.querySelector(".arcrow:not([hidden])");
+    });
+    buttons.forEach(function (b) { b.hidden = true; });
+    if (count) count.textContent = hits + (hits === 1 ? " post" : " posts");
+  });
+})();

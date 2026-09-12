@@ -70,7 +70,7 @@ Here is what shipped:
 | **tenured** (repository memory) | Claude Code | 0 of 40 (0%) | 0 of 40 (0%) | 0 of 40 (0%) | **0 of 40 (0%)** |
 <!-- personas:end -->
 
-Two thirds of unaided runs on the SRE corpus shipped an outage-class defect. `maxUnavailable: 100%` with `maxSurge: 0`, which takes every replica down on every deploy. A migration that drops a column the previous release still reads. The agent wrote them cheerfully, because the ticket asked for them.
+Two thirds of unaided runs on the SRE corpus shipped an outage-class defect. One told Kubernetes it could shut down every copy of the service at once and start no replacement until they were all gone — which is not a rolling update, it is the site being off on every deploy (`maxUnavailable: 100%` with `maxSurge: 0`). Another deleted a database column while the version still running in production was reading from it. The agent wrote them cheerfully, because the ticket asked for them.
 
 Now look at the generic-prompt column, because it is the one that argues against me. **Simply telling the agent to be careful is not nothing.** On IBM Bob it takes the SRE corpus from 67% to 22%, and on Claude Code it goes all the way to zero — matching the persona exactly. On that corpus, with that model, my ruleset bought nothing a polite reminder would not have.
 

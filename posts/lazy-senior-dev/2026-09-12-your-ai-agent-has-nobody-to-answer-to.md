@@ -135,7 +135,9 @@ Ask one whether a change looks risky and it will find you something. On clean di
 
 ![On four changes with nothing wrong in them, four agents raise three to four false alarms out of four unaided and none with the persona loaded, while still catching twelve of twelve planted defects](/blogs/assets/art/lazy-senior-dev/quiet-on-clean-code.svg)
 
-Four independent agents. Three to four false alarms out of four, down to zero — while catching every planted defect.
+Four independent agents. Three to four false alarms out of four, down to zero — <!-- caught:start -->
+and every one of them still caught 12 of 12 planted defects
+<!-- caught:end -->.
 
 That last column is what makes the rest mean anything. Zero false alarms is also what you score by approving everything, so a noise number without a detection number beside it is not a result, it is a shrug.
 

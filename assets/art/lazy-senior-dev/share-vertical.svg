@@ -1,148 +1,416 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1350" role="img" aria-label="Top: an agent writes a change, reviews its own diff, agrees with itself and commits, in a closed loop, until a gate is placed in it and refuses the write. Below, three reviewers stand at that gate. The Grump reads the diff and blocks an API key compared with double equals, taking defects reaching the branch from 29 percent to 0. The Paranoid SRE reads the deploy and pages on maxUnavailable 100 percent, from 60 percent to 0. Tenured reads the repository's history and refuses to re-add a dependency removed for a CVE, from 10 percent to 0.">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1350" role="img" aria-label="An agent writes a change, reviews its own diff, agrees with itself and commits, in a loop with nothing outside it that can refuse. Below it, the three reviewers that sit in that loop: the Grump on the diff, the Paranoid SRE on the deploy, and Tenured on the repository's own history.">
   <style>
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-    .sans{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-    .cap{font-size:16px;font-weight:700;letter-spacing:.18em;fill:#5a6b8c}
-    .ttl{font-size:40px;font-weight:800;fill:#e8ecf8}
-    .sub{font-size:20px;fill:#93a4c8}
-    .n{font-size:18px;fill:#e8ecf8}
-    .nm{font-size:25px;font-weight:800;fill:#e8ecf8}
-    .role{font-size:17px;fill:#93a4c8}
-    .code{font-size:16px}
-    .vd{font-size:15px;font-weight:700;letter-spacing:.05em}
-    .big{font-size:34px;font-weight:800}
-    .lbl{font-size:14px;fill:#5a6b8c}
-
-    /* Everything is on screen the whole time and everything is moving: one 12s timeline, each row
-       offset inside it so the eye is led down the card instead of being asked to watch four things
-       at once. */
-    @keyframes orbit{to{transform:rotate(360deg)}}
-    @keyframes flow{to{stroke-dashoffset:-34}}
-    @keyframes gatebar{0%,20%{opacity:.25;transform:scaleY(.82)}28%,72%{opacity:1;transform:scaleY(1)}82%,100%{opacity:.25;transform:scaleY(.82)}}
-    @keyframes refuse{0%,22%{opacity:0;transform:scale(.82)}30%{opacity:1;transform:scale(1.08)}38%,70%{opacity:1;transform:scale(1)}80%,100%{opacity:0;transform:scale(.94)}}
-    @keyframes nudge{0%,20%{transform:translateX(0)}28%{transform:translateX(-30px)}36%,100%{transform:translateX(-18px)}}
-
-    /* one stamp per row, staggered */
-    @keyframes stamp1{0%,24%{opacity:0;transform:scale(.7) rotate(-8deg)}31%{opacity:1;transform:scale(1.12) rotate(-3deg)}38%,92%{opacity:1;transform:scale(1) rotate(-3deg)}100%{opacity:0}}
-    @keyframes stamp2{0%,40%{opacity:0;transform:scale(.7) rotate(-8deg)}47%{opacity:1;transform:scale(1.12) rotate(-3deg)}54%,92%{opacity:1;transform:scale(1) rotate(-3deg)}100%{opacity:0}}
-    @keyframes stamp3{0%,56%{opacity:0;transform:scale(.7) rotate(-8deg)}63%{opacity:1;transform:scale(1.12) rotate(-3deg)}70%,92%{opacity:1;transform:scale(1) rotate(-3deg)}100%{opacity:0}}
-    @keyframes strike1{0%,26%{width:0}34%,100%{width:322px}}
-    @keyframes strike2{0%,42%{width:0}50%,100%{width:322px}}
-    @keyframes strike3{0%,58%{width:0}66%,100%{width:322px}}
-    @keyframes drop1{0%,22%{opacity:0;transform:translateY(-8px)}30%,100%{opacity:1;transform:translateY(0)}}
-    @keyframes drop2{0%,38%{opacity:0;transform:translateY(-8px)}46%,100%{opacity:1;transform:translateY(0)}}
-    @keyframes drop3{0%,54%{opacity:0;transform:translateY(-8px)}62%,100%{opacity:1;transform:translateY(0)}}
-
-    .orb{animation:orbit 6s linear infinite;transform-origin:540px 372px}
-    .fl{stroke-dasharray:7 10;animation:flow 1.6s linear infinite}
-    .gb{animation:gatebar 12s ease-in-out infinite;transform-origin:540px 372px}
-    .rf{animation:refuse 12s ease-out infinite;transform-origin:760px 372px}
-    .nd{animation:nudge 12s ease-in-out infinite}
-    .s1{animation:stamp1 12s ease-out infinite;transform-origin:center}
-    .s2{animation:stamp2 12s ease-out infinite;transform-origin:center}
-    .s3{animation:stamp3 12s ease-out infinite;transform-origin:center}
-    .k1{animation:strike1 12s ease-out infinite}
-    .k2{animation:strike2 12s ease-out infinite}
-    .k3{animation:strike3 12s ease-out infinite}
-    .d1{animation:drop1 12s ease-out infinite}
-    .d2{animation:drop2 12s ease-out infinite}
-    .d3{animation:drop3 12s ease-out infinite}
-    @media (prefers-reduced-motion:reduce){
-      .orb,.fl,.gb,.rf,.nd,.s1,.s2,.s3,.k1,.k2,.k3,.d1,.d2,.d3{animation:none}
-      .rf,.s1,.s2,.s3,.d1,.d2,.d3{opacity:1;transform:none}
-      .k1,.k2,.k3{width:322px}
-    }
+    .lsv-sans{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    .lsv-cap{font-size:15px;font-weight:700;letter-spacing:.18em;fill:#5a6b8c}
+    .lsv-ttl{font-size:37px;font-weight:800;fill:#e8ecf8}
+    .lsv-sub{font-size:18px;fill:#93a4c8}
+    .lsv-n{font-size:16px;fill:#e8ecf8}
+    .lsv-nm{font-size:22px;font-weight:800;fill:#e8ecf8;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    .lsv-role{font-size:15px;fill:#93a4c8;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    .lsv-foot{font-size:14px;fill:#5a6b8c}
+    @keyframes lsv-orbit{to{transform:rotate(360deg)}}
+    @keyframes lsv-flow{to{stroke-dashoffset:-34}}
+    @keyframes lsv-bar{0%,18%{opacity:.25;transform:scaleY(.8)}26%,74%{opacity:1;transform:scaleY(1)}84%,100%{opacity:.25;transform:scaleY(.8)}}
+    @keyframes lsv-push{0%,18%{transform:translateX(0)}27%{transform:translateX(-28px)}36%,100%{transform:translateX(-16px)}}
+    .lsv-orb{animation:lsv-orbit 6s linear infinite;transform-origin:540px 268px}
+    .lsv-fl{stroke-dasharray:7 10;animation:lsv-flow 1.6s linear infinite}
+    .lsv-gb{animation:lsv-bar 12s ease-in-out infinite;transform-origin:540px 268px}
+    .lsv-nd{animation:lsv-push 12s ease-in-out infinite}
+    @media (prefers-reduced-motion:reduce){ .lsv-orb,.lsv-fl,.lsv-gb,.lsv-nd{animation:none} }
   </style>
+
+  <style>.g-mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .g-sans{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    .g-b{font-size:12px;font-weight:700}.g-xs{font-size:9.5px;letter-spacing:.08em}
+    .g-num{font-size:22px;font-weight:700}
+    .g-cap{font-size:10px;font-weight:700;letter-spacing:.18em}
+    @keyframes g-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+    @keyframes g-blink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+    @keyframes g-steam{0%{opacity:0;transform:translateY(4px) scale(.9)}35%{opacity:.9}100%{opacity:0;transform:translateY(-16px) scale(1.15)}}
+    @keyframes g-sweep{to{transform:rotate(360deg)}}
+    @keyframes g-spin{to{transform:rotate(360deg)}}
+    @keyframes g-rspin{to{transform:rotate(-360deg)}}
+    @keyframes g-ping{0%,100%{opacity:.25;r:3}50%{opacity:1;r:5}}
+    @keyframes g-pulse{0%,100%{opacity:.35}50%{opacity:1}}
+    @keyframes g-settle{0%,55%{fill:var(--w)}70%,100%{fill:var(--o)}}
+    @keyframes g-glow{0%,100%{opacity:.20}50%{opacity:.42}}
+    @keyframes g-dash{to{stroke-dashoffset:-40}}
+    .g-bob{animation:g-bob 3.4s ease-in-out infinite}
+    .g-eye{animation:g-blink 4.6s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+    .g-st{animation:g-steam 2.6s ease-in-out infinite}
+    .g-s2{animation-delay:.5s}.g-s3{animation-delay:1s}
+    .g-sweep{animation:g-sweep 3.6s linear infinite;transform-origin:0 0}
+    .g-sp-s{animation:g-spin 16s linear infinite;transform-origin:0 0}
+    .g-sp-r{animation:g-rspin 11s linear infinite;transform-origin:0 0}
+    .g-ping{animation:g-ping 1.9s ease-in-out infinite}
+    .g-wire{animation:g-dash 1.6s linear infinite}
+    .g-glow{animation:g-glow 4s ease-in-out infinite}
+    .g-dot{--w:#f43f5e;--o:#22c55e;animation:g-settle 4.4s ease-in-out infinite}
+    .g-r1 .g-dot{animation-delay:.35s}.g-r2 .g-dot{animation-delay:.7s}.g-r3 .g-dot{animation-delay:1.05s}
+    .g-vrow{animation:g-pulse 4.4s ease-in-out infinite}
+    .g-v1{animation-delay:1.45s}.g-v2{animation-delay:2.9s}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important}}</style>
+  <style>.s-mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .s-sans{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    .s-b{font-size:12px;font-weight:700}.s-xs{font-size:9.5px;letter-spacing:.08em}
+    .s-num{font-size:22px;font-weight:700}
+    .s-cap{font-size:10px;font-weight:700;letter-spacing:.18em}
+    @keyframes s-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+    @keyframes s-blink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+    @keyframes s-steam{0%{opacity:0;transform:translateY(4px) scale(.9)}35%{opacity:.9}100%{opacity:0;transform:translateY(-16px) scale(1.15)}}
+    @keyframes s-sweep{to{transform:rotate(360deg)}}
+    @keyframes s-spin{to{transform:rotate(360deg)}}
+    @keyframes s-rspin{to{transform:rotate(-360deg)}}
+    @keyframes s-ping{0%,100%{opacity:.25;r:3}50%{opacity:1;r:5}}
+    @keyframes s-pulse{0%,100%{opacity:.35}50%{opacity:1}}
+    @keyframes s-settle{0%,55%{fill:var(--w)}70%,100%{fill:var(--o)}}
+    @keyframes s-glow{0%,100%{opacity:.20}50%{opacity:.42}}
+    @keyframes s-dash{to{stroke-dashoffset:-40}}
+    .s-bob{animation:s-bob 3.4s ease-in-out infinite}
+    .s-eye{animation:s-blink 4.6s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+    .s-st{animation:s-steam 2.6s ease-in-out infinite}
+    .s-s2{animation-delay:.5s}.s-s3{animation-delay:1s}
+    .s-sweep{animation:s-sweep 3.6s linear infinite;transform-origin:0 0}
+    .s-sp-s{animation:s-spin 16s linear infinite;transform-origin:0 0}
+    .s-sp-r{animation:s-rspin 11s linear infinite;transform-origin:0 0}
+    .s-ping{animation:s-ping 1.9s ease-in-out infinite}
+    .s-wire{animation:s-dash 1.6s linear infinite}
+    .s-glow{animation:s-glow 4s ease-in-out infinite}
+    .s-dot{--w:#f472b6;--o:#22c55e;animation:s-settle 4.4s ease-in-out infinite}
+    .s-r1 .s-dot{animation-delay:.35s}.s-r2 .s-dot{animation-delay:.7s}.s-r3 .s-dot{animation-delay:1.05s}
+    .s-vrow{animation:s-pulse 4.4s ease-in-out infinite}
+    .s-v1{animation-delay:1.45s}.s-v2{animation-delay:2.9s}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important}}</style>
+  <style>.t-mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .t-sans{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    .t-b{font-size:12px;font-weight:700}.t-xs{font-size:9.5px;letter-spacing:.08em}
+    .t-num{font-size:22px;font-weight:700}
+    .t-cap{font-size:10px;font-weight:700;letter-spacing:.18em}
+    @keyframes t-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+    @keyframes t-blink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+    @keyframes t-steam{0%{opacity:0;transform:translateY(4px) scale(.9)}35%{opacity:.9}100%{opacity:0;transform:translateY(-16px) scale(1.15)}}
+    @keyframes t-sweep{to{transform:rotate(360deg)}}
+    @keyframes t-spin{to{transform:rotate(360deg)}}
+    @keyframes t-rspin{to{transform:rotate(-360deg)}}
+    @keyframes t-ping{0%,100%{opacity:.25;r:3}50%{opacity:1;r:5}}
+    @keyframes t-pulse{0%,100%{opacity:.35}50%{opacity:1}}
+    @keyframes t-settle{0%,55%{fill:var(--w)}70%,100%{fill:var(--o)}}
+    @keyframes t-glow{0%,100%{opacity:.20}50%{opacity:.42}}
+    @keyframes t-dash{to{stroke-dashoffset:-40}}
+    .t-bob{animation:t-bob 3.4s ease-in-out infinite}
+    .t-eye{animation:t-blink 4.6s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+    .t-st{animation:t-steam 2.6s ease-in-out infinite}
+    .t-s2{animation-delay:.5s}.t-s3{animation-delay:1s}
+    .t-sweep{animation:t-sweep 3.6s linear infinite;transform-origin:0 0}
+    .t-sp-s{animation:t-spin 16s linear infinite;transform-origin:0 0}
+    .t-sp-r{animation:t-rspin 11s linear infinite;transform-origin:0 0}
+    .t-ping{animation:t-ping 1.9s ease-in-out infinite}
+    .t-wire{animation:t-dash 1.6s linear infinite}
+    .t-glow{animation:t-glow 4s ease-in-out infinite}
+    .t-dot{--w:#fb923c;--o:#22c55e;animation:t-settle 4.4s ease-in-out infinite}
+    .t-r1 .t-dot{animation-delay:.35s}.t-r2 .t-dot{animation-delay:.7s}.t-r3 .t-dot{animation-delay:1.05s}
+    .t-vrow{animation:t-pulse 4.4s ease-in-out infinite}
+    .t-v1{animation-delay:1.45s}.t-v2{animation-delay:2.9s}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important}}</style>
 
   <rect width="1080" height="1350" fill="#0b1020"/>
   <rect x="0" y="0" width="1080" height="5" fill="#8ea2ff" opacity=".7"/>
 
-  <!-- ── heading ───────────────────────────────────────────────── -->
-  <text class="sans cap" x="56" y="74">THE LOOP NOBODY IS WATCHING</text>
-  <text class="sans ttl" x="56" y="128">Your agent writes it, reviews it,</text>
-  <text class="sans ttl" x="56" y="176">and agrees with itself.</text>
+  <text class="lsv-sans lsv-cap" x="56" y="66">THE LOOP NOBODY IS WATCHING</text>
+  <text class="lsv-sans lsv-ttl" x="56" y="116">Your agent writes it, reviews it,</text>
+  <text class="lsv-sans lsv-ttl" x="56" y="160">and agrees with itself.</text>
 
-  <!-- ── the loop, with a gate in it ───────────────────────────── -->
-  <circle cx="540" cy="372" r="128" fill="none" stroke="#1e2a4a" stroke-width="2"/>
-  <circle cx="540" cy="372" r="128" fill="none" stroke="#8ea2ff" stroke-width="2.5" class="fl" opacity=".55"/>
-  <g class="orb"><circle cx="540" cy="244" r="9" fill="#8ea2ff"/></g>
+  <circle cx="540" cy="268" r="86" fill="none" stroke="#1e2a4a" stroke-width="2"/>
+  <circle cx="540" cy="268" r="86" fill="none" stroke="#8ea2ff" stroke-width="2.5" class="lsv-fl" opacity=".55"/>
+  <g class="lsv-orb"><circle cx="540" cy="182" r="7" fill="#8ea2ff"/></g>
+  <rect x="432" y="164" width="216" height="36" rx="9" fill="#121a30" stroke="#1e2a4a"/>
+  <text class="lsv-sans lsv-n" x="540" y="188" text-anchor="middle">writes the change</text>
+  <rect x="660" y="250" width="220" height="36" rx="9" fill="#121a30" stroke="#1e2a4a"/>
+  <text class="lsv-sans lsv-n" x="770" y="274" text-anchor="middle">reviews its own diff</text>
+  <rect x="438" y="336" width="204" height="36" rx="9" fill="#121a30" stroke="#1e2a4a"/>
+  <text class="lsv-sans lsv-n" x="540" y="360" text-anchor="middle">agrees with itself</text>
+  <g class="lsv-nd">
+    <rect x="212" y="250" width="172" height="36" rx="9" fill="#121a30" stroke="#8ea2ff" stroke-width="1.4"/>
+    <text class="lsv-sans lsv-n" x="298" y="274" text-anchor="middle">commits</text>
+  </g>
+  <rect x="404" y="240" width="20" height="58" rx="6" fill="#f43f5e" class="lsv-gb"/>
+  <text class="lsv-sans lsv-sub" x="540" y="262" text-anchor="middle" fill="#5a6b8c">nothing here</text>
+  <text class="lsv-sans lsv-sub" x="540" y="284" text-anchor="middle" fill="#5a6b8c">can say no</text>
 
-  <rect x="416" y="222" width="248" height="44" rx="11" fill="#121a30" stroke="#1e2a4a"/>
-  <text class="sans n" x="540" y="250" text-anchor="middle">writes the change</text>
-  <rect x="686" y="350" width="252" height="44" rx="11" fill="#121a30" stroke="#1e2a4a"/>
-  <text class="sans n" x="812" y="378" text-anchor="middle">reviews its own diff</text>
-  <rect x="424" y="478" width="232" height="44" rx="11" fill="#121a30" stroke="#1e2a4a"/>
-  <text class="sans n" x="540" y="506" text-anchor="middle">agrees with itself</text>
-  <g class="nd">
-    <rect x="146" y="350" width="196" height="44" rx="11" fill="#121a30" stroke="#8ea2ff" stroke-width="1.5"/>
-    <text class="sans n" x="244" y="378" text-anchor="middle">commits</text>
+  <text class="lsv-sans lsv-sub" x="56" y="420">So I put three senior engineers in it. One of them can refuse the write.</text>
+
+  <g transform="translate(176 476)">
+    <text class="lsv-nm" x="0" y="-18">The Grump</text>
+    <text class="lsv-role" x="0" y="2">reads the diff — what breaks in production</text>
+    <g transform="translate(0 14) scale(0.8275)">
+<defs>
+    <radialGradient id="g-g-dark">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity=".38"/>
+      <stop offset="55%" stop-color="#f59e0b" stop-opacity=".12"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="880" height="284" rx="18" fill="#0b1020"/>
+  <circle class="g-glow" cx="452" cy="142" r="128" fill="url(#g-g-dark)"/>
+  <text x="24"  y="34" class="g-mono g-cap" fill="#f43f5e">AGENT · WRITES</text>
+  <text x="386" y="34" class="g-mono g-cap" fill="#f59e0b">REVIEWED · GATED</text>
+  <text x="596" y="34" class="g-mono g-cap" fill="#22c55e">BRANCH · CLEAN</text>
+  
+    <g class="row r0">
+      <rect x="24" y="62" width="252" height="34" rx="9" fill="#121a30" stroke="#243154"/>
+      <rect x="24" y="62" width="3.5" height="34" rx="2" fill="#f59e0b" opacity=".9"/>
+      <text x="38" y="76" class="g-mono g-b" fill="#e8ecf8">auth.py</text>
+      <text x="38" y="89" class="g-mono g-xs" fill="#f43f5e">unchecked .get()</text>
+      <circle class="g-dot" cx="262" cy="79" r="4" fill="#f43f5e"/>
+    </g>
+    <g class="row g-r1">
+      <rect x="24" y="106" width="252" height="34" rx="9" fill="#121a30" stroke="#243154"/>
+      <rect x="24" y="106" width="3.5" height="34" rx="2" fill="#f59e0b" opacity=".9"/>
+      <text x="38" y="120" class="g-mono g-b" fill="#e8ecf8">api.ts</text>
+      <text x="38" y="133" class="g-mono g-xs" fill="#f43f5e">no timeout</text>
+      <circle class="g-dot" cx="262" cy="123" r="4" fill="#f43f5e"/>
+    </g>
+    <g class="row g-r2">
+      <rect x="24" y="150" width="252" height="34" rx="9" fill="#121a30" stroke="#243154"/>
+      <rect x="24" y="150" width="3.5" height="34" rx="2" fill="#f59e0b" opacity=".9"/>
+      <text x="38" y="164" class="g-mono g-b" fill="#e8ecf8">deploy.yml</text>
+      <text x="38" y="177" class="g-mono g-xs" fill="#f43f5e">secret in env</text>
+      <circle class="g-dot" cx="262" cy="167" r="4" fill="#f43f5e"/>
+    </g>
+    <g class="row g-r3">
+      <rect x="24" y="194" width="252" height="34" rx="9" fill="#121a30" stroke="#243154"/>
+      <rect x="24" y="194" width="3.5" height="34" rx="2" fill="#f59e0b" opacity=".9"/>
+      <text x="38" y="208" class="g-mono g-b" fill="#e8ecf8">db.go</text>
+      <text x="38" y="221" class="g-mono g-xs" fill="#f43f5e">N+1 query</text>
+      <circle class="g-dot" cx="262" cy="211" r="4" fill="#f43f5e"/>
+    </g>
+  <path id="g-f0-dark" class="g-wire" d="M280 79 C 336 79, 368 142, 414 142" fill="none" stroke="#f59e0b" stroke-width="1.5" opacity=".45" stroke-dasharray="4 6"/>
+    <circle r="3.2" fill="#f59e0b"><animateMotion dur="2.4s" repeatCount="indefinite" path="M280 79 C 336 79, 368 142, 414 142"/></circle><path id="g-f1-dark" class="g-wire" d="M280 123 C 336 123, 368 142, 414 142" fill="none" stroke="#f59e0b" stroke-width="1.5" opacity=".45" stroke-dasharray="4 6"/>
+    <circle r="3.2" fill="#f59e0b"><animateMotion dur="2.75s" repeatCount="indefinite" path="M280 123 C 336 123, 368 142, 414 142"/></circle><path id="g-f2-dark" class="g-wire" d="M280 167 C 336 167, 368 142, 414 142" fill="none" stroke="#f59e0b" stroke-width="1.5" opacity=".45" stroke-dasharray="4 6"/>
+    <circle r="3.2" fill="#f59e0b"><animateMotion dur="3.0999999999999996s" repeatCount="indefinite" path="M280 167 C 336 167, 368 142, 414 142"/></circle><path id="g-f3-dark" class="g-wire" d="M280 211 C 336 211, 368 142, 414 142" fill="none" stroke="#f59e0b" stroke-width="1.5" opacity=".45" stroke-dasharray="4 6"/>
+    <circle r="3.2" fill="#f59e0b"><animateMotion dur="3.4499999999999997s" repeatCount="indefinite" path="M280 211 C 336 211, 368 142, 414 142"/></circle>
+  
+    <path class="g-wire" d="M490 142 H 584" fill="none" stroke="#22c55e" stroke-width="1.8" opacity=".55" stroke-dasharray="5 6"/>
+    <circle r="3.4" fill="#22c55e"><animateMotion dur="1.8s" repeatCount="indefinite" path="M490 142 H 584"/></circle>
+    <path d="M578 137 l7 5 -7 5" fill="none" stroke="#22c55e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>
+  <g transform="translate(452 142)">
+    <g class="g-bob">
+      <path d="M-26 -14 h44 v30 a14 14 0 0 1 -14 14 h-16 a14 14 0 0 1 -14 -14 z" fill="#f59e0b" opacity=".18" stroke="#f59e0b" stroke-width="2.5"/>
+      <path d="M18 -6 h10 a10 10 0 0 1 0 20 h-10" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+      <g stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" opacity=".85">
+        <path class="g-st s1" d="M-14 -20 q-5 -10 0 -18"/><path class="g-st g-s2" d="M-2 -22 q-5 -11 0 -20"/><path class="g-st g-s3" d="M10 -20 q-5 -10 0 -18"/>
+      </g>
+      <g fill="#e8ecf8"><circle class="g-eye" cx="-9" cy="6" r="2.6"/><circle class="g-eye" cx="9" cy="6" r="2.6"/></g>
+      <path d="M-9 20 q9 -6 18 0" fill="none" stroke="#e8ecf8" stroke-width="2.4" stroke-linecap="round" opacity=".75"/>
+    </g></g>
+  <text x="452" y="206" text-anchor="middle" class="g-sans" font-size="15" font-weight="700" fill="#e8ecf8">The Grump</text>
+  <text x="452" y="222" text-anchor="middle" class="g-mono g-xs" fill="#93a4c8">ONLY WHAT BREAKS · ALWAYS ON</text>
+  <rect x="584" y="80" width="272" height="132" rx="12" fill="none" stroke="#243154" opacity=".7"/>
+  
+    <g class="g-vrow v0">
+      <rect x="596" y="96" width="248" height="30" rx="8" fill="#121a30" stroke="#243154"/>
+      <circle cx="614" cy="111" r="4.5" fill="#22c55e"/>
+      <text x="628" y="115" class="g-mono g-b" fill="#22c55e">APPROVE</text>
+    </g>
+    <g class="g-vrow g-v1">
+      <rect x="596" y="136" width="248" height="30" rx="8" fill="#121a30" stroke="#243154"/>
+      <circle cx="614" cy="151" r="4.5" fill="#f59e0b"/>
+      <text x="628" y="155" class="g-mono g-b" fill="#f59e0b">REQUEST_CHANGES</text>
+    </g>
+    <g class="g-vrow g-v2">
+      <rect x="596" y="176" width="248" height="30" rx="8" fill="#121a30" stroke="#243154"/>
+      <circle cx="614" cy="191" r="4.5" fill="#f43f5e"/>
+      <text x="628" y="195" class="g-mono g-b" fill="#f43f5e">BLOCK</text>
+    </g>
+  <text x="596" y="242" class="g-mono g-xs" fill="#93a4c8">DEFECTS REACHING THE BRANCH</text>
+       <text x="596" y="264" class="g-mono g-num" fill="#f43f5e">29%</text>
+       <text x="648" y="264" class="g-mono g-num" fill="#93a4c8">→</text>
+       <text x="674" y="264" class="g-mono g-num" fill="#22c55e">0%</text>
+       <text x="715" y="264" class="g-mono g-xs" fill="#93a4c8">measured, Antigravity CLI</text>
+    </g>
   </g>
 
-  <!-- the gate sits between "agrees" and "commits" -->
-  <rect x="398" y="336" width="22" height="72" rx="6" fill="#f43f5e" class="gb"/>
-  <g class="rf">
-    <rect x="600" y="586" width="378" height="0" fill="none"/>
+  <g transform="translate(176 773)">
+    <text class="lsv-nm" x="0" y="-18">The Paranoid SRE</text>
+    <text class="lsv-role" x="0" y="2">reads the deploy — what happens at 3 a.m.</text>
+    <g transform="translate(0 14) scale(0.8275)">
+<defs>
+    <radialGradient id="s-g-dark">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity=".38"/>
+      <stop offset="55%" stop-color="#38bdf8" stop-opacity=".12"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="880" height="284" rx="18" fill="#0b1020"/>
+  <circle class="s-glow" cx="452" cy="142" r="128" fill="url(#s-g-dark)"/>
+  <text x="24"  y="34" class="s-mono s-cap" fill="#f472b6">AGENT · SHIPS</text>
+  <text x="386" y="34" class="s-mono s-cap" fill="#38bdf8">REVIEWED · GATED</text>
+  <text x="596" y="34" class="s-mono s-cap" fill="#22c55e">PRODUCTION · HELD</text>
+  
+    <g class="row r0">
+      <rect x="24" y="62" width="252" height="34" rx="9" fill="#121a30" stroke="#243154"/>
+      <rect x="24" y="62" width="3.5" height="34" rx="2" fill="#38bdf8" opacity=".9"/>
+      <text x="38" y="76" class="s-mono s-b" fill="#e8ecf8">values.yaml</text>
+      <text x="38" y="89" class="s-mono s-xs" fill="#f472b6">maxUnavailable 100%</text>
+      <circle class="s-dot" cx="262" cy="79" r="4" fill="#f472b6"/>
+    </g>
+    <g class="row s-r1">
+      <rect x="24" y="106" width="252" height="34" rx="9" fill="#121a30" stroke="#243154"/>
+      <rect x="24" y="106" width="3.5" height="34" rx="2" fill="#38bdf8" opacity=".9"/>
+      <text x="38" y="120" class="s-mono s-b" fill="#e8ecf8">migrate.sql</text>
+      <text x="38" y="133" class="s-mono s-xs" fill="#f472b6">drops a live column</text>
+      <circle class="s-dot" cx="262" cy="123" r="4" fill="#f472b6"/>
+    </g>
+    <g class="row s-r2">
+      <rect x="24" y="150" width="252" height="34" rx="9" fill="#121a30" stroke="#243154"/>
+      <rect x="24" y="150" width="3.5" height="34" rx="2" fill="#38bdf8" opacity=".9"/>
+      <text x="38" y="164" class="s-mono s-b" fill="#e8ecf8">hpa.yaml</text>
+      <text x="38" y="177" class="s-mono s-xs" fill="#f472b6">no minReplicas</text>
+      <circle class="s-dot" cx="262" cy="167" r="4" fill="#f472b6"/>
+    </g>
+    <g class="row s-r3">
+      <rect x="24" y="194" width="252" height="34" rx="9" fill="#121a30" stroke="#243154"/>
+      <rect x="24" y="194" width="3.5" height="34" rx="2" fill="#38bdf8" opacity=".9"/>
+      <text x="38" y="208" class="s-mono s-b" fill="#e8ecf8">ingress.yaml</text>
+      <text x="38" y="221" class="s-mono s-xs" fill="#f472b6">no readiness gate</text>
+      <circle class="s-dot" cx="262" cy="211" r="4" fill="#f472b6"/>
+    </g>
+  <path id="s-f0-dark" class="s-wire" d="M280 79 C 336 79, 368 142, 414 142" fill="none" stroke="#38bdf8" stroke-width="1.5" opacity=".45" stroke-dasharray="4 6"/>
+    <circle r="3.2" fill="#38bdf8"><animateMotion dur="2.4s" repeatCount="indefinite" path="M280 79 C 336 79, 368 142, 414 142"/></circle><path id="s-f1-dark" class="s-wire" d="M280 123 C 336 123, 368 142, 414 142" fill="none" stroke="#38bdf8" stroke-width="1.5" opacity=".45" stroke-dasharray="4 6"/>
+    <circle r="3.2" fill="#38bdf8"><animateMotion dur="2.75s" repeatCount="indefinite" path="M280 123 C 336 123, 368 142, 414 142"/></circle><path id="s-f2-dark" class="s-wire" d="M280 167 C 336 167, 368 142, 414 142" fill="none" stroke="#38bdf8" stroke-width="1.5" opacity=".45" stroke-dasharray="4 6"/>
+    <circle r="3.2" fill="#38bdf8"><animateMotion dur="3.0999999999999996s" repeatCount="indefinite" path="M280 167 C 336 167, 368 142, 414 142"/></circle><path id="s-f3-dark" class="s-wire" d="M280 211 C 336 211, 368 142, 414 142" fill="none" stroke="#38bdf8" stroke-width="1.5" opacity=".45" stroke-dasharray="4 6"/>
+    <circle r="3.2" fill="#38bdf8"><animateMotion dur="3.4499999999999997s" repeatCount="indefinite" path="M280 211 C 336 211, 368 142, 414 142"/></circle>
+  
+    <path class="s-wire" d="M490 142 H 584" fill="none" stroke="#22c55e" stroke-width="1.8" opacity=".55" stroke-dasharray="5 6"/>
+    <circle r="3.4" fill="#22c55e"><animateMotion dur="1.8s" repeatCount="indefinite" path="M490 142 H 584"/></circle>
+    <path d="M578 137 l7 5 -7 5" fill="none" stroke="#22c55e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>
+  <g transform="translate(452 142)">
+    <g class="s-bob">
+      <circle r="34" fill="#38bdf8" opacity=".12"/>
+      <circle r="34" fill="none" stroke="#38bdf8" stroke-width="2.5"/>
+      <circle r="21" fill="none" stroke="#38bdf8" stroke-width="1.6" opacity=".55"/>
+      <circle r="8"  fill="none" stroke="#38bdf8" stroke-width="1.6" opacity=".4"/>
+      <g class="s-sweep"><path d="M0 0 L0 -34 A34 34 0 0 1 26 -22 Z" fill="#38bdf8" opacity=".38"/></g>
+      <circle class="s-ping" cx="14" cy="-16" r="3.4" fill="#f472b6"/>
+      <circle cx="0" cy="0" r="3.2" fill="#38bdf8"/>
+    </g></g>
+  <text x="452" y="206" text-anchor="middle" class="s-sans" font-size="15" font-weight="700" fill="#e8ecf8">The Paranoid SRE</text>
+  <text x="452" y="222" text-anchor="middle" class="s-mono s-xs" fill="#93a4c8">BLAST RADIUS FIRST · ALWAYS ON</text>
+  <rect x="584" y="80" width="272" height="132" rx="12" fill="none" stroke="#243154" opacity=".7"/>
+  
+    <g class="s-vrow v0">
+      <rect x="596" y="96" width="248" height="30" rx="8" fill="#121a30" stroke="#243154"/>
+      <circle cx="614" cy="111" r="4.5" fill="#22c55e"/>
+      <text x="628" y="115" class="s-mono s-b" fill="#22c55e">SHIP</text>
+    </g>
+    <g class="s-vrow s-v1">
+      <rect x="596" y="136" width="248" height="30" rx="8" fill="#121a30" stroke="#243154"/>
+      <circle cx="614" cy="151" r="4.5" fill="#38bdf8"/>
+      <text x="628" y="155" class="s-mono s-b" fill="#38bdf8">HOLD</text>
+    </g>
+    <g class="s-vrow s-v2">
+      <rect x="596" y="176" width="248" height="30" rx="8" fill="#121a30" stroke="#243154"/>
+      <circle cx="614" cy="191" r="4.5" fill="#f472b6"/>
+      <text x="628" y="195" class="s-mono s-b" fill="#f472b6">PAGE</text>
+    </g>
+  <text x="596" y="242" class="s-mono s-xs" fill="#93a4c8">DEFECTS REACHING THE BRANCH</text>
+       <text x="596" y="264" class="s-mono s-num" fill="#f472b6">60%</text>
+       <text x="648" y="264" class="s-mono s-num" fill="#93a4c8">→</text>
+       <text x="674" y="264" class="s-mono s-num" fill="#22c55e">0%</text>
+       <text x="715" y="264" class="s-mono s-xs" fill="#93a4c8">measured, Claude Code</text>
+    </g>
   </g>
-  <text class="sans sub" x="540" y="364" text-anchor="middle" fill="#5a6b8c">nothing here</text>
-  <text class="sans sub" x="540" y="390" text-anchor="middle" fill="#5a6b8c">can say no</text>
 
-  <text class="sans sub" x="56" y="566">So I put three senior engineers in the loop — and one of them can refuse the write.</text>
-
-  <!-- ── the three, each with the thing it catches ─────────────── -->
-  <!-- 1. the Grump -->
-  <rect x="56" y="596" width="968" height="222" rx="16" fill="#121a30" stroke="#1e2a4a"/>
-  <circle cx="96" cy="640" r="13" fill="#8ea2ff" fill-opacity=".3"/>
-  <text class="sans nm" x="124" y="648">The Grump</text>
-  <text class="sans role" x="124" y="678">reads the diff · rejected 4,000 pull requests</text>
-  <rect x="124" y="702" width="340" height="42" rx="9" fill="#0b1020" stroke="#1e2a4a"/>
-  <text class="mono code" x="140" y="729" fill="#93a4c8">if key == API_KEY:</text>
-  <rect class="k1" x="140" y="723" height="2.5" fill="#f43f5e"/>
-  <g class="d1"><text class="mono code" x="124" y="778" fill="#22c55e">→ hmac.compare_digest(key, API_KEY)</text></g>
-  <g class="s1">
-    <rect x="516" y="694" width="196" height="54" rx="10" fill="#f43f5e" fill-opacity=".14" stroke="#f43f5e" stroke-width="1.8"/>
-    <text class="mono vd" x="614" y="727" fill="#f43f5e" text-anchor="middle">BLOCK</text>
+  <g transform="translate(176 1070)">
+    <text class="lsv-nm" x="0" y="-18">Tenured</text>
+    <text class="lsv-role" x="0" y="2">reads the log — have we already tried this</text>
+    <g transform="translate(0 14) scale(0.8275)">
+<defs>
+    <radialGradient id="t-g-dark">
+      <stop offset="0%" stop-color="#a78bfa" stop-opacity=".38"/>
+      <stop offset="55%" stop-color="#a78bfa" stop-opacity=".12"/>
+      <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="880" height="284" rx="18" fill="#0b1020"/>
+  <circle class="t-glow" cx="452" cy="142" r="128" fill="url(#t-g-dark)"/>
+  <text x="24"  y="34" class="t-mono t-cap" fill="#fb923c">TICKET · ASKS</text>
+  <text x="386" y="34" class="t-mono t-cap" fill="#a78bfa">REVIEWED · GATED</text>
+  <text x="596" y="34" class="t-mono t-cap" fill="#22c55e">MEMORY · ANSWERS</text>
+  
+    <g class="row r0">
+      <rect x="24" y="62" width="252" height="34" rx="9" fill="#121a30" stroke="#243154"/>
+      <rect x="24" y="62" width="3.5" height="34" rx="2" fill="#a78bfa" opacity=".9"/>
+      <text x="38" y="76" class="t-mono t-b" fill="#e8ecf8">git log</text>
+      <text x="38" y="89" class="t-mono t-xs" fill="#fb923c">reverted in 2024</text>
+      <circle class="t-dot" cx="262" cy="79" r="4" fill="#fb923c"/>
+    </g>
+    <g class="row t-r1">
+      <rect x="24" y="106" width="252" height="34" rx="9" fill="#121a30" stroke="#243154"/>
+      <rect x="24" y="106" width="3.5" height="34" rx="2" fill="#a78bfa" opacity=".9"/>
+      <text x="38" y="120" class="t-mono t-b" fill="#e8ecf8">postmortem.md</text>
+      <text x="38" y="133" class="t-mono t-xs" fill="#fb923c">caused the outage</text>
+      <circle class="t-dot" cx="262" cy="123" r="4" fill="#fb923c"/>
+    </g>
+    <g class="row t-r2">
+      <rect x="24" y="150" width="252" height="34" rx="9" fill="#121a30" stroke="#243154"/>
+      <rect x="24" y="150" width="3.5" height="34" rx="2" fill="#a78bfa" opacity=".9"/>
+      <text x="38" y="164" class="t-mono t-b" fill="#e8ecf8">adr-014.md</text>
+      <text x="38" y="177" class="t-mono t-xs" fill="#fb923c">decided against</text>
+      <circle class="t-dot" cx="262" cy="167" r="4" fill="#fb923c"/>
+    </g>
+    <g class="row t-r3">
+      <rect x="24" y="194" width="252" height="34" rx="9" fill="#121a30" stroke="#243154"/>
+      <rect x="24" y="194" width="3.5" height="34" rx="2" fill="#a78bfa" opacity=".9"/>
+      <text x="38" y="208" class="t-mono t-b" fill="#e8ecf8">// NOTE:</text>
+      <text x="38" y="221" class="t-mono t-xs" fill="#fb923c">do not re-add</text>
+      <circle class="t-dot" cx="262" cy="211" r="4" fill="#fb923c"/>
+    </g>
+  <path id="t-f0-dark" class="t-wire" d="M280 79 C 336 79, 368 142, 414 142" fill="none" stroke="#a78bfa" stroke-width="1.5" opacity=".45" stroke-dasharray="4 6"/>
+    <circle r="3.2" fill="#a78bfa"><animateMotion dur="2.4s" repeatCount="indefinite" path="M280 79 C 336 79, 368 142, 414 142"/></circle><path id="t-f1-dark" class="t-wire" d="M280 123 C 336 123, 368 142, 414 142" fill="none" stroke="#a78bfa" stroke-width="1.5" opacity=".45" stroke-dasharray="4 6"/>
+    <circle r="3.2" fill="#a78bfa"><animateMotion dur="2.75s" repeatCount="indefinite" path="M280 123 C 336 123, 368 142, 414 142"/></circle><path id="t-f2-dark" class="t-wire" d="M280 167 C 336 167, 368 142, 414 142" fill="none" stroke="#a78bfa" stroke-width="1.5" opacity=".45" stroke-dasharray="4 6"/>
+    <circle r="3.2" fill="#a78bfa"><animateMotion dur="3.0999999999999996s" repeatCount="indefinite" path="M280 167 C 336 167, 368 142, 414 142"/></circle><path id="t-f3-dark" class="t-wire" d="M280 211 C 336 211, 368 142, 414 142" fill="none" stroke="#a78bfa" stroke-width="1.5" opacity=".45" stroke-dasharray="4 6"/>
+    <circle r="3.2" fill="#a78bfa"><animateMotion dur="3.4499999999999997s" repeatCount="indefinite" path="M280 211 C 336 211, 368 142, 414 142"/></circle>
+  
+    <path class="t-wire" d="M490 142 H 584" fill="none" stroke="#22c55e" stroke-width="1.8" opacity=".55" stroke-dasharray="5 6"/>
+    <circle r="3.4" fill="#22c55e"><animateMotion dur="1.8s" repeatCount="indefinite" path="M490 142 H 584"/></circle>
+    <path d="M578 137 l7 5 -7 5" fill="none" stroke="#22c55e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>
+  <g transform="translate(452 142)">
+    <g class="t-bob">
+      <circle r="34" fill="#a78bfa" opacity=".12"/>
+      <g class="t-sp-s"><circle r="34" fill="none" stroke="#a78bfa" stroke-width="2.5" stroke-dasharray="7 9"/></g>
+      <g class="t-sp-r"><circle r="24" fill="none" stroke="#a78bfa" stroke-width="1.8" opacity=".6" stroke-dasharray="5 8"/></g>
+      <circle r="14" fill="none" stroke="#a78bfa" stroke-width="1.6" opacity=".45"/>
+      <path d="M-7 -2 h14 M-7 5 h10" stroke="#e8ecf8" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
+      <circle class="t-ping" r="3" cy="-24" fill="#fb923c"/>
+    </g></g>
+  <text x="452" y="206" text-anchor="middle" class="t-sans" font-size="15" font-weight="700" fill="#e8ecf8">The one who remembers</text>
+  <text x="452" y="222" text-anchor="middle" class="t-mono t-xs" fill="#93a4c8">REMEMBERS THE POSTMORTEM · ALWAYS ON</text>
+  <rect x="584" y="80" width="272" height="132" rx="12" fill="none" stroke="#243154" opacity=".7"/>
+  
+    <g class="t-vrow v0">
+      <rect x="596" y="96" width="248" height="30" rx="8" fill="#121a30" stroke="#243154"/>
+      <circle cx="614" cy="111" r="4.5" fill="#22c55e"/>
+      <text x="628" y="115" class="t-mono t-b" fill="#22c55e">NEW</text>
+    </g>
+    <g class="t-vrow t-v1">
+      <rect x="596" y="136" width="248" height="30" rx="8" fill="#121a30" stroke="#243154"/>
+      <circle cx="614" cy="151" r="4.5" fill="#a78bfa"/>
+      <text x="628" y="155" class="t-mono t-b" fill="#a78bfa">SEEN_BEFORE</text>
+    </g>
+    <g class="t-vrow t-v2">
+      <rect x="596" y="176" width="248" height="30" rx="8" fill="#121a30" stroke="#243154"/>
+      <circle cx="614" cy="191" r="4.5" fill="#fb923c"/>
+      <text x="628" y="195" class="t-mono t-b" fill="#fb923c">DO_NOT_REPEAT</text>
+    </g>
+  <text x="596" y="242" class="t-mono t-xs" fill="#93a4c8">DEFECTS REACHING THE BRANCH</text>
+       <text x="596" y="264" class="t-mono t-num" fill="#fb923c">10%</text>
+       <text x="648" y="264" class="t-mono t-num" fill="#93a4c8">→</text>
+       <text x="674" y="264" class="t-mono t-num" fill="#22c55e">0%</text>
+       <text x="715" y="264" class="t-mono t-xs" fill="#93a4c8">measured, IBM Bob Shell</text>
+    </g>
   </g>
-  <text class="sans big" x="880" y="700" fill="#f43f5e" text-anchor="middle">29%</text>
-  <text class="sans" x="924" y="700" font-size="24" fill="#5a6b8c">→</text>
-  <text class="sans big" x="968" y="700" fill="#22c55e" text-anchor="middle">0%</text>
-  <text class="sans lbl" x="924" y="726" text-anchor="middle">defects reaching the branch</text>
 
-  <!-- 2. the Paranoid SRE -->
-  <rect x="56" y="838" width="968" height="222" rx="16" fill="#121a30" stroke="#1e2a4a"/>
-  <circle cx="96" cy="882" r="13" fill="#38bdf8" fill-opacity=".3"/>
-  <text class="sans nm" x="124" y="890">The Paranoid SRE</text>
-  <text class="sans role" x="124" y="920">reads the deploy, not the code · paged for all of it</text>
-  <rect x="124" y="944" width="340" height="42" rx="9" fill="#0b1020" stroke="#1e2a4a"/>
-  <text class="mono code" x="140" y="971" fill="#93a4c8">maxUnavailable: 100%</text>
-  <rect class="k2" x="140" y="965" height="2.5" fill="#f43f5e"/>
-  <g class="d2"><text class="mono code" x="124" y="1020" fill="#22c55e">→ maxUnavailable: 25%, maxSurge: 1</text></g>
-  <g class="s2">
-    <rect x="516" y="936" width="196" height="54" rx="10" fill="#f43f5e" fill-opacity=".14" stroke="#f43f5e" stroke-width="1.8"/>
-    <text class="mono vd" x="614" y="969" fill="#f43f5e" text-anchor="middle">PAGE</text>
-  </g>
-  <text class="sans big" x="880" y="942" fill="#f43f5e" text-anchor="middle">60%</text>
-  <text class="sans" x="924" y="942" font-size="24" fill="#5a6b8c">→</text>
-  <text class="sans big" x="968" y="942" fill="#22c55e" text-anchor="middle">0%</text>
-  <text class="sans lbl" x="924" y="968" text-anchor="middle">45 deploys, 27 took prod down</text>
-
-  <!-- 3. Tenured -->
-  <rect x="56" y="1080" width="968" height="222" rx="16" fill="#121a30" stroke="#1e2a4a"/>
-  <circle cx="96" cy="1124" r="13" fill="#f472b6" fill-opacity=".3"/>
-  <text class="sans nm" x="124" y="1132">Tenured</text>
-  <text class="sans role" x="124" y="1162">reads the log and the postmortem · was there for INC-2019-07</text>
-  <rect x="124" y="1186" width="340" height="42" rx="9" fill="#0b1020" stroke="#1e2a4a"/>
-  <text class="mono code" x="140" y="1213" fill="#93a4c8">+ xml-parse-lite</text>
-  <rect class="k3" x="140" y="1207" height="2.5" fill="#f43f5e"/>
-  <g class="d3"><text class="mono code" x="124" y="1262" fill="#22c55e">→ removed for CVE-2024-3104. use defusedxml</text></g>
-  <g class="s3">
-    <rect x="516" y="1178" width="248" height="54" rx="10" fill="#f43f5e" fill-opacity=".14" stroke="#f43f5e" stroke-width="1.8"/>
-    <text class="mono vd" x="640" y="1211" fill="#f43f5e" text-anchor="middle">DO_NOT_REPEAT</text>
-  </g>
-  <text class="sans big" x="880" y="1184" fill="#f43f5e" text-anchor="middle">10%</text>
-  <text class="sans" x="924" y="1184" font-size="24" fill="#5a6b8c">→</text>
-  <text class="sans big" x="968" y="1184" fill="#22c55e" text-anchor="middle">0%</text>
-  <text class="sans lbl" x="924" y="1210" text-anchor="middle">changes that repeat history</text>
-
-  <text class="sans" x="56" y="1332" font-size="15.5" fill="#5a6b8c">2,000 recorded runs · four agents · scored by fixed checks written before any run</text>
-  <text class="sans" x="1024" y="1332" font-size="15.5" fill="#5a6b8c" text-anchor="end">lazy-senior-dev</text>
+  <text class="lsv-sans lsv-foot" x="56" y="1330">2,000 recorded runs · four agents · scored by fixed checks written before any run</text>
+  <text class="lsv-sans lsv-foot" x="1024" y="1330" text-anchor="end">lazy-senior-dev</text>
 </svg>

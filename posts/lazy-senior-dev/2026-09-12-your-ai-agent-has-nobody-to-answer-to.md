@@ -1,0 +1,126 @@
+---
+title: "Your AI Agent Has Nobody to Answer To. I Gave It Three Senior Engineers."
+dek: "Your agent reviews its own work, agrees with itself, and commits. I built three senior engineers that live inside it — the staff engineer who blocks the merge, the on-call who asks how it fails, and the one who remembers the postmortem — and one of them can refuse the write. Across 1,400 recorded runs on four agents, that refusal is the only thing a better prompt could not replace."
+date: 2026-09-12
+slug: your-ai-agent-has-nobody-to-answer-to
+category: "Agentic AI"
+cover: assets/art/lazy-senior-dev/your-ai-agent-has-nobody-to-answer-to.svg
+card: assets/art/lazy-senior-dev/your-ai-agent-has-nobody-to-answer-to.png
+tags: [agentic-ai, code-review, benchmarks, developer-tools]
+canonical: self
+status: published
+---
+
+## The loop nobody is watching
+
+Your coding agent writes a change. Then it reviews the change. Then it decides the change is good. Then it writes the file.
+
+Every step in that loop is the same model, agreeing with itself, at two in the morning, with nobody in the room.
+
+We have spent forty years building institutions around the opposite instinct. Code review exists because the author is the worst possible judge of their own work — not because they are careless, but because they cannot see the thing they did not think of. Then we handed the keyboard to something that reviews its own diffs by default and ships them without asking.
+
+The obvious fix is to tell it to be careful. I measured that. It helps, and then it stops helping, and where it stops is the interesting part.
+
+## Three engineers, not one assistant
+
+"Be more careful" is not a job description. So I wrote three, each with a different question and a different vocabulary:
+
+**The Grump** — the staff engineer who has rejected four thousand pull requests. He reads the diff. Ten questions, in order, answered in writing, then a verdict: `APPROVE`, `REQUEST_CHANGES`, or `BLOCK`. Every objection names a file, a line, how it fails in production, and the smallest fix. He approves with one word: *Fine.*
+
+**The Paranoid SRE** — the on-call engineer who has been paged for every mistake on the card. He does not read your code; he reads your deploy. Limits, probes, rollouts, rollbacks, alerts. `SHIP` / `HOLD` / `PAGE`.
+
+**Tenured** — the engineer who was there. Reads the git log, the postmortems, the ADR that says *don't*, and asks whether this repository has already tried this and undone it. `NEW` / `SEEN_BEFORE` / `DO_NOT_REPEAT`.
+
+They compose. The Grump reviews the diff, the SRE asks what it does to production, Tenured asks whether you already tried it in 2024.
+
+None of them is an agent. There is no second model, no API key, no extra bill. Each is one markdown ruleset that compiles into whatever your host already reads — a skill, a plugin, an MCP server, an `AGENTS.md`, a rules file, a GitHub Action. Fourteen hosts, one set of rules.
+
+## The part that is not a prompt
+
+Here is the thing that actually separates this from a well-written system prompt, and it is small and unglamorous.
+
+The persona is a `PreToolUse` hook. Before your agent is allowed to run `Edit`, `Write`, `MultiEdit`, `Bash` or `apply_patch`, the hook runs first and answers one question: **allow, or deny.**
+
+It reads the verdict the agent just printed. If that verdict is `BLOCK`, the write is refused. If there is no verdict at all — the agent skipped the review and went straight for the file — the write is refused until one appears. A `BLOCK` is never downgraded, whatever mode you are in and however late it is.
+
+Here is the hook refusing a real write, in a real session, from the host's own event stream:
+
+```text
+PreToolUse:Edit  permissionDecision: "deny"
+"No verdict found for this write to app.py. If you have not reviewed it yet:
+ answer the ten checklist questions in writing and print the verdict block."
+```
+
+The agent reviewed, printed a verdict, retried — and this time the code used a constant-time comparison instead of `==` on an API key.
+
+That is the whole idea. **Something outside the model decides whether the work is done.** A prompt cannot do that, because a prompt is advice to the same model that wrote the code.
+
+## What 1,400 runs actually show
+
+I gave agents tickets that each invite a classic defect — a timing-unsafe key comparison, a swallowed exception, an unbounded retry — and let them write the code themselves. Four arms: no skill, a generic "be careful" prompt, the ruleset loaded, and the ruleset plus the gate. Five runs per ticket per arm. Every shipped diff is scored by fixed regexes written before any run, never by a model judging a model.
+
+| Arm | IBM Bob (n=90/arm) | Claude Code (n=90/arm) |
+|---|---|---|
+| no skill | 16 shipped the defect (18%) | 6 (7%) |
+| generic "be careful" prompt | 4 (4%) | 4 (4%) |
+| ruleset loaded | 3 (3%) | 4 (4%) |
+| **ruleset + gate** | **0 (0%)** | **2 (2%)** |
+
+Read the second row before the last one. **Most of the benefit is the prompt.** Going from 18% to 4% is what any competent instruction buys you, and if that were the whole story you should close this tab and go write the instruction yourself.
+
+The gap worth paying attention to is 3% to 0%, and it is not a better sentence. It is the refusal.
+
+And the honest caveat, which is in the repository's own README because a generator puts it there: on Claude the drop is 7% to 2%, and at ninety runs an arm **that is not distinguishable from chance**. Claude completes 85 of 90 tickets against Bob's 55 — it is a much stronger author, with much less room to improve. Pooled across both hosts the effect is overwhelming. On Claude alone, it is a direction, not a proof.
+
+## The result I did not expect, and now think is the main one
+
+Detection was never the problem.
+
+On thirty diffs each carrying one planted defect, Claude Code caught **30 of 30** with my reviewer installed — and **30 of 30** without it. Modern agents are not bad at noticing that an unchecked `.get()` will `KeyError` in production.
+
+What they are bad at is **stopping**.
+
+Ask an unaided agent whether a change is risky and it will find something. On clean diffs with nothing wrong in them at all:
+
+| Agent | false alarms, unaided | with the persona | defects still caught |
+|---|---|---|---|
+| Claude Code | 4 of 4 | **0 of 4** | 12 of 12 |
+| Codex CLI | 3.5 of 4 | **0 of 4** | 12 of 12 |
+| IBM Bob Shell | 3 of 4 | **0 of 4** | 12 of 12 |
+| Antigravity CLI | 3 of 3 | **0 of 3** | 12 of 12 |
+
+Four independent agents. Three to four false alarms out of four, down to zero — while catching every planted defect.
+
+That last column is what makes the rest mean anything. Zero false alarms is also what you score by approving everything, so a noise number without a detection number beside it is not a result, it is a shrug.
+
+An assistant that objects to everything is not cautious. It is noise with a conscience, and you will start ignoring it by Thursday. The reviewer that helps is the one that is **quiet on code that is fine** — because that is what makes the one time it speaks up worth reading.
+
+## Things I found by measuring my own tool
+
+Building the benchmark caught more than the personas did.
+
+**A regular expression in the shipped hook could hang it.** The pattern that reads a finding's file and line backtracked exponentially — 45 characters took 293 milliseconds, 60 would take minutes. It runs inside the hook, the hook has a timeout, and on timeout it **fails open**. A finding line shaped that way was a route to making the gate allow a write it had just refused. Found by a scanner, not by my tests, which is the part that stung.
+
+**One agent was never being measured at all.** Its CLI works in a scratch directory unless told otherwise. It edited a copy, exited zero, wrote a confident summary naming a file under its own cache, and left the workspace untouched — so every run scored as "did not make the change" when the agent had made it somewhere else. Every number I had for that host was measuring my harness.
+
+**The harness read the agent's own words as a refusal.** A run that hits a usage limit has to stop the whole pass. My detector matched `rate limit`, `too many requests` and `429` — over the agent's reply as well as the CLI's output. These tickets ask the agent to write retry loops. A *correct* run says all three phrases. One pass ended after four runs on a reply that began "Implementation looks correct."
+
+I would rather write those down than have someone find them in my data.
+
+## Try it in one line
+
+Pick the one whose question you actually need answered. The Grump if your agent ships code. The SRE if it ships deploys. Tenured if your repository has a memory your agent does not.
+
+```bash
+npx github:lazy-senior-dev/grumpy-reviewer install
+```
+
+Start a new session; it is there from the first prompt of the next one. Set it to `gate` mode when you want the refusal rather than the advice.
+
+The benchmarks are in the repositories with the raw transcripts, the per-case tables, the failures, and the control arm that makes the numbers look worse. Reproduce them against your own agent with `npm run bench`. If your numbers disagree with mine, publish them — that is considerably more useful to me than a star.
+
+And if you take one thing from this and throw the rest away: **run the clean-input arm.** Give whatever assistant you are evaluating four changes with nothing wrong in them, and count how many it objects to. It is an afternoon's work, and it will tell you more about whether you will still be using the thing in a month than any benchmark of planted bugs ever will.
+
+---
+
+*The three personas are documented at [grumpy-reviewer](https://lazy-senior-dev.github.io/grumpy-reviewer/), [paranoid-sre](https://lazy-senior-dev.github.io/paranoid-sre/) and [tenured](https://lazy-senior-dev.github.io/tenured/). Written in a personal capacity; the views here are my own and not those of my employer. Product and company names are the trademarks of their respective owners, and their appearance in a benchmark is a measurement, not an endorsement in either direction.*

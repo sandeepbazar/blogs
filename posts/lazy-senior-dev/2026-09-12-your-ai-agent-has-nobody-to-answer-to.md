@@ -1,6 +1,6 @@
 ---
 title: "Your AI Agent Has Nobody to Answer To. Three Senior Engineers to Break the Loop."
-dek: "Your agent reviews its own work, agrees with itself, and commits. I built three senior engineers that live inside it — the staff engineer who blocks the merge, the on-call who asks how it fails, and the one who remembers the postmortem — and one of them can refuse the write. Across 2,500 recorded runs on four agents, that refusal is the only thing a better prompt could not replace."
+dek: "Your agent reviews its own work, agrees with itself, and commits. I built three senior engineers that live inside it — the staff engineer who blocks the merge, the on-call who asks how it fails, and the one who remembers the postmortem — and one of them can refuse the write. Across 2,600 recorded runs on four agents, that refusal is the only thing a better prompt could not replace."
 date: 2026-09-12
 slug: your-ai-agent-has-nobody-to-answer-to
 category: "Agentic AI"
@@ -115,6 +115,7 @@ simply absent rather than shown half filled:
 | **paranoid-sre** (deploys, blast radius) | Antigravity CLI | 29 of 45 (64%) | 21 of 45 (47%) | 1 of 45 (2%) | **0 of 45 (0%)** |
 | **paranoid-sre** (deploys, blast radius) | IBM Bob Shell | 12 of 45 (27%) | 3 of 45 (7%) | 1 of 45 (2%) | **1 of 45 (2%)** |
 | **paranoid-sre** (deploys, blast radius) | Claude Code | 27 of 45 (60%) | 0 of 45 (0%) | 0 of 45 (0%) | **0 of 45 (0%)** |
+| **paranoid-sre** (deploys, blast radius) | Codex CLI | 24 of 36 (67%) | 4 of 36 (11%) | 5 of 36 (14%) | **3 of 36 (8%)** |
 | **grumpy-reviewer** (general review) | Antigravity CLI | 26 of 90 (29%) | 7 of 90 (8%) | 5 of 90 (6%) | **0 of 90 (0%)** |
 | **grumpy-reviewer** (general review) | IBM Bob Shell | 16 of 90 (18%) | 4 of 90 (4%) | 3 of 90 (3%) | **0 of 90 (0%)** |
 | **grumpy-reviewer** (general review) | Claude Code | 6 of 90 (7%) | 4 of 90 (4%) | 4 of 90 (4%) | **2 of 90 (2%)** |

@@ -72,6 +72,7 @@ Here is what shipped:
 | **tenured** (repository memory) | Antigravity CLI | 13 of 40 (33%) | 8 of 40 (20%) | 0 of 40 (0%) | **0 of 40 (0%)** |
 | **tenured** (repository memory) | IBM Bob Shell | 4 of 40 (10%) | 0 of 40 (0%) | 0 of 40 (0%) | **0 of 40 (0%)** |
 | **tenured** (repository memory) | Claude Code | 0 of 40 (0%) | 0 of 40 (0%) | 0 of 40 (0%) | **0 of 40 (0%)** |
+| **tenured** (repository memory) | Codex CLI | 7 of 16 (44%) | 3 of 16 (19%) | 0 of 16 (0%) | **0 of 16 (0%)** |
 <!-- personas:end -->
 
 Two thirds of unaided runs on the SRE corpus shipped an outage-class defect. One told Kubernetes it could shut down every copy of the service at once and start no replacement until they were all gone — which is not a rolling update, it is the site being off on every deploy (`maxUnavailable: 100%` with `maxSurge: 0`). Another deleted a database column while the version still running in production was reading from it. The agent wrote them cheerfully, because the ticket asked for them.

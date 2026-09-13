@@ -38,6 +38,7 @@ That is about as falsifiable as this kind of claim gets, which is why I liked it
 |---|---|---|---|---|---|
 | Claude Code | `claude-sonnet-5` (n=40/arm) | **90%** | 90% | 88% | 95% |
 | IBM Bob Shell | `bob-default` (n=40/arm) | **23%** | 33% | 40% | 35% |
+| Codex CLI | `gpt-5.5` (n=22/arm) | **18%** | 45% | 95% | 95% |
 | Antigravity CLI | `gemini-3.6-flash-medium` (n=40/arm) | **50%** | 60% | 88% | 93% |
 <!-- cites:end -->
 

@@ -123,6 +123,7 @@ simply absent rather than shown half filled:
 | **tenured** (repository memory) | Antigravity CLI | 13 of 40 (33%) | 8 of 40 (20%) | 0 of 40 (0%) | **0 of 40 (0%)** |
 | **tenured** (repository memory) | IBM Bob Shell | 4 of 40 (10%) | 0 of 40 (0%) | 0 of 40 (0%) | **0 of 40 (0%)** |
 | **tenured** (repository memory) | Claude Code | 0 of 40 (0%) | 0 of 40 (0%) | 0 of 40 (0%) | **0 of 40 (0%)** |
+| **tenured** (repository memory) | Codex CLI | 7 of 16 (44%) | 3 of 16 (19%) | 0 of 16 (0%) | **0 of 16 (0%)** |
 <!-- personas:end -->
 
 The SRE corpus is the one that frightened me. **Ask Claude Code to write those deploys unaided and

@@ -40,7 +40,7 @@ Those two failures are what the personas fix, and they fix them hard:
 | **False alarms on clean diffs** | **4** | **0** |
 | **Replies with no usable verdict, per run** | **3** | **0** |
 
-Median of 3 runs on Claude Code (`claude-sonnet-5`), measured 2026-09-12.
+Median of 3 runs on Claude Code (`claude-sonnet-5`), measured 2026-09-13.
 <!-- discipline:end -->
 
 Same model. Same diffs. The entire delta is behavioural.
@@ -67,7 +67,7 @@ Here is what shipped:
 | **grumpy-reviewer** (general review) | Antigravity CLI | 26 of 90 (29%) | 7 of 90 (8%) | 5 of 90 (6%) | **0 of 90 (0%)** |
 | **grumpy-reviewer** (general review) | IBM Bob Shell | 16 of 90 (18%) | 4 of 90 (4%) | 3 of 90 (3%) | **0 of 90 (0%)** |
 | **grumpy-reviewer** (general review) | Claude Code | 6 of 90 (7%) | 4 of 90 (4%) | 4 of 90 (4%) | **2 of 90 (2%)** |
-| **grumpy-reviewer** (general review) | Codex CLI | 13 of 72 (18%) | 5 of 72 (7%) | 5 of 72 (7%) | **4 of 72 (6%)** |
+| **grumpy-reviewer** (general review) | Codex CLI | 17 of 90 (19%) | 7 of 90 (8%) | 7 of 90 (8%) | **5 of 90 (6%)** |
 | **tenured** (repository memory) | Antigravity CLI | 13 of 40 (33%) | 8 of 40 (20%) | 0 of 40 (0%) | **0 of 40 (0%)** |
 | **tenured** (repository memory) | IBM Bob Shell | 4 of 40 (10%) | 0 of 40 (0%) | 0 of 40 (0%) | **0 of 40 (0%)** |
 | **tenured** (repository memory) | Claude Code | 0 of 40 (0%) | 0 of 40 (0%) | 0 of 40 (0%) | **0 of 40 (0%)** |

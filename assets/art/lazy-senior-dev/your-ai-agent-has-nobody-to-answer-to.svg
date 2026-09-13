@@ -129,6 +129,6 @@
     <text class="sans" x="944" y="521" font-size="13" fill="#93a4c8">the part a prompt cannot do.</text>
   </g>
 
-  <text class="sans" x="60" y="586" font-size="12.5" fill="#5a6b8c">Antigravity CLI, gemini-3.6-flash-medium. IBM Bob Shell: 18% to 0%. Codex CLI: 18% to 6%. Claude Code: 7% to 2%.</text>
+  <text class="sans" x="60" y="586" font-size="12.5" fill="#5a6b8c">Antigravity CLI, gemini-3.6-flash-medium. Codex CLI: 19% to 6%. IBM Bob Shell: 18% to 0%. Claude Code: 7% to 2%.</text>
   <text class="sans" x="1140" y="586" font-size="12.5" fill="#5a6b8c" text-anchor="end">lazy-senior-dev</text>
 </svg>

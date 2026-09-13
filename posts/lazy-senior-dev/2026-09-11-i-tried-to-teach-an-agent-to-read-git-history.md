@@ -81,12 +81,12 @@ The second thing I measure is what happens when the agent writes the code itself
 On IBM Bob Shell, with the code-review persona:
 
 <!-- armsgrumpy:start -->
-| Arm | Antigravity CLI (n=90) | IBM Bob Shell (n=90) | Codex CLI (n=72) | Claude Code (n=90) |
+| Arm | Antigravity CLI (n=90) | Codex CLI (n=90) | IBM Bob Shell (n=90) | Claude Code (n=90) |
 |---|---|---|---|---|
-| no skill | 26 (29%) | 16 (18%) | 13 (18%) | 6 (7%) |
-| generic "be careful" prompt | 7 (8%) | 4 (4%) | 5 (7%) | 4 (4%) |
-| ruleset loaded | 5 (6%) | 3 (3%) | 5 (7%) | 4 (4%) |
-| **ruleset + gate** | **0 (0%)** | **0 (0%)** | **4 (6%)** | **2 (2%)** |
+| no skill | 26 (29%) | 17 (19%) | 16 (18%) | 6 (7%) |
+| generic "be careful" prompt | 7 (8%) | 7 (8%) | 4 (4%) | 4 (4%) |
+| ruleset loaded | 5 (6%) | 7 (8%) | 3 (3%) | 4 (4%) |
+| **ruleset + gate** | **0 (0%)** | **5 (6%)** | **0 (0%)** | **2 (2%)** |
 <!-- armsgrumpy:end -->
 
 The gap that matters is not the first one. Going from 18% to 4% is what any competent prompt buys you, and if that were the whole story you would be right to close the tab and write the prompt yourself.
